@@ -1,0 +1,161 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Scan {
+  id           String   @id @default(uuid())
+  url          String
+  domain       String
+  score        Int
+  label        String   // SAFE, CAUTION, DANGEROUS
+  reasons      String[]
+  aiConfidence Float
+  ipAddress    String?
+  userAgent    String?
+  createdAt    DateTime @default(now())
+
+  @@index([domain])
+  @@index([createdAt])
+  @@index([label])
+}
+
+model Report {
+  id          String   @id @default(uuid())
+  url         String
+  domain      String
+  reason      String
+  description String?
+  screenshot  String?
+  verified    Boolean  @default(false)
+  label       String?  // Assigned after verification: PHISHING, SCAM, SAFE, etc.
+  ipAddress   String?
+  createdAt   DateTime @default(now())
+  verifiedAt  DateTime?
+
+  @@index([domain])
+  @@index([verified])
+  @@index([createdAt])
+}
+
+model Whitelist {
+  id        String   @id @default(uuid())
+  domain    String   @unique
+  brand     String
+  category  String   // bank, ecommerce, government, social, etc.
+  createdAt DateTime @default(now())
+
+  @@index([domain])
+}
+
+model Blocklist {
+  id        String   @id @default(uuid())
+  domain    String   @unique
+  reason    String
+  severity  String   // HIGH, MEDIUM, LOW
+  source    String   // community, auto, manual
+  createdAt DateTime @default(now())
+
+  @@index([domain])
+}
+
+model ModelVersion {
+  id         String   @id @default(uuid())
+  version    Int      @unique
+  samples    Int
+  accuracy   Float
+  precision  Float?
+  recall     Float?
+  f1Score    Float?
+  modelPath  String?
+  isActive   Boolean  @default(false)
+  trainedAt  DateTime @default(now())
+  notes      String?
+
+  @@index([isActive])
+}
+
+model TrainingData {
+  id        String   @id @default(uuid())
+  url       String
+  text      String   // meta, title, snippet
+  label     String   // SAFE, PHISHING, SCAM, SPAM, MALWARE
+  source    String   // report, manual, crawl
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([used])
+  @@index([label])
+}
+
+model DailyStats {
+  id            String   @id @default(uuid())
+  date          DateTime @unique @db.Date
+  totalScans    Int      @default(0)
+  safeCount     Int      @default(0)
+  cautionCount  Int      @default(0)
+  dangerousCount Int     @default(0)
+  reportsCount  Int      @default(0)
+  
+  @@index([date])
+}
+
+// Mẫu lừa đảo thực tế từ MXH Việt Nam
+model ScamPattern {
+  id          String   @id @default(uuid())
+  category    String   // MONEY_TRANSFER, FAKE_BANK, PRIZE, JOB, INVESTMENT, GAMBLING, ROMANCE, IMPERSONATION
+  pattern     String   // Regex hoặc keyword
+  description String   // Mô tả chi tiết
+  example     String?  // Ví dụ thực tế
+  severity    Int      @default(50) // 0-100
+  source      String   // facebook, zalo, telegram, sms, email
+  reportCount Int      @default(1)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([category])
+  @@index([isActive])
+}
+
+// Số điện thoại/tài khoản lừa đảo được báo cáo
+model ScamAccount {
+  id          String   @id @default(uuid())
+  type        String   // PHONE, BANK_ACCOUNT, ZALO, FACEBOOK, TELEGRAM
+  value       String   // Số điện thoại hoặc số tài khoản
+  bankName    String?  // Tên ngân hàng (nếu là tài khoản)
+  ownerName   String?  // Tên chủ tài khoản (nếu biết)
+  reportCount Int      @default(1)
+  totalAmount Float?   // Tổng số tiền bị lừa (nếu biết)
+  description String?
+  verified    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([type, value])
+  @@index([type])
+  @@index([verified])
+}
+
+// Lịch sử scan ảnh
+model ImageScan {
+  id           String   @id @default(uuid())
+  imageHash    String   // Hash của ảnh để tránh scan lại
+  score        Int
+  label        String   // SAFE, SCAM, SUSPICIOUS
+  category     String?  // phishing, scam, gambling, etc.
+  reasons      String[]
+  extractedText String?
+  confidence   Float
+  ipAddress    String?
+  createdAt    DateTime @default(now())
+
+  @@index([imageHash])
+  @@index([label])
+  @@index([createdAt])
+}
