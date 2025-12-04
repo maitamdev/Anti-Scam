@@ -61,6 +61,7 @@ function LoginForm({ onLogin }: { onLogin: (secret: string) => void }) {
   const [secret, setSecret] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -108,15 +109,22 @@ function LoginForm({ onLogin }: { onLogin: (secret: string) => void }) {
           </div>
 
           <form onSubmit={handleSubmit}>
-            <div className="mb-4">
+            <div className="mb-4 relative">
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 value={secret}
                 onChange={(e) => setSecret(e.target.value)}
                 placeholder="Nhập Admin Secret..."
-                className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:border-blue-500 transition-colors"
+                className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:border-blue-500 transition-colors pr-12"
                 autoFocus
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
+              >
+                {showPassword ? '🙈' : '👁️'}
+              </button>
             </div>
 
             {error && (
