@@ -12,28 +12,41 @@ export default function Footer() {
               <span className="text-lg font-bold">ANTISCAM</span>
             </div>
             <p className="text-gray-400 text-sm">
-              Nền tảng AI phân tích và cảnh báo website lừa đảo, 
-              bảo vệ người dùng Việt Nam khỏi các chiêu trò lừa đảo trực tuyến.
+              Nền tảng AI phân tích và cảnh báo website lừa đảo, bảo vệ người
+              dùng Việt Nam khỏi các chiêu trò lừa đảo trực tuyến.
             </p>
           </div>
 
           <div>
             <h3 className="font-semibold mb-4">Liên kết</h3>
             <ul className="space-y-2 text-gray-400 text-sm">
-              <li><Link href="/" className="hover:text-white">Kiểm tra URL</Link></li>
-              <li><Link href="/report" className="hover:text-white">Báo cáo lừa đảo</Link></li>
-              <li><Link href="/guide" className="hover:text-white">Hướng dẫn</Link></li>
-              <li><Link href="/admin" className="hover:text-white">Thống kê</Link></li>
+              <li>
+                <Link href="/" className="hover:text-white">
+                  Kiểm tra URL
+                </Link>
+              </li>
+              <li>
+                <Link href="/report" className="hover:text-white">
+                  Báo cáo lừa đảo
+                </Link>
+              </li>
+              <li>
+                <Link href="/guide" className="hover:text-white">
+                  Hướng dẫn
+                </Link>
+              </li>
             </ul>
           </div>
 
           <div>
-            <h3 className="font-semibold mb-4">API</h3>
-            <ul className="space-y-2 text-gray-400 text-sm">
-              <li><code className="bg-gray-700 px-2 py-1 rounded">POST /api/scan</code></li>
-              <li><code className="bg-gray-700 px-2 py-1 rounded">POST /api/report</code></li>
-              <li><code className="bg-gray-700 px-2 py-1 rounded">GET /api/stats</code></li>
-            </ul>
+            <h3 className="font-semibold mb-4">Về chúng tôi</h3>
+            <p className="text-gray-400 text-sm">
+              ANTISCAM được phát triển với mục tiêu bảo vệ cộng đồng người dùng
+              Việt Nam khỏi các website lừa đảo và phishing.
+            </p>
+            <p className="text-gray-400 text-sm mt-2">
+              Sử dụng công nghệ AI tiên tiến để phân tích và cảnh báo.
+            </p>
           </div>
         </div>
 
@@ -42,10 +55,18 @@ export default function Footer() {
             © 2024 ANTISCAM. Kết quả chỉ mang tính tham khảo.
           </p>
           <div className="flex gap-4">
-            <a href="#" className="text-gray-400 hover:text-white">
+            <a
+              href="https://github.com/maitamdev/Anti-Scam"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-400 hover:text-white"
+            >
               <Github className="w-5 h-5" />
             </a>
-            <a href="#" className="text-gray-400 hover:text-white">
+            <a
+              href="mailto:contact@antiscam.vn"
+              className="text-gray-400 hover:text-white"
+            >
               <Mail className="w-5 h-5" />
             </a>
           </div>

@@ -9,7 +9,6 @@ const navLinks = [
   { href: '/', label: 'Trang chủ' },
   { href: '/report', label: 'Báo cáo' },
   { href: '/guide', label: 'Hướng dẫn' },
-  { href: '/admin', label: 'Thống kê' },
 ]
 
 export default function Header() {
