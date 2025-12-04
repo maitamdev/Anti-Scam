@@ -10,6 +10,26 @@ import {
 import RiskBadge from './RiskBadge'
 import { useState } from 'react'
 
+interface WebsiteInfo {
+  title: string
+  description: string
+  category: string
+  industry: string
+  subCategory: string
+  technologies: string[]
+  framework: string | null
+  cms: string | null
+  hasSSL: boolean
+  hasLoginForm: boolean
+  hasPaymentForm: boolean
+  hasContactInfo: boolean
+  hasSocialLinks: boolean
+  hasPrivacyPolicy: boolean
+  riskFactors: string[]
+  trustFactors: string[]
+  mobileOptimized: boolean
+}
+
 interface ScanResult {
   url: string
   domain: string
@@ -19,6 +39,9 @@ interface ScanResult {
   aiConfidence: number
   heuristicScore?: number
   aiScore?: number
+  websiteInfo?: WebsiteInfo | null
+  categoryGuess?: { category: string; confidence: number }
+  externalSources?: string[]
 }
 
 interface ResultCardProps {
@@ -27,7 +50,7 @@ interface ResultCardProps {
 
 export default function ResultCard({ result }: ResultCardProps) {
   const [copied, setCopied] = useState(false)
-  const [activeTab, setActiveTab] = useState<'overview' | 'details' | 'recommendations'>('overview')
+  const [activeTab, setActiveTab] = useState<'overview' | 'website' | 'details' | 'recommendations'>('overview')
 
   const getScoreColor = (score: number) => {
     if (score <= 30) return 'text-green-400'
@@ -159,9 +182,10 @@ ${result.reasons.map(r => `• ${r}`).join('\n')}
           </div>
 
           {/* Tabs */}
-          <div className="flex gap-2 mb-6 border-b border-gray-700 pb-2">
+          <div className="flex gap-2 mb-6 border-b border-gray-700 pb-2 overflow-x-auto">
             {[
               { id: 'overview', label: 'Tổng quan', icon: Activity },
+              { id: 'website', label: 'Website', icon: Globe },
               { id: 'details', label: 'Chi tiết', icon: FileWarning },
               { id: 'recommendations', label: 'Khuyến nghị', icon: Shield },
             ].map((tab) => (
@@ -251,6 +275,194 @@ ${result.reasons.map(r => `• ${r}`).join('\n')}
                   <p className="text-sm text-gray-300 truncate">{result.domain}</p>
                 </div>
               </div>
+            </motion.div>
+          )}
+
+          {activeTab === 'website' && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="space-y-4"
+            >
+              {result.websiteInfo ? (
+                <>
+                  {/* Website Title & Category */}
+                  <div className="bg-gray-800 rounded-xl p-4">
+                    <h4 className="font-medium mb-3 flex items-center gap-2">
+                      <Globe className="w-4 h-4 text-blue-400" />
+                      Thông tin Website
+                    </h4>
+                    <div className="space-y-3">
+                      {result.websiteInfo.title && (
+                        <div>
+                          <span className="text-gray-400 text-sm">Tiêu đề:</span>
+                          <p className="text-white">{result.websiteInfo.title}</p>
+                        </div>
+                      )}
+                      {result.websiteInfo.description && (
+                        <div>
+                          <span className="text-gray-400 text-sm">Mô tả:</span>
+                          <p className="text-gray-300 text-sm">{result.websiteInfo.description}</p>
+                        </div>
+                      )}
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        <span className="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-full text-sm">
+                          {result.websiteInfo.category}
+                        </span>
+                        <span className="px-3 py-1 bg-purple-500/20 text-purple-400 rounded-full text-sm">
+                          {result.websiteInfo.subCategory}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Technologies */}
+                  {result.websiteInfo.technologies.length > 0 && (
+                    <div className="bg-gray-800 rounded-xl p-4">
+                      <h4 className="font-medium mb-3 flex items-center gap-2">
+                        <Server className="w-4 h-4 text-green-400" />
+                        Công nghệ sử dụng
+                      </h4>
+                      <div className="flex flex-wrap gap-2">
+                        {result.websiteInfo.technologies.map((tech, i) => (
+                          <span key={i} className="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                      {result.websiteInfo.framework && (
+                        <p className="text-sm text-gray-400 mt-2">
+                          Framework: <span className="text-white">{result.websiteInfo.framework}</span>
+                        </p>
+                      )}
+                      {result.websiteInfo.cms && (
+                        <p className="text-sm text-gray-400">
+                          CMS: <span className="text-white">{result.websiteInfo.cms}</span>
+                        </p>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Trust & Risk Factors */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="bg-gray-800 rounded-xl p-4">
+                      <h4 className="font-medium mb-3 text-green-400 flex items-center gap-2">
+                        <CheckCircle className="w-4 h-4" />
+                        Yếu tố tin cậy
+                      </h4>
+                      <ul className="space-y-1 text-sm">
+                        {result.websiteInfo.trustFactors.length > 0 ? (
+                          result.websiteInfo.trustFactors.map((f, i) => (
+                            <li key={i} className="text-gray-300 flex items-center gap-2">
+                              <span className="text-green-400">✓</span> {f}
+                            </li>
+                          ))
+                        ) : (
+                          <li className="text-gray-500">Không có</li>
+                        )}
+                      </ul>
+                    </div>
+                    <div className="bg-gray-800 rounded-xl p-4">
+                      <h4 className="font-medium mb-3 text-red-400 flex items-center gap-2">
+                        <AlertTriangle className="w-4 h-4" />
+                        Yếu tố rủi ro
+                      </h4>
+                      <ul className="space-y-1 text-sm">
+                        {result.websiteInfo.riskFactors.length > 0 ? (
+                          result.websiteInfo.riskFactors.map((f, i) => (
+                            <li key={i} className="text-gray-300 flex items-center gap-2">
+                              <span className="text-red-400">✗</span> {f}
+                            </li>
+                          ))
+                        ) : (
+                          <li className="text-gray-500">Không có</li>
+                        )}
+                      </ul>
+                    </div>
+                  </div>
+
+                  {/* Features */}
+                  <div className="bg-gray-800 rounded-xl p-4">
+                    <h4 className="font-medium mb-3">Tính năng phát hiện</h4>
+                    <div className="grid grid-cols-2 gap-2 text-sm">
+                      <div className="flex items-center gap-2">
+                        {result.websiteInfo.hasSSL ? (
+                          <Lock className="w-4 h-4 text-green-400" />
+                        ) : (
+                          <Unlock className="w-4 h-4 text-red-400" />
+                        )}
+                        <span>SSL/HTTPS</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className={result.websiteInfo.hasLoginForm ? 'text-yellow-400' : 'text-gray-500'}>
+                          {result.websiteInfo.hasLoginForm ? '⚠️' : '○'}
+                        </span>
+                        <span>Form đăng nhập</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className={result.websiteInfo.hasPaymentForm ? 'text-yellow-400' : 'text-gray-500'}>
+                          {result.websiteInfo.hasPaymentForm ? '⚠️' : '○'}
+                        </span>
+                        <span>Form thanh toán</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className={result.websiteInfo.hasContactInfo ? 'text-green-400' : 'text-gray-500'}>
+                          {result.websiteInfo.hasContactInfo ? '✓' : '○'}
+                        </span>
+                        <span>Thông tin liên hệ</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className={result.websiteInfo.hasSocialLinks ? 'text-green-400' : 'text-gray-500'}>
+                          {result.websiteInfo.hasSocialLinks ? '✓' : '○'}
+                        </span>
+                        <span>Liên kết MXH</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className={result.websiteInfo.hasPrivacyPolicy ? 'text-green-400' : 'text-gray-500'}>
+                          {result.websiteInfo.hasPrivacyPolicy ? '✓' : '○'}
+                        </span>
+                        <span>Chính sách bảo mật</span>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <div className="bg-gray-800 rounded-xl p-8 text-center">
+                  <Globe className="w-12 h-12 text-gray-600 mx-auto mb-3" />
+                  <p className="text-gray-400">Không thể truy cập website để phân tích chi tiết</p>
+                  <p className="text-gray-500 text-sm mt-1">Website có thể đã bị chặn hoặc không hoạt động</p>
+                </div>
+              )}
+
+              {/* Category Guess */}
+              {result.categoryGuess && (
+                <div className="bg-gray-800 rounded-xl p-4">
+                  <h4 className="font-medium mb-2">Phân loại từ domain</h4>
+                  <div className="flex items-center gap-3">
+                    <span className="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-full">
+                      {result.categoryGuess.category}
+                    </span>
+                    <span className="text-gray-400 text-sm">
+                      Độ tin cậy: {Math.round(result.categoryGuess.confidence * 100)}%
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {/* External Sources */}
+              {result.externalSources && result.externalSources.length > 0 && (
+                <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4">
+                  <h4 className="font-medium mb-2 text-red-400 flex items-center gap-2">
+                    <AlertTriangle className="w-4 h-4" />
+                    Cảnh báo từ nguồn bên ngoài
+                  </h4>
+                  <ul className="space-y-1">
+                    {result.externalSources.map((source, i) => (
+                      <li key={i} className="text-gray-300 text-sm">• {source}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </motion.div>
           )}
 

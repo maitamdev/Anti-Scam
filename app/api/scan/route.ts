@@ -2,7 +2,17 @@ import { NextRequest, NextResponse } from 'next/server'
 import { analyzeUrl } from '@/app/lib/analyze'
 import prisma from '@/app/lib/db'
 import { getToday } from '@/app/lib/utils'
-import { getClientIP, checkRateLimit, validateUrl, getSecurityHeaders } from '@/app/lib/security'
+import {
+  getClientIP,
+  checkRateLimit,
+  validateUrl,
+  getSecurityHeaders,
+} from '@/app/lib/security'
+import {
+  analyzeWebsite,
+  detectCategoryFromDomain,
+} from '@/app/lib/websiteAnalyzer'
+import { checkExternalSources } from '@/app/lib/externalSources'
 
 export async function POST(request: NextRequest) {
   const headers = getSecurityHeaders()
@@ -35,6 +45,19 @@ export async function POST(request: NextRequest) {
 
     // Analyze URL
     const result = await analyzeUrl(url)
+
+    // Get detailed website info
+    const [websiteInfo, externalCheck, categoryGuess] = await Promise.all([
+      analyzeWebsite(url).catch(() => null),
+      checkExternalSources(result.domain),
+      Promise.resolve(detectCategoryFromDomain(result.domain)),
+    ])
+
+    // Add external source warnings
+    if (externalCheck.isKnownScam) {
+      result.reasons.unshift(...externalCheck.sources.map((s) => `🚫 ${s}`))
+      result.score = Math.max(result.score, 80)
+    }
 
     // Save to database (non-blocking)
     const userAgent = request.headers.get('user-agent') || 'unknown'
@@ -71,19 +94,46 @@ export async function POST(request: NextRequest) {
       },
     }).catch((err: Error) => console.error('[DB] Update stats error:', err.message))
 
-    return NextResponse.json({
-      success: true,
-      data: {
-        url: result.url,
-        domain: result.domain,
-        score: result.score,
-        label: result.label,
-        reasons: result.reasons,
-        aiConfidence: result.aiConfidence,
-        heuristicScore: result.heuristicScore,
-        aiScore: result.aiScore,
+    return NextResponse.json(
+      {
+        success: true,
+        data: {
+          url: result.url,
+          domain: result.domain,
+          score: result.score,
+          label: result.label,
+          reasons: result.reasons,
+          aiConfidence: result.aiConfidence,
+          heuristicScore: result.heuristicScore,
+          aiScore: result.aiScore,
+          // Website details
+          websiteInfo: websiteInfo
+            ? {
+                title: websiteInfo.title,
+                description: websiteInfo.description,
+                category: websiteInfo.category,
+                industry: websiteInfo.industry,
+                subCategory: websiteInfo.subCategory,
+                technologies: websiteInfo.technologies,
+                framework: websiteInfo.framework,
+                cms: websiteInfo.cms,
+                hasSSL: websiteInfo.hasSSL,
+                hasLoginForm: websiteInfo.hasLoginForm,
+                hasPaymentForm: websiteInfo.hasPaymentForm,
+                hasContactInfo: websiteInfo.hasContactInfo,
+                hasSocialLinks: websiteInfo.hasSocialLinks,
+                hasPrivacyPolicy: websiteInfo.hasPrivacyPolicy,
+                riskFactors: websiteInfo.riskFactors,
+                trustFactors: websiteInfo.trustFactors,
+                mobileOptimized: websiteInfo.mobileOptimized,
+              }
+            : null,
+          categoryGuess: categoryGuess,
+          externalSources: externalCheck.sources,
+        },
       },
-    }, { headers: { ...headers, 'X-RateLimit-Remaining': String(rateLimit.remaining) } })
+      { headers: { ...headers, 'X-RateLimit-Remaining': String(rateLimit.remaining) } }
+    )
 
   } catch (error) {
     console.error('[API] Scan error:', error)
