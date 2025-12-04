@@ -2,7 +2,16 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { BarChart3, Shield, AlertTriangle, Users, Brain, RefreshCw } from 'lucide-react'
+import {
+  BarChart3,
+  Shield,
+  AlertTriangle,
+  Users,
+  Brain,
+  RefreshCw,
+  Lock,
+  LogOut,
+} from 'lucide-react'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import ChartPanel from '../components/ChartPanel'
@@ -47,10 +56,139 @@ interface ModelInfo {
   backend: string
 }
 
+// Login Form Component
+function LoginForm({ onLogin }: { onLogin: (secret: string) => void }) {
+  const [secret, setSecret] = useState('')
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
+    setError('')
+
+    try {
+      const res = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ secret }),
+      })
+
+      const data = await res.json()
+
+      if (data.success) {
+        // Save to session storage (not localStorage for security)
+        sessionStorage.setItem('admin_auth', secret)
+        onLogin(secret)
+      } else {
+        setError('Mật khẩu không đúng')
+      }
+    } catch {
+      setError('Lỗi kết nối')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      <Header />
+      <main className="flex-1 pt-20 flex items-center justify-center px-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-gray-800 rounded-xl p-8 border border-gray-700 w-full max-w-md"
+        >
+          <div className="text-center mb-6">
+            <div className="w-16 h-16 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Lock className="w-8 h-8 text-blue-500" />
+            </div>
+            <h1 className="text-2xl font-bold">Admin Dashboard</h1>
+            <p className="text-gray-400 mt-1">Nhập mật khẩu để truy cập</p>
+          </div>
+
+          <form onSubmit={handleSubmit}>
+            <div className="mb-4">
+              <input
+                type="password"
+                value={secret}
+                onChange={(e) => setSecret(e.target.value)}
+                placeholder="Nhập Admin Secret..."
+                className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:border-blue-500 transition-colors"
+                autoFocus
+              />
+            </div>
+
+            {error && (
+              <p className="text-red-400 text-sm mb-4 text-center">{error}</p>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading || !secret}
+              className="w-full py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+            >
+              {loading ? (
+                <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-white"></div>
+              ) : (
+                <>
+                  <Lock className="w-4 h-4" />
+                  Đăng nhập
+                </>
+              )}
+            </button>
+          </form>
+        </motion.div>
+      </main>
+      <Footer />
+    </div>
+  )
+}
+
+// Main Admin Dashboard
 export default function AdminPage() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [adminSecret, setAdminSecret] = useState('')
   const [stats, setStats] = useState<StatsData | null>(null)
   const [modelInfo, setModelInfo] = useState<ModelInfo | null>(null)
   const [loading, setLoading] = useState(true)
+  const [checkingAuth, setCheckingAuth] = useState(true)
+
+  // Check existing auth on mount
+  useEffect(() => {
+    const savedAuth = sessionStorage.getItem('admin_auth')
+    if (savedAuth) {
+      // Verify saved auth
+      fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ secret: savedAuth }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success) {
+            setAdminSecret(savedAuth)
+            setIsAuthenticated(true)
+          } else {
+            sessionStorage.removeItem('admin_auth')
+          }
+        })
+        .finally(() => setCheckingAuth(false))
+    } else {
+      setCheckingAuth(false)
+    }
+  }, [])
+
+  const handleLogin = (secret: string) => {
+    setAdminSecret(secret)
+    setIsAuthenticated(true)
+  }
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('admin_auth')
+    setIsAuthenticated(false)
+    setAdminSecret('')
+  }
 
   const fetchData = async () => {
     setLoading(true)
@@ -73,9 +211,30 @@ export default function AdminPage() {
   }
 
   useEffect(() => {
-    fetchData()
-  }, [])
+    if (isAuthenticated) {
+      fetchData()
+    }
+  }, [isAuthenticated])
 
+  // Show loading while checking auth
+  if (checkingAuth) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        <main className="flex-1 pt-20 flex items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        </main>
+        <Footer />
+      </div>
+    )
+  }
+
+  // Show login form if not authenticated
+  if (!isAuthenticated) {
+    return <LoginForm onLogin={handleLogin} />
+  }
+
+  // Show loading while fetching data
   if (loading) {
     return (
       <div className="min-h-screen flex flex-col">
@@ -91,7 +250,7 @@ export default function AdminPage() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      
+
       <main className="flex-1 pt-20">
         <section className="py-8 px-4">
           <div className="max-w-7xl mx-auto">
@@ -101,15 +260,26 @@ export default function AdminPage() {
                   <BarChart3 className="w-8 h-8 text-blue-500" />
                   Dashboard
                 </h1>
-                <p className="text-gray-400 mt-1">Thống kê và quản lý hệ thống ANTISCAM</p>
+                <p className="text-gray-400 mt-1">
+                  Thống kê và quản lý hệ thống ANTISCAM
+                </p>
               </div>
-              <button
-                onClick={fetchData}
-                className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg flex items-center gap-2 transition-colors"
-              >
-                <RefreshCw className="w-4 h-4" />
-                Làm mới
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={fetchData}
+                  className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg flex items-center gap-2 transition-colors"
+                >
+                  <RefreshCw className="w-4 h-4" />
+                  Làm mới
+                </button>
+                <button
+                  onClick={handleLogout}
+                  className="px-4 py-2 bg-red-600/20 hover:bg-red-600/30 text-red-400 rounded-lg flex items-center gap-2 transition-colors"
+                >
+                  <LogOut className="w-4 h-4" />
+                  Đăng xuất
+                </button>
+              </div>
             </div>
 
             {/* Stats Cards */}
@@ -122,7 +292,9 @@ export default function AdminPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-gray-400 text-sm">Tổng lượt kiểm tra</p>
-                    <p className="text-2xl font-bold">{stats?.totalScans.toLocaleString() || 0}</p>
+                    <p className="text-2xl font-bold">
+                      {stats?.totalScans.toLocaleString() || 0}
+                    </p>
                   </div>
                   <Shield className="w-10 h-10 text-blue-500 opacity-50" />
                 </div>
@@ -137,7 +309,9 @@ export default function AdminPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-gray-400 text-sm">An toàn</p>
-                    <p className="text-2xl font-bold text-green-400">{stats?.safeCount.toLocaleString() || 0}</p>
+                    <p className="text-2xl font-bold text-green-400">
+                      {stats?.safeCount.toLocaleString() || 0}
+                    </p>
                   </div>
                   <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center">
                     <span className="text-xl">🟢</span>
@@ -154,7 +328,9 @@ export default function AdminPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-gray-400 text-sm">Nguy hiểm</p>
-                    <p className="text-2xl font-bold text-red-400">{stats?.dangerousCount.toLocaleString() || 0}</p>
+                    <p className="text-2xl font-bold text-red-400">
+                      {stats?.dangerousCount.toLocaleString() || 0}
+                    </p>
                   </div>
                   <AlertTriangle className="w-10 h-10 text-red-500 opacity-50" />
                 </div>
@@ -169,7 +345,9 @@ export default function AdminPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-gray-400 text-sm">Báo cáo</p>
-                    <p className="text-2xl font-bold">{stats?.reportsCount.toLocaleString() || 0}</p>
+                    <p className="text-2xl font-bold">
+                      {stats?.reportsCount.toLocaleString() || 0}
+                    </p>
                   </div>
                   <Users className="w-10 h-10 text-purple-500 opacity-50" />
                 </div>
@@ -195,37 +373,44 @@ export default function AdminPage() {
                   </div>
                   <div>
                     <p className="text-gray-400 text-sm">Mẫu đã học</p>
-                    <p className="font-semibold">{modelInfo.samples.toLocaleString()}</p>
+                    <p className="font-semibold">
+                      {modelInfo.samples.toLocaleString()}
+                    </p>
                   </div>
                   <div>
                     <p className="text-gray-400 text-sm">Accuracy</p>
-                    <p className="font-semibold text-green-400">{(modelInfo.accuracy * 100).toFixed(1)}%</p>
+                    <p className="font-semibold text-green-400">
+                      {(modelInfo.accuracy * 100).toFixed(1)}%
+                    </p>
                   </div>
                   <div>
                     <p className="text-gray-400 text-sm">Precision</p>
-                    <p className="font-semibold">{(modelInfo.precision * 100).toFixed(1)}%</p>
+                    <p className="font-semibold">
+                      {modelInfo.precision
+                        ? (modelInfo.precision * 100).toFixed(1)
+                        : 'N/A'}
+                      %
+                    </p>
                   </div>
                   <div>
                     <p className="text-gray-400 text-sm">Recall</p>
-                    <p className="font-semibold">{(modelInfo.recall * 100).toFixed(1)}%</p>
+                    <p className="font-semibold">
+                      {modelInfo.recall
+                        ? (modelInfo.recall * 100).toFixed(1)
+                        : 'N/A'}
+                      %
+                    </p>
                   </div>
                   <div>
                     <p className="text-gray-400 text-sm">Backend</p>
                     <p className="font-semibold capitalize">{modelInfo.backend}</p>
                   </div>
                 </div>
-                {modelInfo.pendingTrainingData > 0 && (
-                  <p className="text-yellow-400 text-sm mt-4">
-                    ⚠️ Có {modelInfo.pendingTrainingData} mẫu dữ liệu mới chờ huấn luyện
-                  </p>
-                )}
               </motion.div>
             )}
 
             {/* Charts */}
-            {stats && (
-              <ChartPanel data={stats} />
-            )}
+            {stats && <ChartPanel data={stats} />}
 
             {/* Recent Scans */}
             {stats?.recentScans && stats.recentScans.length > 0 && (
@@ -248,13 +433,21 @@ export default function AdminPage() {
                     </thead>
                     <tbody>
                       {stats.recentScans.map((scan) => (
-                        <tr key={scan.id} className="border-b border-gray-700/50">
+                        <tr
+                          key={scan.id}
+                          className="border-b border-gray-700/50"
+                        >
                           <td className="py-3 text-sm">{scan.domain}</td>
                           <td className="py-3">
-                            <span className={`font-medium ${
-                              scan.score <= 30 ? 'text-green-400' :
-                              scan.score <= 60 ? 'text-yellow-400' : 'text-red-400'
-                            }`}>
+                            <span
+                              className={`font-medium ${
+                                scan.score <= 30
+                                  ? 'text-green-400'
+                                  : scan.score <= 60
+                                    ? 'text-yellow-400'
+                                    : 'text-red-400'
+                              }`}
+                            >
                               {scan.score}
                             </span>
                           </td>
