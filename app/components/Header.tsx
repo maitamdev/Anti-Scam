@@ -26,12 +26,12 @@ export default function Header() {
           <Link href="/" className="flex items-center gap-2">
             <Image 
               src="/logo.png" 
-              alt="ANTISCAM Logo" 
+              alt="ANTI-SCAM Logo" 
               width={40} 
               height={40}
               className="rounded-lg"
             />
-            <span className="text-xl font-bold text-white">ANTISCAM</span>
+            <span className="text-xl font-bold text-white">ANTI-SCAM</span>
           </Link>
 
           {/* Desktop nav */}

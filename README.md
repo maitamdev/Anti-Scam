@@ -1,4 +1,4 @@
-# 🛡️ ANTISCAM
+# 🛡️ ANTI-SCAM
 
 Nền tảng AI phân tích và cảnh báo website lừa đảo, bảo vệ người dùng Việt Nam khỏi các chiêu trò lừa đảo trực tuyến.
 
@@ -23,7 +23,7 @@ Nền tảng AI phân tích và cảnh báo website lừa đảo, bảo vệ ng�
 
 ```bash
 git clone <repo-url>
-cd antiscam
+cd anti-scam
 npm install
 ```
 
@@ -37,7 +37,7 @@ Chỉnh sửa file `.env`:
 
 ```env
 # Database (bắt buộc)
-DATABASE_URL="postgresql://user:password@localhost:5432/antiscam"
+DATABASE_URL="postgresql://user:password@localhost:5432/anti-scam"
 
 # HuggingFace API (miễn phí)
 HUGGINGFACE_API_KEY="hf_xxxxx"
@@ -73,7 +73,7 @@ Truy cập http://localhost:3000
 ## 📁 Cấu trúc Project
 
 ```
-antiscam/
+anti-scam/
 ├── app/
 │   ├── api/
 │   │   ├── scan/route.ts      # API kiểm tra URL

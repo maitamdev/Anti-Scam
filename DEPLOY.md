@@ -12,7 +12,7 @@ git commit -m "Initial commit"
 ### 1.2 Push lên GitHub
 ```bash
 # Tạo repo mới trên GitHub, sau đó:
-git remote add origin https://github.com/YOUR_USERNAME/antiscam.git
+git remote add origin https://github.com/YOUR_USERNAME/anti-scam.git
 git branch -M main
 git push -u origin main
 ```
@@ -23,7 +23,7 @@ git push -u origin main
 1. Vào [vercel.com](https://vercel.com) và đăng nhập
 2. Click "Add New" → "Project"
 3. Import repository từ GitHub
-4. Chọn repo `antiscam`
+4. Chọn repo `anti-scam`
 
 ### 2.2 Cấu hình Environment Variables
 Trong Vercel Dashboard → Settings → Environment Variables, thêm:

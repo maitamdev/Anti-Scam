@@ -1,6 +1,6 @@
 {
-  "name": "ANTISCAM",
-  "short_name": "ANTISCAM",
+  "name": "ANTI-SCAM",
+  "short_name": "ANTI-SCAM",
   "description": "Kiểm tra & Cảnh báo Website Lừa đảo bằng AI",
   "start_url": "/",
   "display": "standalone",

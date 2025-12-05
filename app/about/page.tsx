@@ -50,10 +50,10 @@ export default function AboutPage() {
               animate={{ opacity: 1, y: 0 }}
             >
               <div className="flex justify-center mb-6">
-                <Image src="/logo.png" alt="ANTISCAM" width={80} height={80} className="rounded-2xl" />
+                <Image src="/logo.png" alt="ANTI-SCAM" width={80} height={80} className="rounded-2xl" />
               </div>
               <h1 className="text-4xl md:text-5xl font-bold mb-6">
-                Về <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">ANTISCAM</span>
+                Về <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">ANTI-SCAM</span>
               </h1>
               <p className="text-xl text-gray-400 max-w-2xl mx-auto">
                 Công cụ miễn phí giúp người dùng Việt Nam kiểm tra và nhận biết 
@@ -84,7 +84,7 @@ export default function AboutPage() {
                   giả mạo ngân hàng, nhờ chuyển tiền, trúng thưởng giả, tuyển dụng lừa đảo...
                 </p>
                 <p className="text-gray-400">
-                  ANTISCAM ra đời với mục tiêu cung cấp công cụ đơn giản, miễn phí để mọi người 
+                  ANTI-SCAM ra đời với mục tiêu cung cấp công cụ đơn giản, miễn phí để mọi người 
                   có thể kiểm tra nhanh các link và tin nhắn đáng ngờ trước khi click.
                 </p>
               </motion.div>

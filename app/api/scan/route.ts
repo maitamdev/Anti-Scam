@@ -146,5 +146,5 @@ export async function POST(request: NextRequest) {
 
 // Health check
 export async function GET() {
-  return NextResponse.json({ status: 'ok', service: 'antiscam-api' })
+  return NextResponse.json({ status: 'ok', service: 'anti-scam-api' })
 }

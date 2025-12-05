@@ -8,10 +8,10 @@ const beVietnam = Be_Vietnam_Pro({
 })
 
 export const metadata: Metadata = {
-  title: 'ANTISCAM - Kiểm tra & Cảnh báo Lừa đảo Mạng',
+  title: 'ANTI-SCAM - Kiểm tra & Cảnh báo Lừa đảo Mạng',
   description: 'Nền tảng AI phân tích và cảnh báo website lừa đảo, bảo vệ người dùng Việt Nam khỏi các chiêu trò lừa đảo trực tuyến.',
   keywords: ['chống lừa đảo', 'kiểm tra link', 'phishing', 'scam', 'an toàn mạng', 'bảo mật'],
-  authors: [{ name: 'ANTISCAM Team' }],
+  authors: [{ name: 'ANTI-SCAM Team' }],
   manifest: '/manifest.json',
   icons: {
     icon: '/logo.png',

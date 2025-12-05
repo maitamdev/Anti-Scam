@@ -64,7 +64,7 @@ export default function DashboardPage() {
                 Thống kê
               </h1>
               <p className="text-gray-400 mt-1">
-                Tổng quan hoạt động của hệ thống ANTISCAM
+                Tổng quan hoạt động của hệ thống ANTI-SCAM
               </p>
             </div>
             <button

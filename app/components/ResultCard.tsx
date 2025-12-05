@@ -119,7 +119,7 @@ export default function ResultCard({ result }: ResultCardProps) {
   }
 
   const copyToClipboard = () => {
-    const text = `🔍 Kết quả kiểm tra ANTISCAM
+    const text = `🔍 Kết quả kiểm tra ANTI-SCAM
 ━━━━━━━━━━━━━━━━━━━━━━━━
 🌐 URL: ${result.url}
 📊 Đánh giá: ${result.label === 'SAFE' ? '🟢 AN TOÀN' : result.label === 'CAUTION' ? '🟡 CẦN THẬN TRỌNG' : '🔴 NGUY HIỂM'}
@@ -130,7 +130,7 @@ export default function ResultCard({ result }: ResultCardProps) {
 ${result.reasons.map(r => `• ${r}`).join('\n')}
 ━━━━━━━━━━━━━━━━━━━━━━━━
 ⚠️ Lưu ý: Kết quả chỉ mang tính tham khảo
-🔗 Kiểm tra tại: antiscam.vn`
+🔗 Kiểm tra tại: anti-scam.vn`
     
     navigator.clipboard.writeText(text)
     setCopied(true)

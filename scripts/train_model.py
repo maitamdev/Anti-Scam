@@ -1,5 +1,5 @@
 """
-ANTISCAM - Model Training Script
+ANTI-SCAM - Model Training Script
 Fine-tune a BERT model for phishing/scam detection
 
 Requirements:
@@ -255,7 +255,7 @@ def predict(text: str, model_path: str = 'models/latest'):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Train ANTISCAM model')
+    parser = argparse.ArgumentParser(description='Train ANTI-SCAM model')
     parser.add_argument('--data', type=str, help='Path to training data CSV')
     parser.add_argument('--output', type=str, default='models', help='Output directory')
     parser.add_argument('--model', type=str, default='bert-base-multilingual-cased', 

@@ -12,8 +12,8 @@ export default function Footer() {
           {/* Logo & Description */}
           <div className="md:col-span-2">
             <Link href="/" className="flex items-center gap-2 mb-4">
-              <Image src="/logo.png" alt="ANTISCAM" width={32} height={32} className="rounded-lg" />
-              <span className="text-lg font-bold text-white">ANTISCAM</span>
+              <Image src="/logo.png" alt="ANTI-SCAM" width={32} height={32} className="rounded-lg" />
+              <span className="text-lg font-bold text-white">ANTI-SCAM</span>
             </Link>
             <p className="text-gray-400 text-sm mb-4 max-w-md">
               Công cụ miễn phí giúp kiểm tra website và tin nhắn đáng ngờ. 
@@ -24,7 +24,7 @@ export default function Footer() {
                 className="text-gray-400 hover:text-white transition-colors">
                 <Github className="w-5 h-5" />
               </a>
-              <a href="mailto:contact@antiscam.vn" 
+              <a href="mailto:contact@anti-scam.vn" 
                 className="text-gray-400 hover:text-white transition-colors">
                 <Mail className="w-5 h-5" />
               </a>
@@ -56,7 +56,7 @@ export default function Footer() {
         {/* Bottom */}
         <div className="pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-gray-500 text-sm">
-            © {currentYear} ANTISCAM. Được phát triển với <Heart className="w-4 h-4 inline text-red-500" /> tại Việt Nam.
+            © {currentYear} ANTI-SCAM. Được phát triển với <Heart className="w-4 h-4 inline text-red-500" /> tại Việt Nam.
           </p>
           <p className="text-gray-500 text-sm">
             Công cụ mang tính chất tham khảo, không thay thế cho việc cảnh giác cá nhân.
