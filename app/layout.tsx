@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     siteName: 'ANTI-SCAM',
     images: [
       {
-        url: '/api/og',
+        url: '/hero-shield.jpg',
         width: 1200,
         height: 630,
         alt: 'ANTI-SCAM - Nền tảng chống lừa đảo online',
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'ANTI-SCAM - Bảo Vệ Bạn Khỏi Lừa Đảo Online',
     description: '🛡️ Kiểm tra link • 🤖 AI phân tích • 📚 Quiz nhận biết lừa đảo',
-    images: ['/api/og'],
+    images: ['/hero-shield.jpg'],
   },
   robots: {
     index: true,
