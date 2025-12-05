@@ -1048,8 +1048,16 @@ const questionTemplates: QuestionTemplate[] = [
 // GENERATOR FUNCTIONS
 // ============================================
 
+// Import static questions from extra files
+import { ALL_EXTRA_QUESTIONS } from './quizExtraData'
+import { ALL_STATIC_QUESTIONS } from './quizStaticData'
+
+// Combine all static questions
+const ALL_STATIC_COMBINED = [...ALL_EXTRA_QUESTIONS, ...ALL_STATIC_QUESTIONS]
+
 let questionCounter = 0
 
+// Generate a single question from templates
 export function generateQuestion(): QuizQuestion {
   const template = random(questionTemplates)
   const question = template.generate()
@@ -1061,46 +1069,129 @@ export function generateQuestion(): QuizQuestion {
   } as QuizQuestion
 }
 
+// Get a random static question
+function getRandomStaticQuestion(): QuizQuestion {
+  const staticQ = random(ALL_STATIC_COMBINED)
+  questionCounter++
+  return {
+    id: `q_static_${Date.now()}_${questionCounter}`,
+    ...staticQ,
+  } as QuizQuestion
+}
+
+// Generate questions - mix of templates (60%) and static (40%)
 export function generateQuestions(count: number): QuizQuestion[] {
   const questions: QuizQuestion[] = []
-  for (let i = 0; i < count; i++) {
+  const templateCount = Math.ceil(count * 0.6)
+  const staticCount = count - templateCount
+  
+  // Add template-generated questions
+  for (let i = 0; i < templateCount; i++) {
     questions.push(generateQuestion())
   }
-  return questions
-}
-
-export function generateQuestionsByCategory(category: string, count: number): QuizQuestion[] {
-  const categoryTemplates = questionTemplates.filter(t => t.category === category)
-  if (categoryTemplates.length === 0) return generateQuestions(count)
   
-  const questions: QuizQuestion[] = []
-  for (let i = 0; i < count; i++) {
-    const template = random(categoryTemplates)
-    const question = template.generate()
+  // Add static questions
+  const shuffledStatic = [...ALL_STATIC_COMBINED].sort(() => Math.random() - 0.5)
+  for (let i = 0; i < Math.min(staticCount, shuffledStatic.length); i++) {
     questionCounter++
     questions.push({
-      id: `q_${Date.now()}_${questionCounter}`,
-      ...question,
+      id: `q_static_${Date.now()}_${questionCounter}`,
+      ...shuffledStatic[i],
     } as QuizQuestion)
   }
-  return questions
+  
+  // Shuffle all questions
+  return questions.sort(() => Math.random() - 0.5)
 }
 
+// Generate questions by category - mix templates and static
+export function generateQuestionsByCategory(category: string, count: number): QuizQuestion[] {
+  const categoryKey = Object.keys(QUIZ_CATEGORIES).find(
+    k => QUIZ_CATEGORIES[k as keyof typeof QUIZ_CATEGORIES] === category || k === category
+  ) || category
+  
+  const categoryTemplates = questionTemplates.filter(t => t.category === categoryKey)
+  const categoryStatic = ALL_STATIC_COMBINED.filter(q => 
+    q.category === category || q.category === QUIZ_CATEGORIES[categoryKey as keyof typeof QUIZ_CATEGORIES]
+  )
+  
+  const questions: QuizQuestion[] = []
+  const templateCount = Math.ceil(count * 0.6)
+  const staticCount = count - templateCount
+  
+  // Add from templates
+  for (let i = 0; i < templateCount; i++) {
+    if (categoryTemplates.length > 0) {
+      const template = random(categoryTemplates)
+      const question = template.generate()
+      questionCounter++
+      questions.push({
+        id: `q_${Date.now()}_${questionCounter}`,
+        ...question,
+      } as QuizQuestion)
+    } else {
+      questions.push(generateQuestion())
+    }
+  }
+  
+  // Add from static
+  const shuffledStatic = [...categoryStatic].sort(() => Math.random() - 0.5)
+  for (let i = 0; i < Math.min(staticCount, shuffledStatic.length); i++) {
+    questionCounter++
+    questions.push({
+      id: `q_static_${Date.now()}_${questionCounter}`,
+      ...shuffledStatic[i],
+    } as QuizQuestion)
+  }
+  
+  // Fill remaining with templates if not enough static
+  while (questions.length < count) {
+    questions.push(generateQuestion())
+  }
+  
+  return questions.sort(() => Math.random() - 0.5)
+}
+
+// Generate questions by difficulty - mix templates and static
 export function generateQuestionsByDifficulty(difficulty: 'easy' | 'medium' | 'hard', count: number): QuizQuestion[] {
   const difficultyTemplates = questionTemplates.filter(t => t.difficulty === difficulty)
-  if (difficultyTemplates.length === 0) return generateQuestions(count)
+  const difficultyStatic = ALL_STATIC_COMBINED.filter(q => q.difficulty === difficulty)
   
   const questions: QuizQuestion[] = []
-  for (let i = 0; i < count; i++) {
-    const template = random(difficultyTemplates)
-    const question = template.generate()
+  const templateCount = Math.ceil(count * 0.6)
+  const staticCount = count - templateCount
+  
+  // Add from templates
+  for (let i = 0; i < templateCount; i++) {
+    if (difficultyTemplates.length > 0) {
+      const template = random(difficultyTemplates)
+      const question = template.generate()
+      questionCounter++
+      questions.push({
+        id: `q_${Date.now()}_${questionCounter}`,
+        ...question,
+      } as QuizQuestion)
+    } else {
+      questions.push(generateQuestion())
+    }
+  }
+  
+  // Add from static
+  const shuffledStatic = [...difficultyStatic].sort(() => Math.random() - 0.5)
+  for (let i = 0; i < Math.min(staticCount, shuffledStatic.length); i++) {
     questionCounter++
     questions.push({
-      id: `q_${Date.now()}_${questionCounter}`,
-      ...question,
+      id: `q_static_${Date.now()}_${questionCounter}`,
+      ...shuffledStatic[i],
     } as QuizQuestion)
   }
-  return questions
+  
+  // Fill remaining with templates if not enough static
+  while (questions.length < count) {
+    questions.push(generateQuestion())
+  }
+  
+  return questions.sort(() => Math.random() - 0.5)
 }
 
 // Get all available categories
@@ -1113,21 +1204,8 @@ export function getCategoryName(key: string): string {
   return QUIZ_CATEGORIES[key as keyof typeof QUIZ_CATEGORIES] || key
 }
 
-// Generate mixed questions (from templates only - sync version)
-export function generateMixedQuestions(count: number): QuizQuestion[] {
-  const questions: QuizQuestion[] = []
-  
-  // Generate all from templates
-  for (let i = 0; i < count; i++) {
-    questions.push(generateQuestion())
-  }
-  
-  // Shuffle all questions
-  return questions.sort(() => Math.random() - 0.5)
-}
-
 // Get total available questions count
 export function getTotalQuestionsCount(): number {
-  return questionTemplates.length * 10 // Estimate: each template can generate ~10 variations
+  return questionTemplates.length * 10 + ALL_STATIC_COMBINED.length
 }
 
