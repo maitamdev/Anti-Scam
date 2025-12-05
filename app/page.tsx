@@ -1,22 +1,14 @@
 'use client'
 
-import { useState } from 'react'
 import { motion } from 'framer-motion'
-import Image from 'next/image'
-import Link from 'next/link'
 import { 
   Shield, 
   Search, 
   Brain,
   Eye,
   Lock,
-  Fingerprint,
-  ChevronRight,
   Play,
   CheckCircle,
-  Zap,
-  Users,
-  Award,
   ArrowRight
 } from 'lucide-react'
 import Header from './components/Header'
@@ -25,29 +17,29 @@ import { useRouter } from 'next/navigation'
 
 const features = [
   {
-    icon: Eye,
-    title: 'Phát hiện Mối đe dọa',
-    description: 'Phân tích URL và hình ảnh theo thời gian thực với công nghệ AI tiên tiến, phát hiện lừa đảo ngay lập tức.',
+    icon: Search,
+    title: 'Kiểm tra URL',
+    description: 'Dán link website đáng ngờ để kiểm tra các dấu hiệu phishing, giả mạo ngân hàng, TMĐT.',
     color: 'from-blue-500 to-cyan-500'
   },
   {
-    icon: Lock,
-    title: 'Bảo vệ Danh tính',
-    description: 'Nhận diện các chiêu trò đánh cắp thông tin cá nhân, OTP, mật khẩu và tài khoản ngân hàng.',
+    icon: Eye,
+    title: 'Phân tích Hình ảnh',
+    description: 'Upload ảnh chụp tin nhắn Zalo, SMS, email để AI nhận diện các chiêu trò lừa đảo.',
     color: 'from-purple-500 to-pink-500'
   },
   {
-    icon: Fingerprint,
-    title: 'Duyệt web An toàn',
-    description: 'Kiểm tra website trước khi truy cập, bảo vệ bạn khỏi phishing và malware.',
+    icon: Brain,
+    title: 'Quiz Trắc nghiệm',
+    description: '5000+ câu hỏi giúp bạn nhận biết các hình thức lừa đảo phổ biến tại Việt Nam.',
     color: 'from-green-500 to-emerald-500'
   }
 ]
 
 const stats = [
-  { value: '10K+', label: 'Lượt kiểm tra' },
   { value: '5000+', label: 'Câu hỏi Quiz' },
-  { value: '99%', label: 'Độ chính xác' },
+  { value: '15+', label: 'Loại lừa đảo' },
+  { value: '100%', label: 'Miễn phí' },
   { value: '24/7', label: 'Hoạt động' },
 ]
 
@@ -95,20 +87,21 @@ export default function Home() {
                 transition={{ duration: 0.6 }}
               >
                 <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-full mb-6">
-                  <Zap className="w-4 h-4 text-blue-400" />
-                  <span className="text-sm text-blue-400">Nền tảng AI chống lừa đảo #1 Việt Nam</span>
+                  <Shield className="w-4 h-4 text-blue-400" />
+                  <span className="text-sm text-blue-400">Công cụ hỗ trợ nhận biết lừa đảo online</span>
                 </div>
                 
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
-                  Bảo vệ Thế giới Số của bạn với{' '}
+                  Kiểm tra{' '}
                   <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent">
-                    AI Bảo mật Tiên tiến
+                    Website & Tin nhắn
                   </span>
+                  {' '}đáng ngờ
                 </h1>
                 
                 <p className="text-lg text-gray-400 mb-8 leading-relaxed max-w-xl">
-                  Trang bị cho bạn khả năng phát hiện mối đe dọa theo thời gian thực 
-                  và công nghệ chống lừa đảo chủ động. Bảo vệ mạng lưới, bảo vệ danh tính của bạn.
+                  Dán link hoặc upload ảnh tin nhắn để kiểm tra dấu hiệu lừa đảo. 
+                  Công cụ miễn phí giúp bạn cẩn thận hơn trước khi click vào link lạ.
                 </p>
                 
                 <div className="flex flex-wrap gap-4">
@@ -211,10 +204,10 @@ export default function Home() {
               className="text-center mb-16"
             >
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                Tính năng & Khả năng
+                Các tính năng chính
               </h2>
               <p className="text-gray-400 max-w-2xl mx-auto">
-                Bảo vệ toàn diện với công nghệ AI tiên tiến nhất
+                Những công cụ giúp bạn cẩn thận hơn trên không gian mạng
               </p>
             </motion.div>
 
@@ -256,10 +249,10 @@ export default function Home() {
               className="text-center mb-16"
             >
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                Cách hoạt động
+                Cách sử dụng
               </h2>
               <p className="text-gray-400 max-w-2xl mx-auto">
-                Chỉ 3 bước đơn giản để bảo vệ bạn khỏi lừa đảo
+                Chỉ 3 bước đơn giản để kiểm tra
               </p>
             </motion.div>
 
@@ -302,20 +295,20 @@ export default function Home() {
                 viewport={{ once: true }}
               >
                 <h2 className="text-3xl md:text-4xl font-bold mb-6">
-                  Trao quyền cho Cá nhân & Tổ chức
+                  Tại sao nên sử dụng?
                 </h2>
                 <p className="text-gray-400 mb-8">
-                  Bảo vệ cuộc sống số của bạn với công nghệ phát hiện mối đe dọa theo thời gian thực 
-                  và công nghệ chống lừa đảo chủ động.
+                  Công cụ đơn giản giúp bạn kiểm tra nhanh các link và tin nhắn đáng ngờ 
+                  trước khi click hoặc cung cấp thông tin cá nhân.
                 </p>
                 
                 <div className="space-y-4">
                   {[
-                    'Phân tích URL & website trong vài giây',
-                    'Nhận diện tin nhắn lừa đảo bằng AI Vision',
-                    'Quiz 5000+ câu hỏi nâng cao nhận thức',
-                    'Cẩm nang hướng dẫn chi tiết',
-                    'Báo cáo & cảnh báo cộng đồng',
+                    'Kiểm tra URL website trong vài giây',
+                    'Upload ảnh tin nhắn để phân tích',
+                    'Quiz 5000+ câu hỏi về lừa đảo',
+                    'Cẩm nang hướng dẫn nhận biết',
+                    'Hoàn toàn miễn phí',
                   ].map((item, index) => (
                     <motion.div
                       key={index}
@@ -352,10 +345,10 @@ export default function Home() {
                 className="grid grid-cols-2 gap-4"
               >
                 {[
-                  { icon: Eye, title: 'Phát hiện Mối đe dọa', desc: 'Phân tích theo thời gian thực' },
-                  { icon: Lock, title: 'Bảo vệ Danh tính', desc: 'Chống đánh cắp thông tin' },
-                  { icon: Fingerprint, title: 'Duyệt web An toàn', desc: 'Kiểm tra trước khi truy cập' },
-                  { icon: Brain, title: 'AI Thông minh', desc: 'Học máy tiên tiến' },
+                  { icon: Search, title: 'Kiểm tra URL', desc: 'Phân tích link đáng ngờ' },
+                  { icon: Eye, title: 'Scan Hình ảnh', desc: 'Nhận diện tin nhắn lừa đảo' },
+                  { icon: Brain, title: 'Quiz Trắc nghiệm', desc: 'Học cách nhận biết' },
+                  { icon: Lock, title: 'Miễn phí', desc: 'Không giới hạn sử dụng' },
                 ].map((item, index) => (
                   <motion.div
                     key={index}
@@ -391,11 +384,11 @@ export default function Home() {
               
               <div className="relative z-10">
                 <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                  Sẵn sàng bảo vệ bản thân?
+                  Thử kiểm tra ngay?
                 </h2>
                 <p className="text-gray-400 mb-8 max-w-2xl mx-auto">
-                  Bắt đầu kiểm tra miễn phí ngay hôm nay. Bảo vệ bạn và người thân 
-                  khỏi các chiêu trò lừa đảo trực tuyến.
+                  Dán link hoặc upload ảnh tin nhắn đáng ngờ để kiểm tra. 
+                  Hoàn toàn miễn phí, không cần đăng ký.
                 </p>
                 
                 <div className="flex flex-wrap justify-center gap-4">
