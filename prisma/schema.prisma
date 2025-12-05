@@ -159,3 +159,37 @@ model ImageScan {
   @@index([label])
   @@index([createdAt])
 }
+
+// Danh mục hướng dẫn
+model GuideCategory {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  slug      String   @unique
+  icon      String?  // Icon name from lucide
+  order     Int      @default(0)
+  guides    Guide[]
+  createdAt DateTime @default(now())
+
+  @@index([slug])
+}
+
+// Bài viết hướng dẫn
+model Guide {
+  id          String        @id @default(uuid())
+  title       String
+  slug        String        @unique
+  description String
+  content     String        @db.Text
+  thumbnail   String?
+  level       String        @default("basic") // basic, advanced
+  categoryId  String
+  category    GuideCategory @relation(fields: [categoryId], references: [id])
+  views       Int           @default(0)
+  isPublished Boolean       @default(true)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([slug])
+  @@index([categoryId])
+  @@index([isPublished])
+}

@@ -1,195 +1,313 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { BookOpen, Shield, AlertTriangle, Eye, Lock, Phone, CreditCard, Mail, Globe } from 'lucide-react'
+import { Search, ChevronLeft, ChevronRight, Shield, Lock, Mail, Wifi, Smartphone, RefreshCw } from 'lucide-react'
+import Link from 'next/link'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 
-const tips = [
-  {
-    icon: Globe,
-    title: 'Kiểm tra URL cẩn thận',
-    content: 'Luôn kiểm tra địa chỉ website trước khi nhập thông tin. Kẻ lừa đảo thường dùng domain giống với website chính thức nhưng có sai khác nhỏ (vd: vietcombank.xyz thay vì vietcombank.com.vn).',
-    color: 'text-blue-400',
-  },
-  {
-    icon: Lock,
-    title: 'Kiểm tra HTTPS',
-    content: 'Website an toàn phải có biểu tượng khóa và bắt đầu bằng https://. Tuy nhiên, đây chỉ là điều kiện cần, không đủ để khẳng định website an toàn.',
-    color: 'text-green-400',
-  },
-  {
-    icon: AlertTriangle,
-    title: 'Cảnh giác với tin nhắn khẩn cấp',
-    content: 'Kẻ lừa đảo thường tạo áp lực thời gian: "Tài khoản sẽ bị khóa trong 24h", "Nhận thưởng ngay hôm nay". Hãy bình tĩnh và xác minh trước khi hành động.',
-    color: 'text-yellow-400',
-  },
-  {
-    icon: CreditCard,
-    title: 'Không chia sẻ OTP',
-    content: 'Ngân hàng và các tổ chức uy tín KHÔNG BAO GIỜ yêu cầu OTP qua điện thoại, tin nhắn hay email. OTP chỉ nhập trực tiếp trên app/website chính thức.',
-    color: 'text-red-400',
-  },
-  {
-    icon: Phone,
-    title: 'Xác minh qua kênh chính thức',
-    content: 'Nếu nhận được cuộc gọi/tin nhắn đáng ngờ từ "ngân hàng", hãy gác máy và gọi lại số hotline chính thức để xác minh.',
-    color: 'text-purple-400',
-  },
-  {
-    icon: Mail,
-    title: 'Cẩn thận với email lạ',
-    content: 'Không click vào link trong email không rõ nguồn gốc. Kiểm tra địa chỉ email người gửi - kẻ lừa đảo thường dùng email giống nhưng không chính xác.',
-    color: 'text-orange-400',
-  },
-]
+interface Category {
+  id: string
+  name: string
+  slug: string
+  icon: string | null
+  count: number
+}
 
-const scamTypes = [
-  {
-    title: 'Phishing (Giả mạo)',
-    desc: 'Tạo website giả mạo ngân hàng, mạng xã hội để đánh cắp thông tin đăng nhập',
-    examples: ['vietcombank-login.xyz', 'facebook-security.com', 'shopee-khuyenmai.vn'],
-  },
-  {
-    title: 'Lừa đảo trúng thưởng',
-    desc: 'Thông báo trúng thưởng giả, yêu cầu đóng phí để nhận giải',
-    examples: ['Bạn đã trúng iPhone 15', 'Nhận 10 triệu từ Shopee', 'Quay số may mắn'],
-  },
-  {
-    title: 'Đầu tư lừa đảo',
-    desc: 'Hứa hẹn lợi nhuận cao bất thường, kêu gọi đầu tư vào các dự án ảo',
-    examples: ['Lãi suất 30%/tháng', 'Đầu tư crypto x100', 'Forex siêu lợi nhuận'],
-  },
-  {
-    title: 'Cửa hàng giả mạo',
-    desc: 'Website bán hàng giả, thu tiền nhưng không giao hàng hoặc giao hàng kém chất lượng',
-    examples: ['Giảm giá 90%', 'Hàng hiệu giá rẻ', 'Flash sale sốc'],
-  },
+interface Guide {
+  id: string
+  title: string
+  slug: string
+  description: string
+  thumbnail: string | null
+  level: string
+  category: { name: string; slug: string }
+  views: number
+  createdAt: string
+}
+
+interface Pagination {
+  page: number
+  limit: number
+  total: number
+  totalPages: number
+}
+
+const iconMap: Record<string, any> = {
+  Lock: Lock,
+  Mail: Mail,
+  Wifi: Wifi,
+  Smartphone: Smartphone,
+  Shield: Shield,
+  RefreshCw: RefreshCw,
+}
+
+// Placeholder images for guides
+const placeholderImages = [
+  'https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=400&h=250&fit=crop',
+  'https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=400&h=250&fit=crop',
+  'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=400&h=250&fit=crop',
+  'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400&h=250&fit=crop',
+  'https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=400&h=250&fit=crop',
+  'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=250&fit=crop',
 ]
 
 export default function GuidePage() {
+  const [categories, setCategories] = useState<Category[]>([])
+  const [guides, setGuides] = useState<Guide[]>([])
+  const [pagination, setPagination] = useState<Pagination | null>(null)
+  const [selectedCategory, setSelectedCategory] = useState('all')
+  const [searchQuery, setSearchQuery] = useState('')
+  const [currentPage, setCurrentPage] = useState(1)
+  const [loading, setLoading] = useState(true)
+
+  const fetchGuides = async (category: string, search: string, page: number) => {
+    setLoading(true)
+    try {
+      const params = new URLSearchParams({
+        page: page.toString(),
+        limit: '6',
+      })
+      if (category !== 'all') params.set('category', category)
+      if (search) params.set('search', search)
+
+      const res = await fetch(`/api/guides?${params}`)
+      const data = await res.json()
+
+      if (data.success) {
+        setGuides(data.data.guides)
+        setCategories(data.data.categories)
+        setPagination(data.data.pagination)
+      }
+    } catch (error) {
+      console.error('Failed to fetch guides:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchGuides(selectedCategory, searchQuery, currentPage)
+  }, [selectedCategory, currentPage])
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+    setCurrentPage(1)
+    fetchGuides(selectedCategory, searchQuery, 1)
+  }
+
+  const handleCategoryChange = (slug: string) => {
+    setSelectedCategory(slug)
+    setCurrentPage(1)
+  }
+
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-[#0a0f1a]">
       <Header />
-      
-      <main className="flex-1 pt-20">
-        {/* Hero */}
-        <section className="py-16 px-4 bg-gradient-to-b from-blue-900/20 to-transparent">
-          <div className="max-w-4xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-            >
-              <BookOpen className="w-16 h-16 text-blue-500 mx-auto mb-4" />
-              <h1 className="text-3xl md:text-4xl font-bold mb-4">
-                Hướng dẫn Phòng chống Lừa đảo
-              </h1>
-              <p className="text-gray-400 text-lg">
-                Trang bị kiến thức để bảo vệ bản thân và gia đình khỏi các chiêu trò lừa đảo trực tuyến
-              </p>
-            </motion.div>
-          </div>
-        </section>
 
-        {/* Tips */}
-        <section className="py-12 px-4">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-2xl font-bold mb-8 text-center">6 Nguyên tắc vàng</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {tips.map((tip, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1 }}
-                  className="bg-gray-800 rounded-xl p-6 border border-gray-700"
+      <main className="flex-1 pt-24 pb-12">
+        <div className="max-w-7xl mx-auto px-4">
+          {/* Header */}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-8"
+          >
+            <h1 className="text-3xl md:text-4xl font-bold mb-3">
+              Tài nguyên & Hướng dẫn
+            </h1>
+            <p className="text-gray-400">
+              Khám phá các bài viết, mẹo và hướng dẫn để bảo vệ bản thân trên không gian mạng.
+            </p>
+          </motion.div>
+
+          <div className="grid lg:grid-cols-4 gap-8">
+            {/* Sidebar */}
+            <div className="lg:col-span-1">
+              {/* Categories */}
+              <div className="bg-[#111827] rounded-2xl p-6 border border-gray-800 mb-6">
+                <h2 className="font-semibold mb-4">Danh mục</h2>
+                <div className="space-y-1">
+                  <button
+                    onClick={() => handleCategoryChange('all')}
+                    className={`w-full flex items-center justify-between px-3 py-2 rounded-lg transition-colors ${
+                      selectedCategory === 'all'
+                        ? 'bg-blue-600/20 text-blue-400'
+                        : 'text-gray-400 hover:bg-gray-800'
+                    }`}
+                  >
+                    <span>Tất cả</span>
+                    <span className="text-sm">{categories.reduce((sum, c) => sum + c.count, 0)}</span>
+                  </button>
+                  {categories.map((cat) => {
+                    const IconComponent = iconMap[cat.icon || 'Shield'] || Shield
+                    return (
+                      <button
+                        key={cat.id}
+                        onClick={() => handleCategoryChange(cat.slug)}
+                        className={`w-full flex items-center justify-between px-3 py-2 rounded-lg transition-colors ${
+                          selectedCategory === cat.slug
+                            ? 'bg-blue-600/20 text-blue-400'
+                            : 'text-gray-400 hover:bg-gray-800'
+                        }`}
+                      >
+                        <span>{cat.name}</span>
+                        <span className="text-sm">{cat.count}</span>
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+
+              {/* CTA Card */}
+              <div className="bg-gradient-to-br from-blue-600/20 to-cyan-600/10 rounded-2xl p-6 border border-blue-500/20">
+                <h3 className="font-semibold mb-2">Đánh giá mức độ an toàn</h3>
+                <p className="text-gray-400 text-sm mb-4">
+                  Tìm hiểu xem bạn có đang an toàn trên không gian mạng hay không.
+                </p>
+                <Link
+                  href="/assessment"
+                  className="block w-full bg-blue-600 hover:bg-blue-700 text-white text-center py-2 rounded-lg transition-colors"
                 >
-                  <tip.icon className={`w-10 h-10 ${tip.color} mb-4`} />
-                  <h3 className="font-semibold text-lg mb-2">{tip.title}</h3>
-                  <p className="text-gray-400 text-sm">{tip.content}</p>
-                </motion.div>
-              ))}
+                  Bắt đầu ngay
+                </Link>
+              </div>
             </div>
-          </div>
-        </section>
 
-        {/* Scam Types */}
-        <section className="py-12 px-4 bg-gray-800/30">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-2xl font-bold mb-8 text-center">Các hình thức lừa đảo phổ biến</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {scamTypes.map((type, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, x: i % 2 === 0 ? -20 : 20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  className="bg-gray-800 rounded-xl p-6 border border-gray-700"
-                >
-                  <h3 className="font-semibold text-lg mb-2 text-red-400">{type.title}</h3>
-                  <p className="text-gray-400 text-sm mb-4">{type.desc}</p>
-                  <div className="flex flex-wrap gap-2">
-                    {type.examples.map((ex, j) => (
-                      <span key={j} className="px-2 py-1 bg-red-500/20 text-red-400 text-xs rounded">
-                        {ex}
-                      </span>
+            {/* Main Content */}
+            <div className="lg:col-span-3">
+              {/* Search */}
+              <form onSubmit={handleSearch} className="mb-6">
+                <div className="relative">
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Tìm kiếm bài viết, hướng dẫn..."
+                    className="w-full bg-[#111827] border border-gray-800 rounded-xl py-3 pl-12 pr-4 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-colors"
+                  />
+                </div>
+              </form>
+
+              {/* Guides Grid */}
+              {loading ? (
+                <div className="flex items-center justify-center py-20">
+                  <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+                </div>
+              ) : guides.length > 0 ? (
+                <>
+                  <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
+                    {guides.map((guide, index) => (
+                      <motion.div
+                        key={guide.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                      >
+                        <Link href={`/guide/${guide.slug}`}>
+                          <div className="bg-[#111827] rounded-2xl border border-gray-800 overflow-hidden hover:border-gray-700 transition-colors group">
+                            {/* Thumbnail */}
+                            <div className="aspect-video bg-gray-800 relative overflow-hidden">
+                              <img
+                                src={guide.thumbnail || placeholderImages[index % placeholderImages.length]}
+                                alt={guide.title}
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                              />
+                            </div>
+                            {/* Content */}
+                            <div className="p-4">
+                              <span className={`text-xs font-medium ${
+                                guide.level === 'advanced' ? 'text-purple-400' : 'text-cyan-400'
+                              }`}>
+                                {guide.level === 'advanced' ? 'Nâng cao' : 'Cơ bản'}
+                              </span>
+                              <h3 className="font-semibold mt-1 mb-2 line-clamp-2 group-hover:text-blue-400 transition-colors">
+                                {guide.title}
+                              </h3>
+                              <p className="text-gray-400 text-sm line-clamp-2">
+                                {guide.description}
+                              </p>
+                            </div>
+                          </div>
+                        </Link>
+                      </motion.div>
                     ))}
                   </div>
-                </motion.div>
-              ))}
+
+                  {/* Pagination */}
+                  {pagination && pagination.totalPages > 1 && (
+                    <div className="flex items-center justify-center gap-2">
+                      <button
+                        onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                        disabled={currentPage === 1}
+                        className="p-2 rounded-lg bg-[#111827] border border-gray-800 disabled:opacity-50 disabled:cursor-not-allowed hover:border-gray-700 transition-colors"
+                      >
+                        <ChevronLeft className="w-5 h-5" />
+                      </button>
+                      
+                      {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
+                        let pageNum = i + 1
+                        if (pagination.totalPages > 5) {
+                          if (currentPage > 3) {
+                            pageNum = currentPage - 2 + i
+                          }
+                          if (currentPage > pagination.totalPages - 2) {
+                            pageNum = pagination.totalPages - 4 + i
+                          }
+                        }
+                        return (
+                          <button
+                            key={pageNum}
+                            onClick={() => setCurrentPage(pageNum)}
+                            className={`w-10 h-10 rounded-lg transition-colors ${
+                              currentPage === pageNum
+                                ? 'bg-blue-600 text-white'
+                                : 'bg-[#111827] border border-gray-800 hover:border-gray-700'
+                            }`}
+                          >
+                            {pageNum}
+                          </button>
+                        )
+                      })}
+
+                      {pagination.totalPages > 5 && currentPage < pagination.totalPages - 2 && (
+                        <>
+                          <span className="text-gray-500">...</span>
+                          <button
+                            onClick={() => setCurrentPage(pagination.totalPages)}
+                            className="w-10 h-10 rounded-lg bg-[#111827] border border-gray-800 hover:border-gray-700 transition-colors"
+                          >
+                            {pagination.totalPages}
+                          </button>
+                        </>
+                      )}
+
+                      <button
+                        onClick={() => setCurrentPage((p) => Math.min(pagination.totalPages, p + 1))}
+                        disabled={currentPage === pagination.totalPages}
+                        className="p-2 rounded-lg bg-[#111827] border border-gray-800 disabled:opacity-50 disabled:cursor-not-allowed hover:border-gray-700 transition-colors"
+                      >
+                        <ChevronRight className="w-5 h-5" />
+                      </button>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="text-center py-20">
+                  <Shield className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+                  <h3 className="text-xl font-semibold mb-2">Chưa có bài viết</h3>
+                  <p className="text-gray-400">
+                    {searchQuery
+                      ? 'Không tìm thấy bài viết phù hợp với từ khóa của bạn.'
+                      : 'Các bài viết hướng dẫn sẽ sớm được cập nhật.'}
+                  </p>
+                </div>
+              )}
             </div>
           </div>
-        </section>
-
-        {/* Emergency */}
-        <section className="py-12 px-4">
-          <div className="max-w-4xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="bg-red-500/10 border border-red-500/30 rounded-xl p-8 text-center"
-            >
-              <AlertTriangle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-              <h2 className="text-xl font-bold mb-4">Nếu bạn đã bị lừa đảo</h2>
-              <div className="text-left max-w-2xl mx-auto space-y-3 text-gray-300">
-                <p>1. <strong>Liên hệ ngân hàng ngay</strong> để khóa tài khoản/thẻ nếu đã cung cấp thông tin tài chính</p>
-                <p>2. <strong>Đổi mật khẩu</strong> tất cả tài khoản liên quan</p>
-                <p>3. <strong>Báo cáo</strong> cho cơ quan công an địa phương</p>
-                <p>4. <strong>Lưu giữ bằng chứng</strong>: screenshot, tin nhắn, email, lịch sử giao dịch</p>
-              </div>
-              <div className="mt-6 p-4 bg-gray-800 rounded-lg">
-                <p className="text-sm text-gray-400">Đường dây nóng Bộ Công an:</p>
-                <p className="text-2xl font-bold text-yellow-400">113</p>
-              </div>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* CTA */}
-        <section className="py-12 px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl p-8"
-            >
-              <Shield className="w-12 h-12 mx-auto mb-4" />
-              <h2 className="text-2xl font-bold mb-4">Kiểm tra ngay website đáng ngờ</h2>
-              <p className="text-blue-100 mb-6">
-                Sử dụng công cụ ANTISCAM để kiểm tra độ an toàn của bất kỳ website nào
-              </p>
-              <a
-                href="/"
-                className="inline-block px-8 py-3 bg-white text-blue-600 font-semibold rounded-full hover:bg-gray-100 transition-colors"
-              >
-                Kiểm tra ngay
-              </a>
-            </motion.div>
-          </div>
-        </section>
+        </div>
       </main>
 
       <Footer />

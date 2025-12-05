@@ -1,245 +1,292 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Shield, TrendingUp, Users, AlertTriangle, Link2, Image as ImageIcon } from 'lucide-react'
+import { 
+  Shield, 
+  Search, 
+  Lightbulb, 
+  BookOpen,
+  ClipboardCheck,
+  BarChart3,
+  Zap,
+  ChevronRight,
+  Quote
+} from 'lucide-react'
 import Header from './components/Header'
 import Footer from './components/Footer'
-import UrlInput from './components/UrlInput'
-import ResultCard from './components/ResultCard'
-import ImageUpload from './components/ImageUpload'
+import { useRouter } from 'next/navigation'
 
-interface ScanResult {
-  url: string
-  domain: string
-  score: number
-  label: 'SAFE' | 'CAUTION' | 'DANGEROUS'
-  reasons: string[]
-  aiConfidence: number
-  heuristicScore?: number
-  aiScore?: number
-}
+const features = [
+  {
+    icon: Search,
+    title: 'Hiểu rõ lỗ hổng',
+    description: 'Xác định các điểm yếu tiềm ẩn trong thói quen trực tuyến của bạn thông qua một bài đánh giá toàn diện.'
+  },
+  {
+    icon: Lightbulb,
+    title: 'Nhận khuyến nghị cá nhân hóa',
+    description: 'Nhận được các bước hành động cụ thể để thực hiện được thiết kế riêng cho nhu cầu của bạn.'
+  },
+  {
+    icon: BookOpen,
+    title: 'Nâng cao kiến thức bảo mật',
+    description: 'Trang bị cho mình những kiến thức cần thiết để tự tin đối mặt với các mối đe dọa mạng.'
+  }
+]
 
-interface Stats {
-  totalScans: number
-  dangerousCount: number
-  reportsCount: number
-}
+const steps = [
+  {
+    number: '01',
+    title: 'Trả lời khảo sát',
+    description: 'Hoàn thành bài đánh giá ngắn gọn về các thói quen và kiến thức an ninh mạng của bạn.'
+  },
+  {
+    number: '02', 
+    title: 'Nhận báo cáo tức thì',
+    description: 'Xem điểm số an toàn của bạn và phân tích chi tiết các lĩnh vực cần cải thiện.'
+  },
+  {
+    number: '03',
+    title: 'Hành động để cải thiện',
+    description: 'Áp dụng các khuyến nghị được cá nhân hóa để tăng cường bảo mật cho bạn.'
+  }
+]
+
+const testimonials = [
+  {
+    quote: 'Nền tảng này thực sự mở mang tầm mắt. Tôi đã nhận ra nhiều rủi ro bảo mật mà trước đây tôi không hề hay biết. Các khuyến nghị rất rõ ràng và dễ thực hiện.',
+    name: 'An Nguyễn',
+    role: 'Sinh viên CNTT'
+  },
+  {
+    quote: 'Là một người không chuyên về kỹ thuật, tôi thấy CyberSecure rất thân thiện và hữu ích. Giờ đây tôi cảm thấy an tâm hơn rất nhiều khi sử dụng internet cho công việc hàng ngày.',
+    name: 'Minh Trang',
+    role: 'Nhân viên văn phòng'
+  }
+]
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<'url' | 'image'>('url')
-  const [result, setResult] = useState<ScanResult | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState('')
-  const [stats, setStats] = useState<Stats>({ totalScans: 0, dangerousCount: 0, reportsCount: 0 })
+  const router = useRouter()
 
-  useEffect(() => {
-    fetch('/api/stats')
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          setStats({
-            totalScans: data.data.totalScans,
-            dangerousCount: data.data.dangerousCount,
-            reportsCount: data.data.reportsCount,
-          })
-        }
-      })
-      .catch(() => {})
-  }, [])
-
-  const handleScan = async (url: string) => {
-    setIsLoading(true)
-    setError('')
-    setResult(null)
-
-    try {
-      const res = await fetch('/api/scan', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url }),
-      })
-
-      const data = await res.json()
-
-      if (!data.success) {
-        throw new Error(data.error || 'Có lỗi xảy ra')
-      }
-
-      setResult(data.data)
-
-      // Save to localStorage
-      const history = JSON.parse(localStorage.getItem('scanHistory') || '[]')
-      history.unshift({ ...data.data, timestamp: new Date().toISOString() })
-      localStorage.setItem('scanHistory', JSON.stringify(history.slice(0, 20)))
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Có lỗi xảy ra')
-    } finally {
-      setIsLoading(false)
-    }
+  const handleStartAssessment = () => {
+    router.push('/assessment')
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-[#0a0f1a]">
       <Header />
       
-      <main className="flex-1 pt-20">
+      <main className="flex-1">
         {/* Hero Section */}
-        <section className="py-12 px-4">
-          <div className="max-w-4xl mx-auto text-center">
+        <section className="pt-32 pb-20 px-4 relative overflow-hidden">
+          {/* Background gradient */}
+          <div className="absolute inset-0 bg-gradient-to-b from-blue-900/20 to-transparent pointer-events-none" />
+          
+          <div className="max-w-7xl mx-auto">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              {/* Left content */}
+              <motion.div
+                initial={{ opacity: 0, x: -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6 }}
+              >
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
+                  Đánh giá Mức độ{' '}
+                  <span className="gradient-text">An toàn Mạng</span>{' '}
+                  của Bạn
+                </h1>
+                <p className="text-lg text-gray-400 mb-8 leading-relaxed">
+                  Nền tảng giúp sinh viên và cá nhân tự kiểm tra và cải thiện 
+                  khả năng phòng thủ trước các mối đe dọa trực tuyến.
+                </p>
+                <motion.button
+                  onClick={handleStartAssessment}
+                  className="btn-primary px-8 py-4 rounded-lg font-semibold text-white flex items-center gap-2 group"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  Bắt đầu Đánh giá Ngay
+                  <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </motion.button>
+              </motion.div>
+
+              {/* Right - Shield illustration */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="flex justify-center lg:justify-end"
+              >
+                <div className="relative">
+                  <div className="w-64 h-64 md:w-80 md:h-80 rounded-full bg-gradient-to-br from-blue-600/20 to-cyan-500/10 flex items-center justify-center shield-glow">
+                    <Shield className="w-32 h-32 md:w-40 md:h-40 text-blue-500" strokeWidth={1} />
+                  </div>
+                  {/* Decorative rings */}
+                  <div className="absolute inset-0 rounded-full border border-blue-500/20 animate-pulse" />
+                  <div className="absolute -inset-4 rounded-full border border-cyan-500/10" />
+                  <div className="absolute -inset-8 rounded-full border border-blue-500/5" />
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </section>
+
+        {/* Why Section */}
+        <section className="py-20 px-4">
+          <div className="max-w-7xl mx-auto">
             <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mb-6"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center mb-16"
             >
-              <Shield className="w-16 h-16 text-blue-500 mx-auto mb-4" />
-              <h1 className="text-4xl md:text-5xl font-bold mb-3">
-                <span className="gradient-text">ANTISCAM</span>
-              </h1>
-              <p className="text-lg text-gray-400">
-                Kiểm tra Website & Hình ảnh Lừa đảo bằng AI
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                Tại sao bạn nên quan tâm?
+              </h2>
+              <p className="text-gray-400 max-w-2xl mx-auto">
+                Nền tảng của chúng tôi cung cấp những công cụ cần thiết để bạn hiểu rõ 
+                và nâng cao mức độ an toàn của mình trên không gian mạng.
               </p>
             </motion.div>
 
-            {/* Tab Switcher */}
-            <div className="flex justify-center gap-2 mb-8">
-              <button
-                onClick={() => { setActiveTab('url'); setResult(null); setError(''); }}
-                className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all ${
-                  activeTab === 'url'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
-                }`}
-              >
-                <Link2 className="w-5 h-5" />
-                Kiểm tra URL
-              </button>
-              <button
-                onClick={() => { setActiveTab('image'); setResult(null); setError(''); }}
-                className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all ${
-                  activeTab === 'image'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
-                }`}
-              >
-                <ImageIcon className="w-5 h-5" />
-                Phân tích Hình ảnh
-              </button>
-            </div>
-
-            {/* URL Tab */}
-            {activeTab === 'url' && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-              >
-                <p className="text-gray-400 mb-6">
-                  Nhập URL website để AI phân tích và phát hiện lừa đảo
-                </p>
-                <UrlInput onSubmit={handleScan} isLoading={isLoading} />
-                {error && (
-                  <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="text-red-400 mt-4"
-                  >
-                    {error}
-                  </motion.p>
-                )}
-              </motion.div>
-            )}
-
-            {/* Image Tab */}
-            {activeTab === 'image' && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-              >
-                <p className="text-gray-400 mb-6">
-                  Tải lên ảnh chụp màn hình tin nhắn, website để phát hiện lừa đảo
-                </p>
-                <ImageUpload />
-              </motion.div>
-            )}
-          </div>
-        </section>
-
-        {/* Result Section */}
-        {result && activeTab === 'url' && (
-          <section className="py-8 px-4">
-            <ResultCard result={result} />
-          </section>
-        )}
-
-        {/* Stats Section */}
-        <section className="py-12 px-4 bg-gray-800/30">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-2xl font-bold text-center mb-8">Thống kê hệ thống</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className="bg-gray-800 rounded-xl p-6 border border-gray-700 text-center"
-              >
-                <TrendingUp className="w-10 h-10 text-blue-500 mx-auto mb-3" />
-                <p className="text-3xl font-bold">{stats.totalScans.toLocaleString()}</p>
-                <p className="text-gray-400">Lượt kiểm tra</p>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.1 }}
-                className="bg-gray-800 rounded-xl p-6 border border-gray-700 text-center"
-              >
-                <AlertTriangle className="w-10 h-10 text-red-500 mx-auto mb-3" />
-                <p className="text-3xl font-bold">{stats.dangerousCount.toLocaleString()}</p>
-                <p className="text-gray-400">Website nguy hiểm</p>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.2 }}
-                className="bg-gray-800 rounded-xl p-6 border border-gray-700 text-center"
-              >
-                <Users className="w-10 h-10 text-green-500 mx-auto mb-3" />
-                <p className="text-3xl font-bold">{stats.reportsCount.toLocaleString()}</p>
-                <p className="text-gray-400">Báo cáo cộng đồng</p>
-              </motion.div>
-            </div>
-          </div>
-        </section>
-
-        {/* Features Section */}
-        <section className="py-12 px-4">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-2xl font-bold text-center mb-8">Tính năng nổi bật</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[
-                { title: 'Phân tích URL bằng AI', desc: 'Groq Llama 3.3 phân tích nội dung website thực' },
-                { title: 'Phân tích Hình ảnh', desc: 'OCR + AI phát hiện lừa đảo trong ảnh chụp màn hình' },
-                { title: 'Kiểm tra tức thì', desc: 'Kết quả trong vài giây với độ chính xác cao' },
-                { title: 'Cộng đồng báo cáo', desc: 'Học từ báo cáo để ngày càng thông minh hơn' },
-                { title: 'API công khai', desc: 'Tích hợp dễ dàng vào ứng dụng của bạn' },
-                { title: 'Miễn phí', desc: 'Hoàn toàn miễn phí cho người dùng cá nhân' },
-              ].map((feature, i) => (
+            <div className="grid md:grid-cols-3 gap-8">
+              {features.map((feature, index) => (
                 <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
+                  key={index}
+                  initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: i * 0.1 }}
-                  className="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-gray-600 transition-colors"
+                  transition={{ delay: index * 0.1 }}
+                  className="bg-[#1a2332] rounded-2xl p-8 border border-gray-800 card-hover"
                 >
-                  <h3 className="font-semibold mb-2">{feature.title}</h3>
-                  <p className="text-gray-400 text-sm">{feature.desc}</p>
+                  <div className="w-14 h-14 rounded-xl bg-blue-600/20 flex items-center justify-center mb-6">
+                    <feature.icon className="w-7 h-7 text-blue-400" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
+                  <p className="text-gray-400 leading-relaxed">{feature.description}</p>
                 </motion.div>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* Journey Section */}
+        <section className="py-20 px-4 bg-[#0d1320]">
+          <div className="max-w-7xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center mb-16"
+            >
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                Hành trình Bảo mật của Bạn
+              </h2>
+            </motion.div>
+
+            <div className="relative max-w-3xl mx-auto">
+              {/* Timeline line */}
+              <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-500 to-cyan-500 hidden md:block" />
+
+              {steps.map((step, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: -30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.15 }}
+                  className="relative flex gap-6 mb-12 last:mb-0"
+                >
+                  {/* Step number */}
+                  <div className="flex-shrink-0 w-16 h-16 rounded-full bg-[#1a2332] border-2 border-blue-500 flex items-center justify-center z-10">
+                    <span className="text-blue-400 font-bold">{step.number}</span>
+                  </div>
+                  
+                  {/* Content */}
+                  <div className="pt-3">
+                    <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
+                    <p className="text-gray-400">{step.description}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Testimonials Section */}
+        <section className="py-20 px-4">
+          <div className="max-w-7xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center mb-16"
+            >
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                Người dùng nói gì về chúng tôi?
+              </h2>
+              <p className="text-gray-400 max-w-2xl mx-auto">
+                Xem cách ANTISCAM đã giúp những người khác tăng cường an toàn trực tuyến của họ.
+              </p>
+            </motion.div>
+
+            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+              {testimonials.map((testimonial, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                  className="testimonial-card rounded-2xl p-8"
+                >
+                  <Quote className="w-8 h-8 text-blue-500/50 mb-4" />
+                  <p className="text-gray-300 mb-6 leading-relaxed italic">
+                    "{testimonial.quote}"
+                  </p>
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
+                      <span className="text-white font-semibold">
+                        {testimonial.name.charAt(0)}
+                      </span>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-cyan-400">{testimonial.name}</p>
+                      <p className="text-gray-500 text-sm">{testimonial.role}</p>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="py-20 px-4 bg-gradient-to-b from-[#0d1320] to-[#0a0f1a]">
+          <div className="max-w-4xl mx-auto text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <h2 className="text-3xl md:text-4xl font-bold mb-6">
+                Sẵn sàng bảo vệ bản thân?
+              </h2>
+              <p className="text-gray-400 mb-8 max-w-2xl mx-auto">
+                Bắt đầu đánh giá miễn phí ngay hôm nay và khám phá cách bạn có thể 
+                cải thiện an toàn trực tuyến của mình.
+              </p>
+              <motion.button
+                onClick={handleStartAssessment}
+                className="btn-primary px-10 py-4 rounded-lg font-semibold text-white inline-flex items-center gap-2 group"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                Bắt đầu Ngay
+                <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </motion.button>
+            </motion.div>
           </div>
         </section>
       </main>

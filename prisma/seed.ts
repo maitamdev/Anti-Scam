@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 
-const prisma = new PrismaClient()
+// @ts-ignore - Models will be available after prisma generate
+const prisma = new PrismaClient() as any
 
 async function main() {
   console.log('🌱 Seeding database...')
@@ -358,6 +359,98 @@ async function main() {
     },
   })
   console.log('✅ Model Version: v1')
+
+  // Guide Categories
+  const guideCategories = [
+    { name: 'Quản lý Mật khẩu', slug: 'mat-khau', icon: 'Lock', order: 1 },
+    { name: 'Nhận biết Lừa đảo', slug: 'lua-dao', icon: 'Mail', order: 2 },
+    { name: 'Bảo mật Wi-Fi & Mạng', slug: 'wifi-mang', icon: 'Wifi', order: 3 },
+    { name: 'An toàn trên Mạng xã hội', slug: 'mang-xa-hoi', icon: 'Shield', order: 4 },
+    { name: 'Bảo vệ Thiết bị', slug: 'thiet-bi', icon: 'Smartphone', order: 5 },
+    { name: 'Cập nhật Phần mềm', slug: 'phan-mem', icon: 'RefreshCw', order: 6 },
+  ]
+
+  for (const cat of guideCategories) {
+    await prisma.guideCategory.upsert({
+      where: { slug: cat.slug },
+      update: {},
+      create: cat,
+    })
+  }
+  console.log(`✅ Guide Categories: ${guideCategories.length} categories`)
+
+  // Guides - Inline content
+  const guides = [
+    {
+      title: '5 bước tạo mật khẩu không thể bẻ khóa',
+      slug: '5-buoc-tao-mat-khau-manh',
+      description: 'Hướng dẫn chi tiết cách tạo và quản lý mật khẩu mạnh để bảo vệ tài khoản của bạn khỏi hacker.',
+      level: 'basic',
+      categorySlug: 'mat-khau',
+      content: `<h2>Tại sao mật khẩu mạnh lại quan trọng?</h2><p>Mật khẩu là lớp bảo vệ đầu tiên và quan trọng nhất cho tài khoản trực tuyến của bạn. Theo thống kê từ Verizon Data Breach Report 2023, hơn 80% các vụ xâm nhập dữ liệu liên quan đến mật khẩu yếu hoặc bị đánh cắp. Một mật khẩu yếu như "123456" hoặc "password" có thể bị bẻ khóa trong chưa đầy 1 giây.</p><h2>5 bước tạo mật khẩu không thể bẻ khóa</h2><ol><li><strong>Độ dài tối thiểu 12-16 ký tự:</strong> Mỗi ký tự thêm vào làm tăng độ khó bẻ khóa theo cấp số nhân.</li><li><strong>Kết hợp đa dạng ký tự:</strong> Sử dụng chữ hoa (A-Z), chữ thường (a-z), số (0-9) và ký tự đặc biệt (!@#$%^&*).</li><li><strong>Tránh thông tin cá nhân:</strong> Không dùng tên, ngày sinh, số điện thoại.</li><li><strong>Sử dụng cụm từ (passphrase):</strong> Ví dụ: "Tôi thích uống cà phê mỗi sáng" → "T0i_Th1ch#CaPhe@MoiSang!"</li><li><strong>Mỗi tài khoản một mật khẩu riêng:</strong> Nếu một tài khoản bị hack, các tài khoản khác vẫn an toàn.</li></ol><h2>Sử dụng trình quản lý mật khẩu</h2><ul><li><strong>Bitwarden (Miễn phí):</strong> Mã nguồn mở, bảo mật cao, đồng bộ đa thiết bị.</li><li><strong>1Password (Trả phí):</strong> Giao diện đẹp, tính năng chia sẻ gia đình.</li><li><strong>LastPass (Freemium):</strong> Phổ biến, dễ sử dụng.</li></ul><h2>Kiểm tra mật khẩu đã bị lộ</h2><p>Truy cập haveibeenpwned.com để kiểm tra xem email hoặc mật khẩu của bạn có trong các vụ rò rỉ dữ liệu không.</p>`
+    },
+    {
+      title: 'Hướng dẫn nhận biết email lừa đảo (Phishing)',
+      slug: 'nhan-biet-email-lua-dao',
+      description: 'Các dấu hiệu cảnh báo chi tiết để phát hiện và tránh các cuộc tấn công lừa đảo qua email.',
+      level: 'basic',
+      categorySlug: 'lua-dao',
+      content: `<h2>Email lừa đảo (Phishing) là gì?</h2><p>Phishing là hình thức tấn công mạng phổ biến nhất, chiếm hơn 90% các cuộc tấn công. Kẻ lừa đảo gửi email giả mạo từ các tổ chức uy tín để đánh cắp thông tin đăng nhập, số thẻ tín dụng.</p><h2>10 dấu hiệu nhận biết email phishing</h2><ol><li><strong>Địa chỉ email gửi đáng ngờ:</strong> Kiểm tra kỹ domain. Ví dụ: support@vietcombank-secure.com (giả) vs support@vietcombank.com.vn (thật).</li><li><strong>Lời chào chung chung:</strong> "Kính gửi Quý khách hàng" thay vì tên cụ thể.</li><li><strong>Tạo cảm giác khẩn cấp:</strong> "Tài khoản sẽ bị khóa trong 24h".</li><li><strong>Link đáng ngờ:</strong> Hover chuột để xem URL thật trước khi click.</li><li><strong>Lỗi chính tả và ngữ pháp:</strong> Email chính thức hiếm khi có lỗi.</li><li><strong>Yêu cầu thông tin nhạy cảm:</strong> Ngân hàng KHÔNG BAO GIỜ yêu cầu mật khẩu, OTP qua email.</li><li><strong>File đính kèm đáng ngờ:</strong> Đặc biệt các file .exe, .zip, .js.</li><li><strong>Thiết kế email kém:</strong> Logo mờ, màu sắc không đúng brand.</li><li><strong>Không có thông tin liên hệ:</strong> Email thật luôn có footer với địa chỉ, hotline.</li><li><strong>Quá tốt để là thật:</strong> "Bạn trúng thưởng 100 triệu" - nếu không tham gia thì không thể trúng.</li></ol><h2>Cách xử lý khi nhận email đáng ngờ</h2><ul><li>KHÔNG click bất kỳ link nào</li><li>KHÔNG tải file đính kèm</li><li>Truy cập trực tiếp website chính thức</li><li>Gọi hotline chính thức để xác nhận</li></ul>`
+    },
+    {
+      title: 'Cách bảo mật mạng Wi-Fi tại nhà',
+      slug: 'bao-mat-wifi-tai-nha',
+      description: 'Hướng dẫn chi tiết thiết lập mạng không dây an toàn để ngăn chặn truy cập trái phép.',
+      level: 'advanced',
+      categorySlug: 'wifi-mang',
+      content: `<h2>Tại sao cần bảo mật Wi-Fi?</h2><p>Wi-Fi không được bảo mật có thể dẫn đến: người lạ sử dụng internet miễn phí, đánh cắp dữ liệu cá nhân, theo dõi hoạt động trực tuyến. Hơn 40% router tại Việt Nam vẫn sử dụng mật khẩu mặc định.</p><h2>Các bước bảo mật Wi-Fi chi tiết</h2><ol><li><strong>Đổi mật khẩu admin router:</strong> Truy cập 192.168.1.1, đăng nhập và đổi mật khẩu mặc định (admin/admin).</li><li><strong>Sử dụng mã hóa WPA3 hoặc WPA2-AES:</strong> TUYỆT ĐỐI không dùng WEP.</li><li><strong>Đặt mật khẩu Wi-Fi mạnh:</strong> Tối thiểu 12 ký tự, kết hợp chữ hoa, chữ thường, số.</li><li><strong>Đổi tên mạng (SSID):</strong> Không dùng tên mặc định như "TP-Link_XXXX".</li><li><strong>Tắt WPS:</strong> WPS có lỗ hổng bảo mật nghiêm trọng.</li><li><strong>Cập nhật firmware router:</strong> Kiểm tra và cập nhật mỗi 3 tháng.</li><li><strong>Tạo mạng Guest riêng:</strong> Cho khách sử dụng mạng Guest với mật khẩu khác.</li></ol><h2>Cài đặt nâng cao</h2><ul><li>Tắt quản lý từ xa (Remote Management)</li><li>Bật tường lửa router</li><li>Sử dụng DNS an toàn: 1.1.1.1 (Cloudflare) hoặc 8.8.8.8 (Google)</li></ul>`
+    },
+    {
+      title: 'An toàn khi sử dụng mạng xã hội',
+      slug: 'an-toan-mang-xa-hoi',
+      description: 'Hướng dẫn cài đặt quyền riêng tư và chia sẻ thông tin thông minh trên Facebook, Zalo, TikTok.',
+      level: 'basic',
+      categorySlug: 'mang-xa-hoi',
+      content: `<h2>Rủi ro khi chia sẻ quá nhiều</h2><p>Mạng xã hội là mỏ vàng thông tin cho kẻ lừa đảo. Từ thông tin như ngày sinh, tên thú cưng, trường học, kẻ xấu có thể: đoán mật khẩu, giả mạo danh tính, tấn công có chủ đích. 78% kẻ trộm sử dụng mạng xã hội để xác định mục tiêu.</p><h2>Cài đặt quyền riêng tư trên Facebook</h2><ol><li><strong>Ai có thể xem bài đăng:</strong> Settings → Privacy → Chọn "Friends"</li><li><strong>Giới hạn bài đăng cũ:</strong> Settings → Privacy → Limit Past Posts</li><li><strong>Ẩn danh sách bạn bè:</strong> Profile → Friends → Edit Privacy → "Only me"</li><li><strong>Kiểm soát tag:</strong> Bật "Review tags" và "Review posts you're tagged in"</li><li><strong>Ẩn thông tin cá nhân:</strong> Chọn "Only me" cho số điện thoại, email, ngày sinh</li></ol><h2>Những điều KHÔNG NÊN chia sẻ</h2><ul><li>Ảnh CMND/CCCD, bằng lái, hộ chiếu</li><li>Vé máy bay, boarding pass (chứa mã PNR)</li><li>Địa chỉ nhà cụ thể</li><li>Lịch trình đi du lịch ("Đi Đà Nẵng 1 tuần" = "Nhà tôi trống 1 tuần")</li><li>Thông tin tài chính: lương, số dư tài khoản</li></ul>`
+    },
+    {
+      title: 'Bảo vệ điện thoại khỏi phần mềm độc hại',
+      slug: 'bao-ve-dien-thoai-malware',
+      description: 'Hướng dẫn toàn diện bảo vệ smartphone Android và iPhone khỏi virus, malware, spyware.',
+      level: 'advanced',
+      categorySlug: 'thiet-bi',
+      content: `<h2>Các loại malware phổ biến trên điện thoại</h2><ul><li><strong>Spyware:</strong> Theo dõi vị trí, ghi âm cuộc gọi, đọc tin nhắn</li><li><strong>Banking Trojan:</strong> Đánh cắp thông tin đăng nhập ngân hàng, OTP</li><li><strong>Ransomware:</strong> Khóa điện thoại, đòi tiền chuộc</li><li><strong>Adware:</strong> Hiển thị quảng cáo liên tục</li></ul><h2>Cách malware xâm nhập</h2><ol><li>Ứng dụng giả mạo từ store không chính thức</li><li>Click link trong SMS, email độc hại</li><li>File APK từ nguồn lạ</li><li>Wi-Fi công cộng không an toàn</li></ol><h2>10 bước bảo vệ điện thoại</h2><ol><li><strong>Chỉ cài app từ store chính thức:</strong> Google Play, App Store</li><li><strong>Kiểm tra quyền truy cập:</strong> App đèn pin không cần quyền đọc tin nhắn</li><li><strong>Đọc đánh giá trước khi cài:</strong> Cẩn thận với app mới, ít review</li><li><strong>Cập nhật hệ điều hành:</strong> Bật cập nhật tự động</li><li><strong>Không root/jailbreak:</strong> Vô hiệu hóa nhiều lớp bảo mật</li><li><strong>Cài phần mềm bảo mật:</strong> Kaspersky, Bitdefender</li><li><strong>Bật khóa màn hình:</strong> PIN 6 số, vân tay, Face ID</li><li><strong>Bật Find My Device:</strong> Định vị, khóa, xóa dữ liệu từ xa</li><li><strong>Sao lưu dữ liệu:</strong> Backup thường xuyên</li><li><strong>Cẩn thận với Wi-Fi công cộng:</strong> Sử dụng VPN</li></ol><h2>Dấu hiệu điện thoại bị nhiễm malware</h2><ul><li>Pin hết nhanh bất thường</li><li>Điện thoại nóng khi không sử dụng</li><li>Data di động tăng đột biến</li><li>Xuất hiện app lạ không cài</li></ul>`
+    },
+    {
+      title: 'Tại sao cập nhật phần mềm lại quan trọng?',
+      slug: 'tai-sao-cap-nhat-phan-mem',
+      description: 'Hiểu rõ tầm quan trọng của việc luôn cập nhật hệ điều hành, trình duyệt và ứng dụng.',
+      level: 'basic',
+      categorySlug: 'phan-mem',
+      content: `<h2>Cập nhật phần mềm = Vá lỗ hổng bảo mật</h2><p>Mỗi phần mềm đều có lỗi (bug), và một số lỗi có thể bị hacker khai thác. Khi lỗ hổng được phát hiện, nhà phát triển phát hành bản vá trong các bản cập nhật. Ví dụ: Lỗ hổng WannaCry năm 2017 đã lây nhiễm hơn 200,000 máy tính, gây thiệt hại hàng tỷ đô la - dù Microsoft đã phát hành bản vá 2 tháng trước.</p><h2>Các loại cập nhật quan trọng</h2><ol><li><strong>Cập nhật hệ điều hành:</strong> Windows Update, macOS Update, iOS/Android Update</li><li><strong>Cập nhật trình duyệt:</strong> Chrome, Firefox, Safari, Edge</li><li><strong>Cập nhật ứng dụng:</strong> Đặc biệt app ngân hàng, email, mạng xã hội</li><li><strong>Cập nhật firmware:</strong> Router, camera IP, thiết bị IoT</li></ol><h2>Rủi ro khi không cập nhật</h2><ul><li>Bị khai thác lỗ hổng đã biết</li><li>Malware xâm nhập</li><li>Dữ liệu bị đánh cắp</li><li>Thiết bị bị kiểm soát thành botnet</li><li>Ransomware mã hóa dữ liệu</li></ul><h2>Cách cập nhật an toàn</h2><ol><li><strong>Bật cập nhật tự động:</strong> Windows: Settings → Update & Security</li><li><strong>Cập nhật ngay khi có thông báo:</strong> Đừng nhấn "Remind me later"</li><li><strong>Ưu tiên Security Update:</strong> Các bản cập nhật có ghi "Security" hoặc "Critical"</li><li><strong>Backup trước khi cập nhật lớn:</strong> Phòng trường hợp lỗi</li><li><strong>Cập nhật từ nguồn chính thức:</strong> Không tải từ link lạ</li></ol>`
+    }
+  ]
+
+  for (const guide of guides) {
+    const category = await prisma.guideCategory.findUnique({
+      where: { slug: guide.categorySlug },
+    })
+    if (category) {
+      await prisma.guide.upsert({
+        where: { slug: guide.slug },
+        update: {},
+        create: {
+          title: guide.title,
+          slug: guide.slug,
+          description: guide.description,
+          content: guide.content,
+          level: guide.level,
+          categoryId: category.id,
+        },
+      })
+    }
+  }
+  console.log(`✅ Guides: ${guides.length} articles`)
 
   console.log('🎉 Seeding completed!')
 }

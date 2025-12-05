@@ -81,72 +81,27 @@ const FALLBACK_PATTERNS: Array<{
 ]
 
 
-const SCAM_DETECTION_PROMPT = `Bạn là chuyên gia phát hiện lừa đảo online hàng đầu Việt Nam với 10 năm kinh nghiệm. Phân tích KỸ LƯỠNG ảnh này.
+const SCAM_DETECTION_PROMPT = `Phân tích ảnh này để phát hiện lừa đảo.
 
-🚨 CÁC CHIÊU TRÒ LỪA ĐẢO PHỔ BIẾN NHẤT TẠI VIỆT NAM:
+QUAN TRỌNG:
+- CHỈ mô tả nội dung THỰC SỰ có trong ảnh
+- KHÔNG bịa đặt thông tin không tồn tại
+- Đọc kỹ văn bản trước khi kết luận
 
-1. 💸 NHỜ CHUYỂN TIỀN (Phổ biến nhất - 90% là lừa đảo):
-   - Người quen/lạ nhắn tin nhờ chuyển tiền hộ
-   - Lý do: "bank đang lỗi", "app lỗi", "cần gấp", "giúp tí việc"
-   - Hỏi "có banking không?", "TK còn tiền không?"
-   - Nhờ chuyển qua Techcombank, Vietcombank, MB...
-   → NẾU THẤY PATTERN NÀY = SCAM 95-100 điểm
+DẤU HIỆU LỪA ĐẢO:
+1. Giả CSKH game/ngân hàng, yêu cầu liên hệ Zalo/Telegram → 70-85 điểm
+2. Nhờ chuyển tiền, lý do "bank lỗi" → 85-95 điểm  
+3. Trúng thưởng, nộp phí nhận quà → 80-90 điểm
+4. Việc nhẹ lương cao, đặt cọc → 80-90 điểm
+5. Hỏi OTP, mật khẩu → 95-100 điểm
+6. Đầu tư lãi cao, cờ bạc → 85-95 điểm
 
-2. 🏦 GIẢ MẠO NGÂN HÀNG:
-   - SMS/tin nhắn giả từ ngân hàng
-   - "Tài khoản bị khóa", "Giao dịch đáng ngờ"
-   - Link lạ yêu cầu đăng nhập, xác minh
-   → SCAM 90-100 điểm
+CHẤM ĐIỂM: 0-30 an toàn, 31-60 đáng ngờ, 61-100 lừa đảo
 
-3. 🎁 TRÚNG THƯỞNG/QUÀ TẶNG:
-   - "Chúc mừng bạn trúng thưởng..."
-   - Yêu cầu nộp phí để nhận quà
-   - Voucher, gift card miễn phí
-   → SCAM 80-95 điểm
+TRẢ LỜI ĐÚNG FORMAT JSON (không có markdown):
+{"label":"SCAM","score":75,"reason":"Mô tả ngắn gọn nội dung ảnh và dấu hiệu phát hiện"}
 
-4. 💼 TUYỂN DỤNG LỪA ĐẢO:
-   - "Việc nhẹ lương cao", "500k-2tr/ngày"
-   - Tuyển CTV Shopee, Lazada, TikTok
-   - Yêu cầu đặt cọc, nạp tiền trước
-   → SCAM 85-95 điểm
-
-5. 📈 ĐẦU TƯ/FOREX/CRYPTO:
-   - Hứa lãi 30%/tháng, 2%/ngày
-   - Group VIP trading, signal
-   - Cam kết hoàn vốn
-   → SCAM 90-100 điểm
-
-6. 🎰 CỜ BẠC ONLINE:
-   - Casino, lô đề, cá độ bóng đá
-   - Soi cầu, dự đoán xổ số
-   → SCAM 90 điểm
-
-7. 🔐 LỪA LẤY THÔNG TIN:
-   - Hỏi mã OTP, mật khẩu
-   - Yêu cầu CMND/CCCD
-   - Thông tin thẻ ngân hàng
-   → SCAM 100 điểm
-
-8. 💔 LỪA ĐẢO TÌNH CẢM:
-   - Người nước ngoài làm quen
-   - Gửi quà từ nước ngoài, đóng phí hải quan
-   → SCAM 95 điểm
-
-9. 👨‍👩‍👧 GIẢ MẠO NGƯỜI THÂN:
-   - "Con đây, số mới", "Mẹ ơi con cần tiền gấp"
-   - Bạn bè bị hack FB xin tiền
-   → SCAM 90 điểm
-
-⚠️ QUY TẮC PHÂN TÍCH:
-- Tin nhắn nhờ chuyển tiền + lý do bank lỗi = SCAM 95-100
-- Hỏi có banking không + nhờ việc = SCAM 90-95
-- Bất kỳ yêu cầu OTP/mật khẩu = SCAM 100
-- Trúng thưởng bất ngờ = SCAM 85-95
-- Việc nhẹ lương cao = SCAM 85-90
-- Nếu NGHI NGỜ → cho điểm CAO (70-90)
-
-📋 TRẢ LỜI BẰNG JSON:
-{"label": "SCAM" hoặc "SAFE", "score": 0-100, "reason": "giải thích chi tiết bằng tiếng Việt, nêu rõ dấu hiệu phát hiện"}`
+Chỉ trả về 1 object JSON duy nhất, score phải là số nguyên.`
 
 // Category icons
 const CATEGORY_ICONS: Record<string, string> = {
@@ -210,26 +165,60 @@ async function analyzeWithQwen(imageBase64: string): Promise<{
     console.log('[HF] Qwen response:', content)
 
     // Parse JSON
-    const jsonMatch = content.match(/\{[\s\S]*\}/)
+    const jsonMatch = content.match(/\{[\s\S]*?\}/)
     if (jsonMatch) {
       try {
-        const parsed = JSON.parse(jsonMatch[0])
+        // Clean up the JSON string
+        let jsonStr = jsonMatch[0]
+          .replace(/```json\s*/g, '')
+          .replace(/```\s*/g, '')
+          .trim()
+        
+        const parsed = JSON.parse(jsonStr)
+        
+        // Handle score that might be string like "85-95"
+        let score = 50
+        if (typeof parsed.score === 'number') {
+          score = parsed.score
+        } else if (typeof parsed.score === 'string') {
+          // Extract first number from string like "85-95"
+          const numMatch = parsed.score.match(/\d+/)
+          if (numMatch) score = parseInt(numMatch[0], 10)
+        }
+        
+        // Clean reason - remove any JSON artifacts
+        let reason = parsed.reason || ''
+        reason = reason.replace(/```json[\s\S]*```/g, '').trim()
+        
         return {
           label: parsed.label || 'UNKNOWN',
-          score: typeof parsed.score === 'number' ? parsed.score : 50,
-          reason: parsed.reason || '',
+          score: Math.min(100, Math.max(0, score)),
+          reason,
         }
-      } catch {
-        console.error('[HF] JSON parse failed')
+      } catch (e) {
+        console.error('[HF] JSON parse failed:', e)
       }
     }
 
-    // Fallback
+    // Fallback - extract meaningful text
     const isScam = /SCAM/i.test(content)
+    // Clean content from JSON artifacts
+    let cleanContent = content
+      .replace(/```json[\s\S]*?```/g, '')
+      .replace(/\{[\s\S]*?\}/g, '')
+      .replace(/```/g, '')
+      .trim()
+    
+    if (!cleanContent) {
+      cleanContent = isScam 
+        ? 'Phát hiện dấu hiệu đáng ngờ trong hình ảnh'
+        : 'Không phát hiện dấu hiệu lừa đảo rõ ràng'
+    }
+    
     return {
       label: isScam ? 'SCAM' : 'SAFE',
       score: isScam ? 75 : 20,
-      reason: content.slice(0, 300),
+      reason: cleanContent.slice(0, 500),
     }
   } catch (error) {
     console.error('[HF] Error:', error)
