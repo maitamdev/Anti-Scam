@@ -1,0 +1,68 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#0a0f1a"/>
+  
+  <!-- Gradient circles -->
+  <circle cx="300" cy="150" r="300" fill="url(#grad1)" opacity="0.3"/>
+  <circle cx="900" cy="480" r="350" fill="url(#grad2)" opacity="0.3"/>
+  
+  <!-- Shield Icon -->
+  <g transform="translate(540, 80)">
+    <path d="M60 0L120 22.5V67.5C120 112.5 60 150 60 150C60 150 0 112.5 0 67.5V22.5L60 0Z" fill="#3b82f6" fill-opacity="0.2" stroke="#3b82f6" stroke-width="3"/>
+    <path d="M45 75L55 85L80 60" stroke="#22c55e" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  </g>
+  
+  <!-- Title: ANTI-SCAM -->
+  <text x="600" y="300" text-anchor="middle" font-family="Arial, sans-serif" font-size="72" font-weight="800">
+    <tspan fill="url(#titleGrad)">ANTI-SCAM</tspan>
+  </text>
+  
+  <!-- Subtitle -->
+  <text x="600" y="360" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" fill="#94a3b8">
+    Bảo Vệ Bạn Khỏi Lừa Đảo Online
+  </text>
+  
+  <!-- Feature boxes -->
+  <g transform="translate(140, 420)">
+    <!-- Box 1 -->
+    <rect x="0" y="0" width="200" height="90" rx="16" fill="#3b82f6" fill-opacity="0.1" stroke="#3b82f6" stroke-opacity="0.3"/>
+    <text x="100" y="40" text-anchor="middle" font-size="32">🛡️</text>
+    <text x="100" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#e2e8f0">Kiểm tra Link</text>
+    
+    <!-- Box 2 -->
+    <rect x="230" y="0" width="200" height="90" rx="16" fill="#3b82f6" fill-opacity="0.1" stroke="#3b82f6" stroke-opacity="0.3"/>
+    <text x="330" y="40" text-anchor="middle" font-size="32">🤖</text>
+    <text x="330" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#e2e8f0">AI Phân tích</text>
+    
+    <!-- Box 3 -->
+    <rect x="460" y="0" width="200" height="90" rx="16" fill="#3b82f6" fill-opacity="0.1" stroke="#3b82f6" stroke-opacity="0.3"/>
+    <text x="560" y="40" text-anchor="middle" font-size="32">📚</text>
+    <text x="560" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#e2e8f0">5000+ Quiz</text>
+    
+    <!-- Box 4 -->
+    <rect x="690" y="0" width="200" height="90" rx="16" fill="#3b82f6" fill-opacity="0.1" stroke="#3b82f6" stroke-opacity="0.3"/>
+    <text x="790" y="40" text-anchor="middle" font-size="32">🚨</text>
+    <text x="790" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#e2e8f0">Cảnh báo</text>
+  </g>
+  
+  <!-- URL -->
+  <text x="600" y="590" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="#64748b">
+    anti-scam-kappa.vercel.app
+  </text>
+  
+  <!-- Gradients -->
+  <defs>
+    <radialGradient id="grad1" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(300 150) scale(300)">
+      <stop stop-color="#1e3a5f"/>
+      <stop offset="1" stop-color="#0a0f1a" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="grad2" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(900 480) scale(350)">
+      <stop stop-color="#2d1f5e"/>
+      <stop offset="1" stop-color="#0a0f1a" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="titleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#8b5cf6"/>
+    </linearGradient>
+  </defs>
+</svg>
