@@ -12,7 +12,7 @@ const navLinks = [
   { href: '/quiz', label: 'Trắc nghiệm' },
   { href: '/guide', label: 'Cẩm nang' },
   { href: '/report', label: 'Báo cáo' },
-  { href: '/result', label: 'Lịch sử' },
+  { href: '/about', label: 'Giới thiệu' },
 ]
 
 export default function Header() {
