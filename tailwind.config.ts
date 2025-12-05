@@ -11,6 +11,10 @@ const config: Config = {
       screens: {
         'xs': '475px',
       },
+      fontFamily: {
+        sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
+        display: ['var(--font-display)', 'system-ui', 'sans-serif'],
+      },
       colors: {
         safe: '#22c55e',
         caution: '#f59e0b',

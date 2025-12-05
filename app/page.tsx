@@ -1,9 +1,9 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { 
-  Shield, 
-  Search, 
+import {
+  Shield,
+  Search,
   Brain,
   Eye,
   Lock,
@@ -87,22 +87,31 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
               >
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-blue-500/10 border border-blue-500/20 rounded-full mb-4 sm:mb-6">
-                  <Shield className="w-3 h-3 sm:w-4 sm:h-4 text-blue-400" />
-                  <span className="text-xs sm:text-sm text-blue-400">Công cụ hỗ trợ nhận biết lừa đảo online</span>
-                </div>
+                {/* Badge */}
+                <motion.div 
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border border-blue-500/20 rounded-full mb-6"
+                >
+                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                  <span className="text-sm text-gray-300 font-medium">Công cụ hỗ trợ phát hiện lừa đảo</span>
+                </motion.div>
                 
-                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4 sm:mb-6">
-                  Kiểm tra{' '}
-                  <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent">
-                    Website & Tin nhắn
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black leading-[1.15] mb-4 sm:mb-6 font-display uppercase tracking-wide italic">
+                  <span className="text-white">Bạn có đang</span>
+                  <br />
+                  <span className="whitespace-nowrap">
+                    <span className="text-white">lướt mạng </span>
+                    <span className="bg-gradient-to-r from-emerald-400 to-green-500 bg-clip-text text-transparent">
+                      an toàn?
+                    </span>
                   </span>
-                  {' '}đáng ngờ
                 </h1>
                 
-                <p className="text-base sm:text-lg text-gray-400 mb-6 sm:mb-8 leading-relaxed max-w-xl">
-                  Dán link hoặc upload ảnh tin nhắn để kiểm tra dấu hiệu lừa đảo. 
-                  Công cụ miễn phí giúp bạn cẩn thận hơn trước khi click vào link lạ.
+                <p className="text-base sm:text-lg text-gray-400 mb-8 leading-relaxed max-w-xl">
+                  Kiểm tra URL và hình ảnh để <span className="text-white font-medium">phát hiện dấu hiệu lừa đảo</span>. 
+                  Công cụ miễn phí giúp bạn cẩn thận hơn khi lướt web.
                 </p>
                 
                 <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
@@ -112,7 +121,7 @@ export default function Home() {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
-                    Bắt đầu Phân tích
+                    Kiểm tra ngay
                     <ArrowRight className="w-5 h-5" />
                   </motion.button>
                   
@@ -123,7 +132,7 @@ export default function Home() {
                     whileTap={{ scale: 0.98 }}
                   >
                     <Play className="w-5 h-5" />
-                    Chơi Quiz
+                    Kiểm tra kiến thức
                   </motion.button>
                 </div>
               </motion.div>

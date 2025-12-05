@@ -12,8 +12,17 @@ import {
   generateImpersonationScam,
   generatePhishingEmail,
   generateLegitimateMessage,
+  generateFakeWebsiteLogin,
+  generateFakeQRCode,
+  generateFakeTransferConfirmation,
+  generateFakeAppNotification,
+  generateCryptoScam,
+  generateRomanceScamProfile,
   type QuizImage,
 } from './quizImages'
+
+// Import extra questions
+import { ALL_EXTRA_QUESTIONS, getRandomExtraQuestions } from './quizExtraData'
 
 export interface QuizQuestion {
   id: string
@@ -922,6 +931,152 @@ const questionTemplates: QuestionTemplate[] = [
       }
     },
   },
+
+  // ========== NEW IMAGE-BASED QUESTIONS ==========
+  {
+    category: 'PHISHING',
+    difficulty: 'hard',
+    type: 'image',
+    generate: () => {
+      const imageData = generateFakeWebsiteLogin()
+      return {
+        type: 'image' as const,
+        category: QUIZ_CATEGORIES.PHISHING,
+        difficulty: 'hard' as const,
+        question: 'Xem trang đăng nhập dưới đây. Đây có phải website chính thức của ngân hàng?',
+        image: imageData.dataUrl,
+        imageData,
+        options: [
+          { id: 'a', text: 'Có, giao diện giống hệt website chính thức', isCorrect: false },
+          { id: 'b', text: 'Không, URL trên thanh địa chỉ là giả mạo', isCorrect: true },
+          { id: 'c', text: 'Có, vì có logo ngân hàng', isCorrect: false },
+          { id: 'd', text: 'Cần đăng nhập thử để kiểm tra', isCorrect: false },
+        ],
+        explanation: `🚨 DẤU HIỆU LỪA ĐẢO:\n${imageData.redFlags.map(f => `• ${f}`).join('\n')}\n\nLuôn kiểm tra URL trước khi đăng nhập!`,
+        tags: ['hình ảnh', 'website', 'phishing', 'url'],
+      }
+    },
+  },
+  {
+    category: 'SAFE_BROWSING',
+    difficulty: 'medium',
+    type: 'image',
+    generate: () => {
+      const imageData = generateFakeQRCode()
+      return {
+        type: 'image' as const,
+        category: QUIZ_CATEGORIES.SAFE_BROWSING,
+        difficulty: 'medium' as const,
+        question: 'Bạn thấy QR code như hình ở nơi công cộng. Bạn nên làm gì?',
+        image: imageData.dataUrl,
+        imageData,
+        options: [
+          { id: 'a', text: 'Quét ngay để thanh toán/nhận ưu đãi', isCorrect: false },
+          { id: 'b', text: 'Kiểm tra kỹ QR có bị dán đè không, xem URL sau khi quét', isCorrect: true },
+          { id: 'c', text: 'QR code luôn an toàn, cứ quét', isCorrect: false },
+          { id: 'd', text: 'Chỉ quét nếu ở cửa hàng lớn', isCorrect: false },
+        ],
+        explanation: `🚨 DẤU HIỆU LỪA ĐẢO:\n${imageData.redFlags.map(f => `• ${f}`).join('\n')}\n\nKẻ gian có thể dán QR giả đè lên QR thật!`,
+        tags: ['hình ảnh', 'qr code', 'thanh toán'],
+      }
+    },
+  },
+  {
+    category: 'MONEY_TRANSFER',
+    difficulty: 'hard',
+    type: 'image',
+    generate: () => {
+      const imageData = generateFakeTransferConfirmation()
+      return {
+        type: 'image' as const,
+        category: QUIZ_CATEGORIES.MONEY_TRANSFER,
+        difficulty: 'hard' as const,
+        question: 'Người mua hàng gửi ảnh chuyển tiền như hình và yêu cầu giao hàng. Bạn nên làm gì?',
+        image: imageData.dataUrl,
+        imageData,
+        options: [
+          { id: 'a', text: 'Giao hàng ngay vì có bằng chứng chuyển tiền', isCorrect: false },
+          { id: 'b', text: 'Kiểm tra số dư tài khoản thực tế trước khi giao', isCorrect: true },
+          { id: 'c', text: 'Yêu cầu gửi thêm ảnh biên lai', isCorrect: false },
+          { id: 'd', text: 'Tin tưởng nếu ảnh rõ nét', isCorrect: false },
+        ],
+        explanation: `🚨 DẤU HIỆU LỪA ĐẢO:\n${imageData.redFlags.map(f => `• ${f}`).join('\n')}\n\nChỉ tin thông báo từ app ngân hàng, không tin ảnh chụp màn hình!`,
+        tags: ['hình ảnh', 'chuyển tiền', 'photoshop'],
+      }
+    },
+  },
+  {
+    category: 'PRIZE_SCAM',
+    difficulty: 'medium',
+    type: 'image',
+    generate: () => {
+      const imageData = generateFakeAppNotification()
+      return {
+        type: 'image' as const,
+        category: QUIZ_CATEGORIES.PRIZE_SCAM,
+        difficulty: 'medium' as const,
+        question: 'Bạn nhận được thông báo như hình trên điện thoại. Đây có phải thật không?',
+        image: imageData.dataUrl,
+        imageData,
+        options: [
+          { id: 'a', text: 'Có, vì thông báo từ app chính thức', isCorrect: false },
+          { id: 'b', text: 'Không chắc, cần mở app để kiểm tra trực tiếp', isCorrect: true },
+          { id: 'c', text: 'Có, nhấn ngay để nhận tiền', isCorrect: false },
+          { id: 'd', text: 'Có nếu số tiền nhỏ', isCorrect: false },
+        ],
+        explanation: `🚨 DẤU HIỆU LỪA ĐẢO:\n${imageData.redFlags.map(f => `• ${f}`).join('\n')}\n\nLuôn mở app chính thức để kiểm tra, không nhấn vào notification!`,
+        tags: ['hình ảnh', 'notification', 'app giả'],
+      }
+    },
+  },
+  {
+    category: 'INVESTMENT',
+    difficulty: 'easy',
+    type: 'image',
+    generate: () => {
+      const imageData = generateCryptoScam()
+      return {
+        type: 'image' as const,
+        category: QUIZ_CATEGORIES.INVESTMENT,
+        difficulty: 'easy' as const,
+        question: 'Bạn thấy quảng cáo đầu tư như hình. Đây có đáng tin không?',
+        image: imageData.dataUrl,
+        imageData,
+        options: [
+          { id: 'a', text: 'Có, nhiều người đã giàu từ crypto', isCorrect: false },
+          { id: 'b', text: 'Không, đây là lừa đảo đầu tư điển hình', isCorrect: true },
+          { id: 'c', text: 'Thử với số tiền nhỏ', isCorrect: false },
+          { id: 'd', text: 'Có nếu có testimonial', isCorrect: false },
+        ],
+        explanation: `🚨 DẤU HIỆU LỪA ĐẢO:\n${imageData.redFlags.map(f => `• ${f}`).join('\n')}\n\nKhông có đầu tư nào cam kết lợi nhuận cao mà không có rủi ro!`,
+        tags: ['hình ảnh', 'đầu tư', 'crypto', 'ponzi'],
+      }
+    },
+  },
+  {
+    category: 'ROMANCE',
+    difficulty: 'medium',
+    type: 'image',
+    generate: () => {
+      const imageData = generateRomanceScamProfile()
+      return {
+        type: 'image' as const,
+        category: QUIZ_CATEGORIES.ROMANCE,
+        difficulty: 'medium' as const,
+        question: 'Bạn nhận được lời mời kết bạn từ profile như hình. Đây có đáng tin không?',
+        image: imageData.dataUrl,
+        imageData,
+        options: [
+          { id: 'a', text: 'Có, profile đầy đủ thông tin', isCorrect: false },
+          { id: 'b', text: 'Cần cảnh giác, có nhiều dấu hiệu lừa đảo tình cảm', isCorrect: true },
+          { id: 'c', text: 'Có nếu họ video call', isCorrect: false },
+          { id: 'd', text: 'Có vì người nước ngoài thường thật thà', isCorrect: false },
+        ],
+        explanation: `🚨 DẤU HIỆU LỪA ĐẢO:\n${imageData.redFlags.map(f => `• ${f}`).join('\n')}\n\nLừa đảo tình cảm thường bắt đầu từ profile "hoàn hảo" như thế này!`,
+        tags: ['hình ảnh', 'tình cảm', 'romance scam', 'profile giả'],
+      }
+    },
+  },
 ]
 
 // ============================================
@@ -992,3 +1147,37 @@ export function getCategories(): string[] {
 export function getCategoryName(key: string): string {
   return QUIZ_CATEGORIES[key as keyof typeof QUIZ_CATEGORIES] || key
 }
+
+// Generate mixed questions (from templates + static extra questions)
+export function generateMixedQuestions(count: number): QuizQuestion[] {
+  const questions: QuizQuestion[] = []
+  const templateCount = Math.ceil(count * 0.6) // 60% from templates
+  const extraCount = count - templateCount // 40% from extra static questions
+  
+  // Add template-generated questions
+  for (let i = 0; i < templateCount; i++) {
+    questions.push(generateQuestion())
+  }
+  
+  // Add extra static questions
+  const extraQuestions = getRandomExtraQuestions(extraCount)
+  extraQuestions.forEach((q, index) => {
+    questionCounter++
+    questions.push({
+      id: `q_extra_${Date.now()}_${questionCounter}_${index}`,
+      ...q,
+    } as QuizQuestion)
+  })
+  
+  // Shuffle all questions
+  return questions.sort(() => Math.random() - 0.5)
+}
+
+// Get total available questions count
+export function getTotalQuestionsCount(): number {
+  return questionTemplates.length * 10 + ALL_EXTRA_QUESTIONS.length // Estimate: each template can generate ~10 variations
+}
+
+// Export extra questions for direct access
+export { ALL_EXTRA_QUESTIONS, getRandomExtraQuestions } from './quizExtraData'
+

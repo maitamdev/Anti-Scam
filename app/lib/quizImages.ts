@@ -401,3 +401,274 @@ export function generateQuizImages(count: number): QuizImage[] {
   }
   return images
 }
+
+
+// ============================================
+// ADDITIONAL SCAM IMAGE GENERATORS
+// ============================================
+
+// Fake website login page
+export function generateFakeWebsiteLogin(): QuizImage {
+  const bank = random(BANKS)
+  const fakeUrl = random([
+    `${bank.toLowerCase()}-dangnhap.com`,
+    `${bank.toLowerCase()}-vn.net`,
+    `secure-${bank.toLowerCase()}.xyz`,
+    `${bank.toLowerCase()}-online.top`,
+  ])
+  
+  const svg = svgToDataUrl(`
+    <svg xmlns="http://www.w3.org/2000/svg" width="340" height="280" viewBox="0 0 340 280">
+      <rect width="340" height="280" fill="#f5f5f5"/>
+      <!-- Browser bar -->
+      <rect width="340" height="35" fill="#dee1e6"/>
+      <circle cx="15" cy="17" r="5" fill="#ff5f57"/>
+      <circle cx="30" cy="17" r="5" fill="#febc2e"/>
+      <circle cx="45" cy="17" r="5" fill="#28c840"/>
+      <!-- URL bar -->
+      <rect x="60" y="8" width="220" height="20" rx="4" fill="#fff"/>
+      <text x="68" y="22" font-size="9" fill="#c00">⚠️ ${fakeUrl}</text>
+      <!-- Page content -->
+      <rect x="20" y="50" width="300" height="210" rx="8" fill="#fff" stroke="#ddd"/>
+      <!-- Bank logo area -->
+      <rect x="120" y="65" width="100" height="30" rx="4" fill="#1a73e8"/>
+      <text x="170" y="85" font-size="12" fill="white" text-anchor="middle" font-weight="bold">${bank}</text>
+      <!-- Login form -->
+      <text x="170" y="115" font-size="11" fill="#333" text-anchor="middle">Đăng nhập Internet Banking</text>
+      <rect x="70" y="130" width="200" height="32" rx="4" fill="#f5f5f5" stroke="#ddd"/>
+      <text x="80" y="150" font-size="10" fill="#999">Tên đăng nhập</text>
+      <rect x="70" y="170" width="200" height="32" rx="4" fill="#f5f5f5" stroke="#ddd"/>
+      <text x="80" y="190" font-size="10" fill="#999">Mật khẩu</text>
+      <rect x="70" y="215" width="200" height="32" rx="6" fill="#1a73e8"/>
+      <text x="170" y="236" font-size="12" fill="white" text-anchor="middle" font-weight="bold">ĐĂNG NHẬP</text>
+    </svg>
+  `)
+
+  return {
+    dataUrl: svg,
+    type: 'website',
+    isScam: true,
+    description: `Website giả mạo trang đăng nhập ${bank}`,
+    redFlags: [
+      `URL giả: ${fakeUrl} không phải domain chính thức`,
+      'Domain lạ (.com, .net, .xyz, .top thay vì .com.vn)',
+      'Giao diện có thể giống 100% nhưng URL khác',
+      'Không có chứng chỉ SSL hợp lệ của ngân hàng',
+    ],
+  }
+}
+
+// Fake QR code scam
+export function generateFakeQRCode(): QuizImage {
+  const scenarios = [
+    { context: 'quán cafe', reason: 'thanh toán', redFlag: 'QR code bị dán đè lên QR gốc' },
+    { context: 'bãi đỗ xe', reason: 'phí gửi xe', redFlag: 'QR code dán ở vị trí bất thường' },
+    { context: 'ATM', reason: 'hướng dẫn rút tiền', redFlag: 'QR code không phải của ngân hàng' },
+    { context: 'poster đường phố', reason: 'khuyến mãi', redFlag: 'QR code dẫn đến link lạ' },
+  ]
+  const scenario = random(scenarios)
+  
+  const svg = svgToDataUrl(`
+    <svg xmlns="http://www.w3.org/2000/svg" width="340" height="260" viewBox="0 0 340 260">
+      <rect width="340" height="260" fill="#fff"/>
+      <!-- QR Code frame -->
+      <rect x="95" y="30" width="150" height="150" fill="#fff" stroke="#333" stroke-width="2"/>
+      <!-- Fake QR pattern -->
+      <rect x="105" y="40" width="30" height="30" fill="#333"/>
+      <rect x="145" y="40" width="30" height="30" fill="#333"/>
+      <rect x="185" y="40" width="30" height="30" fill="#333"/>
+      <rect x="105" y="80" width="30" height="30" fill="#333"/>
+      <rect x="165" y="80" width="30" height="30" fill="#333"/>
+      <rect x="105" y="120" width="30" height="30" fill="#333"/>
+      <rect x="145" y="120" width="30" height="30" fill="#333"/>
+      <rect x="185" y="120" width="30" height="30" fill="#333"/>
+      <!-- Warning sticker -->
+      <rect x="180" y="130" width="60" height="25" fill="#ff0" stroke="#f00" stroke-width="2" transform="rotate(-15 210 142)"/>
+      <text x="210" y="147" font-size="8" fill="#f00" text-anchor="middle" transform="rotate(-15 210 142)">FAKE!</text>
+      <!-- Context -->
+      <text x="170" y="200" font-size="12" fill="#333" text-anchor="middle">Quét để ${scenario.reason}</text>
+      <text x="170" y="220" font-size="10" fill="#666" text-anchor="middle">Tại ${scenario.context}</text>
+      <text x="170" y="245" font-size="9" fill="#c00" text-anchor="middle">⚠️ ${scenario.redFlag}</text>
+    </svg>
+  `)
+
+  return {
+    dataUrl: svg,
+    type: 'website',
+    isScam: true,
+    description: `QR code giả tại ${scenario.context}`,
+    redFlags: [
+      scenario.redFlag,
+      'Kẻ gian dán QR giả đè lên QR thật',
+      'QR dẫn đến trang web lừa đảo hoặc chuyển tiền',
+      'Luôn kiểm tra URL sau khi quét QR',
+    ],
+  }
+}
+
+// Fake transfer confirmation
+export function generateFakeTransferConfirmation(): QuizImage {
+  const bank = random(BANKS)
+  const amount = randomAmount() * 2
+  const name = random(NAMES)
+  
+  const svg = svgToDataUrl(`
+    <svg xmlns="http://www.w3.org/2000/svg" width="340" height="320" viewBox="0 0 340 320">
+      <rect width="340" height="320" fill="#f0f0f0"/>
+      <!-- Phone frame -->
+      <rect x="20" y="10" width="300" height="300" rx="20" fill="#fff" stroke="#ddd"/>
+      <!-- Header -->
+      <rect x="20" y="10" width="300" height="50" rx="20" fill="#1a73e8"/>
+      <text x="170" y="42" font-size="14" fill="white" text-anchor="middle" font-weight="bold">${bank}</text>
+      <!-- Success icon -->
+      <circle cx="170" cy="100" r="30" fill="#4caf50"/>
+      <text x="170" y="110" font-size="24" fill="white" text-anchor="middle">✓</text>
+      <!-- Transfer info -->
+      <text x="170" y="150" font-size="14" fill="#333" text-anchor="middle" font-weight="bold">Chuyển tiền thành công</text>
+      <text x="170" y="180" font-size="20" fill="#1a73e8" text-anchor="middle" font-weight="bold">${formatMoney(amount)}</text>
+      <text x="170" y="210" font-size="11" fill="#666" text-anchor="middle">Đến: ${name.toUpperCase()}</text>
+      <text x="170" y="230" font-size="11" fill="#666" text-anchor="middle">STK: ***${randomBankAccount().slice(-4)}</text>
+      <text x="170" y="250" font-size="10" fill="#999" text-anchor="middle">${randomTime()} - ${new Date().toLocaleDateString('vi-VN')}</text>
+      <!-- Warning -->
+      <rect x="40" y="270" width="260" height="30" rx="4" fill="#fff3cd"/>
+      <text x="170" y="290" font-size="9" fill="#856404" text-anchor="middle">⚠️ Ảnh này có thể bị chỉnh sửa bằng Photoshop</text>
+    </svg>
+  `)
+
+  return {
+    dataUrl: svg,
+    type: 'bank',
+    isScam: true,
+    description: 'Ảnh chụp màn hình chuyển tiền giả',
+    redFlags: [
+      'Ảnh chuyển tiền có thể bị chỉnh sửa dễ dàng',
+      'Kẻ gian gửi ảnh giả để lừa bạn giao hàng/dịch vụ',
+      'Luôn kiểm tra số dư tài khoản thực tế',
+      'Không tin ảnh chụp màn hình, chỉ tin thông báo từ app ngân hàng',
+    ],
+  }
+}
+
+// Fake app notification
+export function generateFakeAppNotification(): QuizImage {
+  const apps = [
+    { name: 'MoMo', color: '#a50064' },
+    { name: 'ZaloPay', color: '#0068ff' },
+    { name: 'VNPay', color: '#005baa' },
+    { name: 'Shopee', color: '#ee4d2d' },
+  ]
+  const app = random(apps)
+  const amount = randomAmount()
+  
+  const svg = svgToDataUrl(`
+    <svg xmlns="http://www.w3.org/2000/svg" width="340" height="140" viewBox="0 0 340 140">
+      <rect width="340" height="140" fill="#1c1c1e"/>
+      <!-- Notification card -->
+      <rect x="15" y="20" width="310" height="100" rx="14" fill="#2c2c2e"/>
+      <!-- App icon -->
+      <rect x="30" y="35" width="45" height="45" rx="10" fill="${app.color}"/>
+      <text x="52" y="65" font-size="20" fill="white" text-anchor="middle" font-weight="bold">${app.name.charAt(0)}</text>
+      <!-- Content -->
+      <text x="90" y="50" font-size="13" fill="#fff" font-weight="bold">${app.name}</text>
+      <text x="280" y="50" font-size="10" fill="#8e8e93">Bây giờ</text>
+      <text x="90" y="70" font-size="12" fill="#fff">🎉 Bạn nhận được ${formatMoney(amount)}</text>
+      <text x="90" y="88" font-size="11" fill="#8e8e93">Từ: CHUONG TRINH KHUYEN MAI</text>
+      <text x="90" y="105" font-size="10" fill="#007aff">Nhấn để nhận ngay →</text>
+    </svg>
+  `)
+
+  return {
+    dataUrl: svg,
+    type: 'bank',
+    isScam: true,
+    description: `Thông báo giả từ ${app.name}`,
+    redFlags: [
+      'Thông báo "nhận tiền" bất ngờ không rõ nguồn',
+      'Yêu cầu "nhấn để nhận" - app thật tự động cộng tiền',
+      'Có thể là notification giả hoặc app clone',
+      'Kiểm tra trực tiếp trong app chính thức',
+    ],
+  }
+}
+
+// Crypto/Investment scam
+export function generateCryptoScam(): QuizImage {
+  const profits = ['500%', '1000%', '300%', '200%']
+  const profit = random(profits)
+  
+  const svg = svgToDataUrl(`
+    <svg xmlns="http://www.w3.org/2000/svg" width="340" height="280" viewBox="0 0 340 280">
+      <rect width="340" height="280" fill="#0d1421"/>
+      <!-- Header -->
+      <rect width="340" height="50" fill="#1a2332"/>
+      <text x="170" y="32" font-size="14" fill="#ffd700" text-anchor="middle" font-weight="bold">💰 CRYPTO INVESTMENT VIP 💰</text>
+      <!-- Fake chart -->
+      <polyline points="30,180 80,160 130,170 180,120 230,100 280,60 310,40" fill="none" stroke="#00ff00" stroke-width="3"/>
+      <text x="280" y="55" font-size="10" fill="#00ff00">+${profit}</text>
+      <!-- Testimonials -->
+      <rect x="20" y="200" width="145" height="60" rx="8" fill="#1a2332"/>
+      <text x="30" y="220" font-size="9" fill="#fff">"Đầu tư 10tr, rút 50tr sau 1 tuần"</text>
+      <text x="30" y="235" font-size="8" fill="#888">- Nguyễn V.A ⭐⭐⭐⭐⭐</text>
+      <rect x="175" y="200" width="145" height="60" rx="8" fill="#1a2332"/>
+      <text x="185" y="220" font-size="9" fill="#fff">"Lãi ${profit} chỉ sau 3 ngày"</text>
+      <text x="185" y="235" font-size="8" fill="#888">- Trần T.B ⭐⭐⭐⭐⭐</text>
+      <!-- CTA -->
+      <rect x="70" y="265" width="200" height="10" rx="2" fill="#ffd700"/>
+    </svg>
+  `)
+
+  return {
+    dataUrl: svg,
+    type: 'website',
+    isScam: true,
+    description: 'Quảng cáo đầu tư crypto lừa đảo',
+    redFlags: [
+      `Hứa lợi nhuận phi thực tế (${profit})`,
+      'Biểu đồ chỉ đi lên - không có đầu tư nào như vậy',
+      'Testimonial giả với tên chung chung',
+      'Không có thông tin công ty, giấy phép',
+    ],
+  }
+}
+
+// Romance scam profile
+export function generateRomanceScamProfile(): QuizImage {
+  const jobs = ['Bác sĩ', 'Kỹ sư dầu khí', 'Quân nhân Mỹ', 'Doanh nhân']
+  const countries = ['Mỹ', 'Anh', 'Đức', 'Úc']
+  const job = random(jobs)
+  const country = random(countries)
+  
+  const svg = svgToDataUrl(`
+    <svg xmlns="http://www.w3.org/2000/svg" width="340" height="300" viewBox="0 0 340 300">
+      <rect width="340" height="300" fill="#fff"/>
+      <!-- Profile header -->
+      <rect width="340" height="120" fill="linear-gradient(#667eea, #764ba2)"/>
+      <rect x="0" y="0" width="340" height="120" fill="#667eea"/>
+      <!-- Avatar -->
+      <circle cx="170" cy="100" r="50" fill="#fff" stroke="#fff" stroke-width="4"/>
+      <circle cx="170" cy="100" r="46" fill="#ddd"/>
+      <text x="170" y="110" font-size="30" fill="#999" text-anchor="middle">👤</text>
+      <!-- Info -->
+      <text x="170" y="175" font-size="16" fill="#333" text-anchor="middle" font-weight="bold">Michael Johnson</text>
+      <text x="170" y="195" font-size="12" fill="#666" text-anchor="middle">${job} • ${country}</text>
+      <text x="170" y="215" font-size="11" fill="#888" text-anchor="middle">"Looking for true love ❤️"</text>
+      <!-- Red flags -->
+      <rect x="20" y="235" width="300" height="50" rx="8" fill="#fff3cd"/>
+      <text x="170" y="255" font-size="9" fill="#856404" text-anchor="middle">⚠️ Dấu hiệu: Ảnh đẹp như model, nghề nghiệp "sang"</text>
+      <text x="170" y="270" font-size="9" fill="#856404" text-anchor="middle">Người nước ngoài, nhanh chóng tỏ tình</text>
+    </svg>
+  `)
+
+  return {
+    dataUrl: svg,
+    type: 'messenger',
+    isScam: true,
+    description: 'Profile giả trong lừa đảo tình cảm',
+    redFlags: [
+      'Ảnh đại diện quá hoàn hảo (thường lấy từ internet)',
+      `Nghề nghiệp "sang": ${job}`,
+      `Người nước ngoài (${country}) quen qua mạng`,
+      'Nhanh chóng tỏ tình, hứa hẹn tương lai',
+    ],
+  }
+}
