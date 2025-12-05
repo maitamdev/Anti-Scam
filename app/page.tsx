@@ -11,6 +11,7 @@ import {
   CheckCircle,
   ArrowRight
 } from 'lucide-react'
+import Image from 'next/image'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import { useRouter } from 'next/navigation'
@@ -127,43 +128,43 @@ export default function Home() {
                 </div>
               </motion.div>
 
-              {/* Right - 3D Shield illustration */}
+              {/* Right - Hero Image */}
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
                 className="flex justify-center lg:justify-end"
               >
-                <div className="relative w-80 h-80 md:w-[420px] md:h-[420px]">
-                  {/* Outer glow rings */}
-                  <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/20 to-cyan-500/20 blur-2xl animate-pulse" />
+                <div className="relative w-80 h-80 md:w-[480px] md:h-[400px]">
+                  {/* Animated glow rings */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/30 to-blue-500/30 blur-3xl animate-pulse" />
+                  <div className="absolute inset-8 bg-gradient-to-r from-purple-500/20 to-pink-500/20 blur-2xl animate-pulse" style={{ animationDelay: '0.5s' }} />
                   
-                  {/* Main circle */}
-                  <div className="absolute inset-8 rounded-full bg-gradient-to-br from-[#0d1a2d] to-[#1a2d4a] border border-blue-500/30 shadow-2xl shadow-blue-500/20">
-                    {/* Inner content */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="relative">
-                        {/* Shield icon */}
-                        <Shield className="w-24 h-24 md:w-32 md:h-32 text-blue-400" strokeWidth={1} />
-                        {/* Lock overlay */}
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <Lock className="w-10 h-10 md:w-12 md:h-12 text-cyan-400" />
-                        </div>
-                      </div>
-                    </div>
-                    
-                    {/* Orbiting elements */}
-                    <div className="absolute inset-0 animate-spin-slow">
-                      <div className="absolute top-4 left-1/2 -translate-x-1/2 w-3 h-3 bg-blue-400 rounded-full" />
-                      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-2 h-2 bg-cyan-400 rounded-full" />
-                      <div className="absolute left-4 top-1/2 -translate-y-1/2 w-2 h-2 bg-purple-400 rounded-full" />
-                      <div className="absolute right-4 top-1/2 -translate-y-1/2 w-3 h-3 bg-green-400 rounded-full" />
-                    </div>
+                  {/* Orbiting particles */}
+                  <div className="absolute inset-0 animate-spin-slow">
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3 h-3 bg-cyan-400 rounded-full shadow-lg shadow-cyan-400/50" />
+                    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-2 h-2 bg-blue-400 rounded-full shadow-lg shadow-blue-400/50" />
+                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-2 h-2 bg-purple-400 rounded-full shadow-lg shadow-purple-400/50" />
+                    <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-green-400 rounded-full shadow-lg shadow-green-400/50" />
                   </div>
                   
-                  {/* Decorative rings */}
-                  <div className="absolute inset-4 rounded-full border border-blue-500/20" />
-                  <div className="absolute inset-0 rounded-full border border-cyan-500/10" />
+                  {/* Hero Image with float animation */}
+                  <motion.div
+                    animate={{ y: [0, -15, 0] }}
+                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                    className="relative w-full h-full"
+                  >
+                    <Image
+                      src="/hero-shield.jpg"
+                      alt="ANTI-SCAM Security Shield"
+                      fill
+                      className="object-contain relative z-10 drop-shadow-[0_0_30px_rgba(59,130,246,0.5)]"
+                      priority
+                    />
+                  </motion.div>
+                  
+                  {/* Scanning line effect */}
+                  <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent animate-scan-line opacity-60" />
                 </div>
               </motion.div>
             </div>
