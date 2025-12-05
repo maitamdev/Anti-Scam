@@ -15,14 +15,40 @@ const montserrat = Montserrat({
 
 export const metadata: Metadata = {
   title: 'ANTI-SCAM - Kiểm tra & Cảnh báo Lừa đảo Mạng',
-  description: 'Nền tảng AI phân tích và cảnh báo website lừa đảo, bảo vệ người dùng Việt Nam khỏi các chiêu trò lừa đảo trực tuyến.',
-  keywords: ['chống lừa đảo', 'kiểm tra link', 'phishing', 'scam', 'an toàn mạng', 'bảo mật'],
+  description: 'Nền tảng AI phân tích và cảnh báo website lừa đảo, bảo vệ người dùng Việt Nam khỏi các chiêu trò lừa đảo trực tuyến. Kiểm tra link nghi ngờ, học cách nhận biết lừa đảo.',
+  keywords: ['chống lừa đảo', 'kiểm tra link', 'phishing', 'scam', 'an toàn mạng', 'bảo mật', 'lừa đảo online', 'cảnh báo lừa đảo'],
   authors: [{ name: 'ANTI-SCAM Team' }],
   manifest: '/manifest.json',
   icons: {
     icon: '/logo.png',
     shortcut: '/logo.png',
     apple: '/logo.png',
+  },
+  openGraph: {
+    title: 'ANTI-SCAM - Bảo Vệ Bạn Khỏi Lừa Đảo Online',
+    description: '🛡️ Kiểm tra link nghi ngờ • 🤖 AI phân tích thông minh • 📚 5000+ câu hỏi quiz • 🚨 Cảnh báo lừa đảo mới nhất',
+    url: 'https://anti-scam-kappa.vercel.app',
+    siteName: 'ANTI-SCAM',
+    images: [
+      {
+        url: 'https://anti-scam-kappa.vercel.app/api/og',
+        width: 1200,
+        height: 630,
+        alt: 'ANTI-SCAM - Nền tảng chống lừa đảo online',
+      },
+    ],
+    locale: 'vi_VN',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'ANTI-SCAM - Bảo Vệ Bạn Khỏi Lừa Đảo Online',
+    description: '🛡️ Kiểm tra link • 🤖 AI phân tích • 📚 Quiz nhận biết lừa đảo',
+    images: ['https://anti-scam-kappa.vercel.app/api/og'],
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 }
 
