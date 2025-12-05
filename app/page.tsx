@@ -71,7 +71,7 @@ export default function Home() {
       
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="pt-28 pb-20 px-4 relative overflow-hidden">
+        <section className="pt-20 sm:pt-28 pb-12 sm:pb-20 px-4 relative overflow-hidden">
           {/* Background effects */}
           <div className="absolute inset-0 overflow-hidden">
             <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
@@ -87,12 +87,12 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
               >
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-full mb-6">
-                  <Shield className="w-4 h-4 text-blue-400" />
-                  <span className="text-sm text-blue-400">Công cụ hỗ trợ nhận biết lừa đảo online</span>
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-blue-500/10 border border-blue-500/20 rounded-full mb-4 sm:mb-6">
+                  <Shield className="w-3 h-3 sm:w-4 sm:h-4 text-blue-400" />
+                  <span className="text-xs sm:text-sm text-blue-400">Công cụ hỗ trợ nhận biết lừa đảo online</span>
                 </div>
                 
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4 sm:mb-6">
                   Kiểm tra{' '}
                   <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent">
                     Website & Tin nhắn
@@ -100,15 +100,15 @@ export default function Home() {
                   {' '}đáng ngờ
                 </h1>
                 
-                <p className="text-lg text-gray-400 mb-8 leading-relaxed max-w-xl">
+                <p className="text-base sm:text-lg text-gray-400 mb-6 sm:mb-8 leading-relaxed max-w-xl">
                   Dán link hoặc upload ảnh tin nhắn để kiểm tra dấu hiệu lừa đảo. 
                   Công cụ miễn phí giúp bạn cẩn thận hơn trước khi click vào link lạ.
                 </p>
                 
-                <div className="flex flex-wrap gap-4">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                   <motion.button
                     onClick={() => router.push('/scan')}
-                    className="px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 rounded-xl font-semibold text-white flex items-center gap-2 shadow-lg shadow-blue-500/25"
+                    className="px-6 py-3 sm:px-8 sm:py-4 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 rounded-xl font-semibold text-white flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
@@ -118,7 +118,7 @@ export default function Home() {
                   
                   <motion.button
                     onClick={() => router.push('/quiz')}
-                    className="px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl font-semibold text-white flex items-center gap-2"
+                    className="px-6 py-3 sm:px-8 sm:py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl font-semibold text-white flex items-center justify-center gap-2"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
@@ -133,9 +133,9 @@ export default function Home() {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
-                className="flex justify-center lg:justify-end"
+                className="flex justify-center lg:justify-end order-first lg:order-last"
               >
-                <div className="relative w-80 h-80 md:w-[480px] md:h-[400px]">
+                <div className="relative w-64 h-64 sm:w-80 sm:h-80 md:w-[480px] md:h-[400px]">
                   {/* Animated glow rings */}
                   <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/30 to-blue-500/30 blur-3xl animate-pulse" />
                   <div className="absolute inset-8 bg-gradient-to-r from-purple-500/20 to-pink-500/20 blur-2xl animate-pulse" style={{ animationDelay: '0.5s' }} />
@@ -172,9 +172,9 @@ export default function Home() {
         </section>
 
         {/* Stats Section */}
-        <section className="py-12 px-4 border-y border-gray-800/50 bg-[#0d1320]/50">
+        <section className="py-8 sm:py-12 px-4 border-y border-gray-800/50 bg-[#0d1320]/50">
           <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8">
               {stats.map((stat, index) => (
                 <motion.div
                   key={index}
@@ -184,10 +184,10 @@ export default function Home() {
                   transition={{ delay: index * 0.1 }}
                   className="text-center"
                 >
-                  <p className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                  <p className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
                     {stat.value}
                   </p>
-                  <p className="text-gray-400 mt-1">{stat.label}</p>
+                  <p className="text-gray-400 text-sm sm:text-base mt-1">{stat.label}</p>
                 </motion.div>
               ))}
             </div>
@@ -196,15 +196,15 @@ export default function Home() {
 
 
         {/* Features Section */}
-        <section className="py-20 px-4">
+        <section className="py-12 sm:py-20 px-4">
           <div className="max-w-7xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-center mb-16"
+              className="text-center mb-8 sm:mb-16"
             >
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
                 Các tính năng chính
               </h2>
               <p className="text-gray-400 max-w-2xl mx-auto">
@@ -212,7 +212,7 @@ export default function Home() {
               </p>
             </motion.div>
 
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
               {features.map((feature, index) => (
                 <motion.div
                   key={index}
@@ -220,17 +220,17 @@ export default function Home() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
-                  className="group relative bg-gradient-to-br from-[#111827] to-[#0d1320] rounded-2xl p-8 border border-gray-800 hover:border-blue-500/50 transition-all duration-300"
+                  className="group relative bg-gradient-to-br from-[#111827] to-[#0d1320] rounded-xl sm:rounded-2xl p-5 sm:p-8 border border-gray-800 hover:border-blue-500/50 transition-all duration-300"
                 >
                   {/* Icon */}
-                  <div className={`w-14 h-14 rounded-xl bg-gradient-to-r ${feature.color} p-0.5 mb-6`}>
-                    <div className="w-full h-full bg-[#111827] rounded-xl flex items-center justify-center">
-                      <feature.icon className="w-7 h-7 text-white" />
+                  <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-lg sm:rounded-xl bg-gradient-to-r ${feature.color} p-0.5 mb-4 sm:mb-6`}>
+                    <div className="w-full h-full bg-[#111827] rounded-lg sm:rounded-xl flex items-center justify-center">
+                      <feature.icon className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
                     </div>
                   </div>
                   
-                  <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
-                  <p className="text-gray-400 leading-relaxed">{feature.description}</p>
+                  <h3 className="text-lg sm:text-xl font-semibold mb-2 sm:mb-3">{feature.title}</h3>
+                  <p className="text-gray-400 text-sm sm:text-base leading-relaxed">{feature.description}</p>
                   
                   {/* Hover effect */}
                   <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/5 to-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -241,23 +241,23 @@ export default function Home() {
         </section>
 
         {/* How it Works Section */}
-        <section className="py-20 px-4 bg-[#0d1320]">
+        <section className="py-12 sm:py-20 px-4 bg-[#0d1320]">
           <div className="max-w-7xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-center mb-16"
+              className="text-center mb-8 sm:mb-16"
             >
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
                 Cách sử dụng
               </h2>
-              <p className="text-gray-400 max-w-2xl mx-auto">
+              <p className="text-gray-400 text-sm sm:text-base max-w-2xl mx-auto">
                 Chỉ 3 bước đơn giản để kiểm tra
               </p>
             </motion.div>
 
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-8">
               {howItWorks.map((item, index) => (
                 <motion.div
                   key={index}
@@ -272,12 +272,12 @@ export default function Home() {
                     <div className="hidden md:block absolute top-12 left-full w-full h-0.5 bg-gradient-to-r from-blue-500/50 to-transparent -translate-x-1/2" />
                   )}
                   
-                  <div className="bg-[#111827] rounded-2xl p-8 border border-gray-800 h-full">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 flex items-center justify-center mb-6">
-                      <span className="text-white font-bold">{item.step}</span>
+                  <div className="bg-[#111827] rounded-xl sm:rounded-2xl p-5 sm:p-8 border border-gray-800 h-full">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 flex items-center justify-center mb-4 sm:mb-6">
+                      <span className="text-white font-bold text-sm sm:text-base">{item.step}</span>
                     </div>
-                    <h3 className="text-xl font-semibold mb-3">{item.title}</h3>
-                    <p className="text-gray-400">{item.description}</p>
+                    <h3 className="text-lg sm:text-xl font-semibold mb-2 sm:mb-3">{item.title}</h3>
+                    <p className="text-gray-400 text-sm sm:text-base">{item.description}</p>
                   </div>
                 </motion.div>
               ))}
@@ -286,24 +286,24 @@ export default function Home() {
         </section>
 
         {/* Features Grid Section */}
-        <section className="py-20 px-4">
+        <section className="py-12 sm:py-20 px-4">
           <div className="max-w-7xl mx-auto">
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 items-center">
               {/* Left - Feature list */}
               <motion.div
                 initial={{ opacity: 0, x: -30 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
               >
-                <h2 className="text-3xl md:text-4xl font-bold mb-6">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6">
                   Tại sao nên sử dụng?
                 </h2>
-                <p className="text-gray-400 mb-8">
+                <p className="text-gray-400 text-sm sm:text-base mb-6 sm:mb-8">
                   Công cụ đơn giản giúp bạn kiểm tra nhanh các link và tin nhắn đáng ngờ 
                   trước khi click hoặc cung cấp thông tin cá nhân.
                 </p>
                 
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                   {[
                     'Kiểm tra URL website trong vài giây',
                     'Upload ảnh tin nhắn để phân tích',
@@ -319,17 +319,17 @@ export default function Home() {
                       transition={{ delay: index * 0.1 }}
                       className="flex items-center gap-3"
                     >
-                      <div className="w-6 h-6 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0">
-                        <CheckCircle className="w-4 h-4 text-green-400" />
+                      <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0">
+                        <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-green-400" />
                       </div>
-                      <span className="text-gray-300">{item}</span>
+                      <span className="text-gray-300 text-sm sm:text-base">{item}</span>
                     </motion.div>
                   ))}
                 </div>
                 
                 <motion.button
                   onClick={() => router.push('/scan')}
-                  className="mt-8 px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 rounded-xl font-semibold text-white flex items-center gap-2"
+                  className="mt-6 sm:mt-8 px-5 py-2.5 sm:px-6 sm:py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 rounded-xl font-semibold text-white flex items-center gap-2 text-sm sm:text-base"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
@@ -343,7 +343,7 @@ export default function Home() {
                 initial={{ opacity: 0, x: 30 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                className="grid grid-cols-2 gap-4"
+                className="grid grid-cols-2 gap-3 sm:gap-4"
               >
                 {[
                   { icon: Search, title: 'Kiểm tra URL', desc: 'Phân tích link đáng ngờ' },
@@ -357,13 +357,13 @@ export default function Home() {
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
                     transition={{ delay: index * 0.1 }}
-                    className="bg-[#111827] rounded-xl p-6 border border-gray-800 hover:border-blue-500/30 transition-colors"
+                    className="bg-[#111827] rounded-lg sm:rounded-xl p-4 sm:p-6 border border-gray-800 hover:border-blue-500/30 transition-colors"
                   >
-                    <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center mb-4">
-                      <item.icon className="w-5 h-5 text-blue-400" />
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-blue-500/20 flex items-center justify-center mb-3 sm:mb-4">
+                      <item.icon className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" />
                     </div>
-                    <h4 className="font-semibold mb-1">{item.title}</h4>
-                    <p className="text-gray-400 text-sm">{item.desc}</p>
+                    <h4 className="font-semibold text-sm sm:text-base mb-1">{item.title}</h4>
+                    <p className="text-gray-400 text-xs sm:text-sm">{item.desc}</p>
                   </motion.div>
                 ))}
               </motion.div>
@@ -372,30 +372,30 @@ export default function Home() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-20 px-4 bg-gradient-to-b from-[#0d1320] to-[#0a0f1a]">
+        <section className="py-12 sm:py-20 px-4 bg-gradient-to-b from-[#0d1320] to-[#0a0f1a]">
           <div className="max-w-4xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="relative bg-gradient-to-r from-blue-600/20 to-cyan-600/20 rounded-3xl p-12 border border-blue-500/20 text-center overflow-hidden"
+              className="relative bg-gradient-to-r from-blue-600/20 to-cyan-600/20 rounded-2xl sm:rounded-3xl p-6 sm:p-12 border border-blue-500/20 text-center overflow-hidden"
             >
               {/* Background glow */}
               <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 blur-3xl" />
               
               <div className="relative z-10">
-                <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
                   Thử kiểm tra ngay?
                 </h2>
-                <p className="text-gray-400 mb-8 max-w-2xl mx-auto">
+                <p className="text-gray-400 text-sm sm:text-base mb-6 sm:mb-8 max-w-2xl mx-auto">
                   Dán link hoặc upload ảnh tin nhắn đáng ngờ để kiểm tra. 
                   Hoàn toàn miễn phí, không cần đăng ký.
                 </p>
                 
-                <div className="flex flex-wrap justify-center gap-4">
+                <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
                   <motion.button
                     onClick={() => router.push('/scan')}
-                    className="px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 rounded-xl font-semibold text-white flex items-center gap-2 shadow-lg shadow-blue-500/25"
+                    className="px-6 py-3 sm:px-8 sm:py-4 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 rounded-xl font-semibold text-white flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
@@ -405,7 +405,7 @@ export default function Home() {
                   
                   <motion.button
                     onClick={() => router.push('/quiz')}
-                    className="px-8 py-4 bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl font-semibold text-white flex items-center gap-2"
+                    className="px-6 py-3 sm:px-8 sm:py-4 bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl font-semibold text-white flex items-center justify-center gap-2"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >

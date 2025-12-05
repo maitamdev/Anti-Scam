@@ -159,12 +159,12 @@ export default function ScanPage() {
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-8"
+            className="text-center mb-6 sm:mb-8"
           >
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">
               Kiểm tra URL & Tin nhắn
             </h1>
-            <p className="text-gray-400 text-lg">
+            <p className="text-gray-400 text-sm sm:text-lg px-2">
               Dán link hoặc upload ảnh tin nhắn đáng ngờ để kiểm tra dấu hiệu lừa đảo.
             </p>
           </motion.div>
@@ -183,29 +183,29 @@ export default function ScanPage() {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex justify-center gap-2 mb-8"
+            className="flex justify-center gap-2 mb-6 sm:mb-8"
           >
             <button
               onClick={() => { setActiveTab('url'); setResult(null); setError(''); }}
-              className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all ${
+              className={`flex items-center gap-1.5 sm:gap-2 px-4 py-2.5 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl font-medium transition-all text-sm sm:text-base ${
                 activeTab === 'url'
                   ? 'bg-blue-600 text-white'
                   : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
               }`}
             >
-              <Link2 className="w-5 h-5" />
-              Kiểm tra URL
+              <Link2 className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="hidden xs:inline">Kiểm tra</span> URL
             </button>
             <button
               onClick={() => { setActiveTab('image'); setResult(null); setError(''); }}
-              className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all ${
+              className={`flex items-center gap-1.5 sm:gap-2 px-4 py-2.5 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl font-medium transition-all text-sm sm:text-base ${
                 activeTab === 'image'
                   ? 'bg-blue-600 text-white'
                   : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
               }`}
             >
-              <ImageIcon className="w-5 h-5" />
-              Kiểm tra hình ảnh
+              <ImageIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="hidden xs:inline">Kiểm tra</span> Hình ảnh
             </button>
           </motion.div>
 
@@ -238,33 +238,34 @@ export default function ScanPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
             onSubmit={handleScan}
-            className="mb-10"
+            className="mb-8 sm:mb-10"
           >
-            <div className="flex gap-3">
+            <div className="flex flex-col sm:flex-row gap-3">
               <div className="flex-1 relative">
-                <Link2 className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                <Link2 className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
                 <input
                   type="text"
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
-                  placeholder="Dán URL hoặc tên website của bạn vào đây..."
-                  className="w-full bg-[#111827] border border-gray-700 rounded-xl py-4 pl-12 pr-4 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-colors"
+                  placeholder="Dán URL website vào đây..."
+                  className="w-full bg-[#111827] border border-gray-700 rounded-lg sm:rounded-xl py-3 sm:py-4 pl-10 sm:pl-12 pr-4 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-colors text-sm sm:text-base"
                   disabled={isLoading}
                 />
               </div>
               <button
                 type="submit"
                 disabled={isLoading || !url.trim()}
-                className="px-8 py-4 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-600/50 disabled:cursor-not-allowed rounded-xl font-medium text-white transition-colors flex items-center gap-2"
+                className="px-6 py-3 sm:px-8 sm:py-4 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-600/50 disabled:cursor-not-allowed rounded-lg sm:rounded-xl font-medium text-white transition-colors flex items-center justify-center gap-2 text-sm sm:text-base"
               >
                 {isLoading ? (
                   <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    Đang kiểm tra...
+                    <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
+                    <span className="hidden sm:inline">Đang kiểm tra...</span>
+                    <span className="sm:hidden">Đang...</span>
                   </>
                 ) : (
                   <>
-                    <Search className="w-5 h-5" />
+                    <Search className="w-4 h-4 sm:w-5 sm:h-5" />
                     Kiểm tra
                   </>
                 )}

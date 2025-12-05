@@ -160,24 +160,24 @@ export default function QuizPage() {
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-center mb-10"
+              className="text-center mb-8 sm:mb-10"
             >
-              <h1 className="text-3xl md:text-4xl font-bold mb-4 flex items-center justify-center gap-3">
-                <Brain className="w-10 h-10 text-purple-400" />
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 flex items-center justify-center gap-2 sm:gap-3">
+                <Brain className="w-8 h-8 sm:w-10 sm:h-10 text-purple-400" />
                 Quiz Nhận Biết Lừa Đảo
               </h1>
-              <p className="text-gray-400 text-lg">
+              <p className="text-gray-400 text-sm sm:text-lg px-2">
                 5000+ câu hỏi đa dạng giúp bạn nhận biết các chiêu trò lừa đảo online
               </p>
             </motion.div>
 
             {/* Game Modes */}
-            <div className="grid md:grid-cols-2 gap-4 mb-8">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-6 sm:mb-8">
               {[
                 { mode: 'quick' as GameMode, icon: Zap, title: 'Chơi Nhanh', desc: '10 câu ngẫu nhiên', color: 'blue' },
-                { mode: 'challenge' as GameMode, icon: Trophy, title: 'Thử Thách', desc: '20 câu, có giới hạn thời gian', color: 'yellow' },
-                { mode: 'practice' as GameMode, icon: Target, title: 'Luyện Tập', desc: 'Chọn chủ đề, không giới hạn', color: 'green' },
-                { mode: 'custom' as GameMode, icon: Award, title: 'Tùy Chỉnh', desc: 'Tự thiết lập theo ý muốn', color: 'purple' },
+                { mode: 'challenge' as GameMode, icon: Trophy, title: 'Thử Thách', desc: '20 câu, giới hạn thời gian', color: 'yellow' },
+                { mode: 'practice' as GameMode, icon: Target, title: 'Luyện Tập', desc: 'Chọn chủ đề', color: 'green' },
+                { mode: 'custom' as GameMode, icon: Award, title: 'Tùy Chỉnh', desc: 'Thiết lập theo ý muốn', color: 'purple' },
               ].map(({ mode, icon: Icon, title, desc, color }) => (
                 <motion.button
                   key={mode}
@@ -194,15 +194,15 @@ export default function QuizPage() {
                       setGameConfig({ ...DEFAULT_CONFIG, mode: 'custom' })
                     }
                   }}
-                  className={`p-6 rounded-2xl border text-left transition-all ${
+                  className={`p-4 sm:p-6 rounded-xl sm:rounded-2xl border text-left transition-all ${
                     gameConfig.mode === mode
                       ? `bg-${color}-500/20 border-${color}-500`
                       : 'bg-gray-800/50 border-gray-700 hover:border-gray-600'
                   }`}
                 >
-                  <Icon className={`w-8 h-8 mb-3 text-${color}-400`} />
-                  <h3 className="font-semibold text-lg mb-1">{title}</h3>
-                  <p className="text-gray-400 text-sm">{desc}</p>
+                  <Icon className={`w-6 h-6 sm:w-8 sm:h-8 mb-2 sm:mb-3 text-${color}-400`} />
+                  <h3 className="font-semibold text-sm sm:text-lg mb-0.5 sm:mb-1">{title}</h3>
+                  <p className="text-gray-400 text-xs sm:text-sm">{desc}</p>
                 </motion.button>
               ))}
             </div>
@@ -303,7 +303,7 @@ export default function QuizPage() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={startGame}
-              className="w-full py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-xl font-semibold text-lg flex items-center justify-center gap-2"
+              className="w-full py-3 sm:py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-xl font-semibold text-base sm:text-lg flex items-center justify-center gap-2"
             >
               <Zap className="w-5 h-5" />
               Bắt Đầu Chơi
