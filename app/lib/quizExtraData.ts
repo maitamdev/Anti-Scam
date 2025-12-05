@@ -3,7 +3,7 @@
  * Bao gồm: hình ảnh, tình huống thực tế, deepfake, AI scam, và nhiều chủ đề mới
  */
 
-import { QuizQuestion, QUIZ_CATEGORIES } from './quizData'
+import { QuizQuestion, QUIZ_CATEGORIES } from './quizConstants'
 
 // ============================================
 // OTP & BANKING SCAM QUESTIONS (100+ câu)

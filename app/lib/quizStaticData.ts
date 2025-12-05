@@ -3,7 +3,7 @@
  * File này chứa hàng trăm câu hỏi được viết sẵn
  */
 
-import { QuizQuestion, QUIZ_CATEGORIES } from './quizData'
+import { QuizQuestion, QUIZ_CATEGORIES } from './quizConstants'
 
 // ============================================
 // PHISHING QUESTIONS (200+ câu)

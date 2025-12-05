@@ -18,48 +18,13 @@ import {
   generateFakeAppNotification,
   generateCryptoScam,
   generateRomanceScamProfile,
-  type QuizImage,
 } from './quizImages'
 
-// Import extra questions
-import { ALL_EXTRA_QUESTIONS, getRandomExtraQuestions } from './quizExtraData'
-
-export interface QuizQuestion {
-  id: string
-  type: 'text' | 'image' | 'scenario'
-  category: string
-  difficulty: 'easy' | 'medium' | 'hard'
-  question: string
-  image?: string // URL hoặc base64
-  imageData?: QuizImage // Full image data with red flags
-  scenario?: string // Tình huống mô tả
-  options: {
-    id: string
-    text: string
-    isCorrect: boolean
-  }[]
-  explanation: string
-  tags: string[]
-}
-
-// Categories
-export const QUIZ_CATEGORIES = {
-  PHISHING: 'Lừa đảo Phishing',
-  MONEY_TRANSFER: 'Nhờ chuyển tiền',
-  FAKE_BANK: 'Giả mạo ngân hàng',
-  PRIZE_SCAM: 'Trúng thưởng giả',
-  JOB_SCAM: 'Tuyển dụng lừa đảo',
-  INVESTMENT: 'Đầu tư lừa đảo',
-  ROMANCE: 'Lừa đảo tình cảm',
-  IMPERSONATION: 'Giả mạo người thân',
-  GAMBLING: 'Cờ bạc online',
-  MALWARE: 'Phần mềm độc hại',
-  SOCIAL_ENGINEERING: 'Kỹ thuật xã hội',
-  PASSWORD: 'Bảo mật mật khẩu',
-  PRIVACY: 'Quyền riêng tư',
-  SAFE_BROWSING: 'Duyệt web an toàn',
-  OTP_SCAM: 'Lừa đảo OTP',
-}
+// Re-export from constants
+export type { QuizQuestion, QuizImage } from './quizConstants'
+export { QUIZ_CATEGORIES } from './quizConstants'
+import type { QuizQuestion } from './quizConstants'
+import { QUIZ_CATEGORIES } from './quizConstants'
 
 // Vietnamese banks for realistic scenarios
 const BANKS = ['Vietcombank', 'Techcombank', 'MB Bank', 'VPBank', 'ACB', 'Agribank', 'BIDV', 'VietinBank', 'TPBank', 'Sacombank']
@@ -1148,26 +1113,14 @@ export function getCategoryName(key: string): string {
   return QUIZ_CATEGORIES[key as keyof typeof QUIZ_CATEGORIES] || key
 }
 
-// Generate mixed questions (from templates + static extra questions)
+// Generate mixed questions (from templates only - sync version)
 export function generateMixedQuestions(count: number): QuizQuestion[] {
   const questions: QuizQuestion[] = []
-  const templateCount = Math.ceil(count * 0.6) // 60% from templates
-  const extraCount = count - templateCount // 40% from extra static questions
   
-  // Add template-generated questions
-  for (let i = 0; i < templateCount; i++) {
+  // Generate all from templates
+  for (let i = 0; i < count; i++) {
     questions.push(generateQuestion())
   }
-  
-  // Add extra static questions
-  const extraQuestions = getRandomExtraQuestions(extraCount)
-  extraQuestions.forEach((q, index) => {
-    questionCounter++
-    questions.push({
-      id: `q_extra_${Date.now()}_${questionCounter}_${index}`,
-      ...q,
-    } as QuizQuestion)
-  })
   
   // Shuffle all questions
   return questions.sort(() => Math.random() - 0.5)
@@ -1175,9 +1128,6 @@ export function generateMixedQuestions(count: number): QuizQuestion[] {
 
 // Get total available questions count
 export function getTotalQuestionsCount(): number {
-  return questionTemplates.length * 10 + ALL_EXTRA_QUESTIONS.length // Estimate: each template can generate ~10 variations
+  return questionTemplates.length * 10 // Estimate: each template can generate ~10 variations
 }
-
-// Export extra questions for direct access
-export { ALL_EXTRA_QUESTIONS, getRandomExtraQuestions } from './quizExtraData'
 
