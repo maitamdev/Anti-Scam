@@ -12,7 +12,7 @@ import {
   GAMBLING_KEYWORDS,
   type Label,
 } from './constants'
-import { extractDomain } from './utils'
+import { extractDomain, extractRootDomain } from './utils'
 import prisma from './db'
 import { analyzeWithAI } from './aiModel'
 
@@ -35,8 +35,14 @@ async function checkWhitelist(domain: string): Promise<boolean> {
   const cached = dbCache.get(key)
   if (cached && cached.expires > Date.now()) return cached.data as boolean
 
-  const result = await prisma.whitelist.findUnique({ where: { domain } })
-  const isWhitelisted = !!result
+  // Check both full domain and root domain (e.g., chat.zalo.me and zalo.me)
+  const rootDomain = extractRootDomain(domain)
+  const [fullMatch, rootMatch] = await Promise.all([
+    prisma.whitelist.findUnique({ where: { domain } }),
+    domain !== rootDomain ? prisma.whitelist.findUnique({ where: { domain: rootDomain } }) : null
+  ])
+  
+  const isWhitelisted = !!(fullMatch || rootMatch)
   dbCache.set(key, { data: isWhitelisted, expires: Date.now() + 300000 })
   return isWhitelisted
 }
@@ -85,8 +91,12 @@ function runHeuristics(url: string, domain: string): { score: number; reasons: s
   // Brand impersonation
   for (const brand of BRAND_KEYWORDS) {
     if (domainLower.includes(brand)) {
-      const realPatterns = [`${brand}.com`, `${brand}.vn`, `${brand}.com.vn`]
-      if (!realPatterns.some(p => domainLower === p || domainLower.endsWith(`.${p}`))) {
+      // Check if it's a legitimate domain or subdomain
+      const rootDomain = extractRootDomain(domainLower)
+      const realPatterns = [`${brand}.com`, `${brand}.vn`, `${brand}.com.vn`, `${brand}.me`]
+      const isLegit = realPatterns.some(p => rootDomain === p || domainLower === p || domainLower.endsWith(`.${p}`))
+      
+      if (!isLegit) {
         score += 35
         reasons.push(`🚨 Giả mạo "${brand}"`)
         break

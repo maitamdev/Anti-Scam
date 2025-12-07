@@ -54,30 +54,36 @@ export default function ResultPage() {
   const [selectedResult, setSelectedResult] = useState<HistoryItem | null>(null)
 
   useEffect(() => {
-    // Load history from localStorage
-    const saved = localStorage.getItem('scanHistory')
-    if (saved) {
-      const parsed = JSON.parse(saved)
-      setHistory(parsed)
-      
-      // Check if there's a URL param to show specific result
-      const urlParam = searchParams.get('url')
-      if (urlParam) {
-        const found = parsed.find((item: HistoryItem) => item.url === urlParam)
-        if (found) setSelectedResult(found)
+    // Load history from localStorage (only in browser)
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('scanHistory')
+      if (saved) {
+        const parsed = JSON.parse(saved)
+        setHistory(parsed)
+        
+        // Check if there's a URL param to show specific result
+        const urlParam = searchParams.get('url')
+        if (urlParam) {
+          const found = parsed.find((item: HistoryItem) => item.url === urlParam)
+          if (found) setSelectedResult(found)
+        }
       }
     }
   }, [searchParams])
 
   const clearHistory = () => {
-    localStorage.removeItem('scanHistory')
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('scanHistory')
+    }
     setHistory([])
     setSelectedResult(null)
   }
 
   const removeItem = (index: number) => {
     const newHistory = history.filter((_, i) => i !== index)
-    localStorage.setItem('scanHistory', JSON.stringify(newHistory))
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('scanHistory', JSON.stringify(newHistory))
+    }
     setHistory(newHistory)
     if (selectedResult === history[index]) {
       setSelectedResult(null)

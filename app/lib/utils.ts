@@ -13,6 +13,19 @@ export function extractDomain(url: string): string {
   }
 }
 
+export function extractRootDomain(domain: string): string {
+  // Extract root domain (e.g., chat.zalo.me -> zalo.me)
+  const parts = domain.split('.')
+  if (parts.length >= 2) {
+    // Handle .com.vn, .co.uk etc
+    if (parts.length >= 3 && parts[parts.length - 2].length <= 3) {
+      return parts.slice(-3).join('.')
+    }
+    return parts.slice(-2).join('.')
+  }
+  return domain
+}
+
 export function normalizeUrl(url: string): string {
   if (!url.startsWith('http://') && !url.startsWith('https://')) {
     return `https://${url}`

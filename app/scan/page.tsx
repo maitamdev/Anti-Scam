@@ -86,10 +86,12 @@ export default function ScanPage() {
       setResult(data.data)
       setExpandedSection('details')
 
-      // Save to localStorage
-      const history = JSON.parse(localStorage.getItem('scanHistory') || '[]')
-      history.unshift({ ...data.data, timestamp: new Date().toISOString() })
-      localStorage.setItem('scanHistory', JSON.stringify(history.slice(0, 20)))
+      // Save to localStorage (only in browser)
+      if (typeof window !== 'undefined') {
+        const history = JSON.parse(localStorage.getItem('scanHistory') || '[]')
+        history.unshift({ ...data.data, timestamp: new Date().toISOString() })
+        localStorage.setItem('scanHistory', JSON.stringify(history.slice(0, 20)))
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Có lỗi xảy ra')
     } finally {
