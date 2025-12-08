@@ -50,7 +50,7 @@ interface ScanResult {
   heuristicScore?: number
   aiScore?: number
   websiteInfo?: WebsiteInfo | null
-  categoryGuess?: string
+  categoryGuess?: { category: string; confidence: number } | string
   externalSources?: string[]
 }
 
@@ -355,7 +355,11 @@ export default function ScanPage() {
                                 </div>
                                 <div className="bg-[#0d1320] rounded-lg p-3">
                                   <p className="text-gray-500 text-xs mb-1">Phân loại</p>
-                                  <p className="text-gray-200 font-medium">{result.categoryGuess || result.websiteInfo?.category || 'Không xác định'}</p>
+                                  <p className="text-gray-200 font-medium">
+                                    {typeof result.categoryGuess === 'object' 
+                                      ? result.categoryGuess.category 
+                                      : result.categoryGuess || result.websiteInfo?.category || 'Không xác định'}
+                                  </p>
                                 </div>
                               </div>
 

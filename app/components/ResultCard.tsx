@@ -40,7 +40,7 @@ interface ScanResult {
   heuristicScore?: number
   aiScore?: number
   websiteInfo?: WebsiteInfo | null
-  categoryGuess?: { category: string; confidence: number }
+  categoryGuess?: { category: string; confidence: number } | string
   externalSources?: string[]
 }
 
@@ -440,11 +440,15 @@ ${result.reasons.map(r => `• ${r}`).join('\n')}
                   <h4 className="font-medium mb-2">Phân loại từ domain</h4>
                   <div className="flex items-center gap-3">
                     <span className="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-full">
-                      {result.categoryGuess.category}
+                      {typeof result.categoryGuess === 'object' 
+                        ? result.categoryGuess.category 
+                        : result.categoryGuess}
                     </span>
-                    <span className="text-gray-400 text-sm">
-                      Độ tin cậy: {Math.round(result.categoryGuess.confidence * 100)}%
-                    </span>
+                    {typeof result.categoryGuess === 'object' && (
+                      <span className="text-gray-400 text-sm">
+                        Độ tin cậy: {Math.round(result.categoryGuess.confidence * 100)}%
+                      </span>
+                    )}
                   </div>
                 </div>
               )}
