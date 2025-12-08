@@ -72,47 +72,61 @@ async function callGroq(url: string, domain: string, content: WebContent | null)
     ? `TITLE: ${content.title}\nDESC: ${content.description}\nTEXT: ${content.bodyText.slice(0, 2500)}\nLOGIN: ${content.hasLoginForm}\nPAYMENT: ${content.hasPaymentForm}`
     : 'KHÔNG THỂ TRUY CẬP'
 
-  const prompt = `Phân tích an ninh website. Trả về JSON CHÍNH XÁC:
+  const prompt = `Phân tích website này. Trả về JSON:
 
 URL: ${url}
 DOMAIN: ${domain}
 ${contentInfo}
 
-YÊU CẦU:
-1. Xác định loại website (Ngân hàng, E-commerce, Giáo dục, Casino, Phishing...)
-2. Đánh giá bảo mật (SSL, domain, nội dung)
-3. Tìm dấu hiệu lừa đảo
+BƯỚC 1: XÁC ĐỊNH WEBSITE
+Dựa vào title, description, nội dung - xác định:
+- Đây là website GÌ? (Ngân hàng, E-commerce, Giáo dục, Tin tức, Casino, Blog...)
+- Chức năng CHÍNH? (Đăng nhập, Thanh toán, Học online, Đọc tin, Cá cược...)
+- Mục đích? (Cung cấp dịch vụ, Kinh doanh, Giáo dục, LỪA ĐẢO...)
 
-ĐÁNH GIÁ:
-• 0-39: AN TOÀN - Website chính thống, không nguy hiểm
-• 40-79: ĐÁNG NGỜ - Thiếu thông tin, cần thận trọng
-• 80-100: NGUY HIỂM - Lừa đảo, phishing, casino
-
-NGUY HIỂM NẾU:
-❌ Giả mạo ngân hàng/ví/thương hiệu
+BƯỚC 2: ĐÁNH GIÁ AN TOÀN
+Kiểm tra:
+✅ SSL hợp lệ, domain chính xác (.com.vn, .edu.vn, .gov.vn)
+✅ Subdomain hợp lệ (khoahoc.28tech.com.vn, mail.google.com)
+✅ Nội dung chuyên nghiệp, có liên hệ đầy đủ
+❌ Giả mạo thương hiệu (paypa1.com, vietcombannk.vn)
 ❌ Casino/cờ bạc/lô đề
 ❌ Lừa đảo đầu tư/forex
-❌ Yêu cầu OTP/mật khẩu/thẻ
-❌ Domain giả (paypa1.com, vietcombannk.vn)
-❌ TLD miễn phí (.tk, .ml, .ga)
+❌ Yêu cầu OTP/thẻ/mật khẩu
+❌ TLD miễn phí (.tk, .ml)
 
-AN TOÀN NẾU:
-✅ Domain chính xác (.com.vn, .edu.vn, .gov.vn)
-✅ Subdomain hợp lệ (mail.google.com, khoahoc.28tech.com.vn)
-✅ Website giáo dục/tin tức/dịch vụ chính thống
-✅ Có SSL, thông tin liên hệ đầy đủ
+ĐIỂM SỐ:
+0-39 = AN TOÀN (safe)
+40-79 = ĐÁNG NGỜ (suspicious)  
+80-100 = NGUY HIỂM (phishing/scam/gambling)
 
-FORMAT (JSON ONLY, NO MARKDOWN):
+OUTPUT (JSON ONLY):
 {
-  "score": 0-100,
+  "score": <số>,
   "category": "safe|suspicious|phishing|scam|gambling",
   "reasons": [
-    "🏢 [Loại website] - [Chức năng]",
-    "🔒 [Đánh giá SSL/Domain]",
-    "✅ [Điểm mạnh] hoặc ❌ [Nguy hiểm]"
+    "🏢 Website [Tên loại] - [Chức năng chính cụ thể]",
+    "🎯 Mục đích: [Mô tả chi tiết website làm gì, phục vụ ai]",
+    "🔒 Domain: [domain].vn - [Đánh giá domain có hợp lệ không]",
+    "✅ [Điểm tốt]" hoặc "❌ [Nguy hiểm]",
+    "✅ hoặc ❌ [thêm 1-2 điểm quan trọng]"
   ],
-  "confidence": 0-1
-}`
+  "confidence": <0-1>
+}
+
+LƯU Ý:
+- reason[0]: BẮT BUỘC mô tả website là GÌ + chức năng GÌ
+- reason[1]: BẮT BUỘC giải thích MỤC ĐÍCH làm gì
+- Sau đó mới đánh giá an toàn
+- CỤ THỂ, KHÔNG chung chung!
+
+VÍ DỤ TỐT:
+"🏢 Nền tảng học lập trình trực tuyến 28Tech - Cung cấp khóa học C++, Java, DSA"
+"🎯 Website giáo dục giúp sinh viên học lập trình qua video, bài tập và thi online"
+
+VÍ DỤ TỆ:
+"🏢 Website thương mại điện tử"
+"🎯 Cung cấp dịch vụ"`
 
   try {
     const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
