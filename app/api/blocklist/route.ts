@@ -4,7 +4,7 @@ import prisma from '@/app/lib/db'
 // Get blocklist
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url)
+    const searchParams = request.nextUrl.searchParams
     const severity = searchParams.get('severity')
 
     const blocklist = await prisma.blocklist.findMany({
@@ -77,13 +77,11 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json(
         { success: false, error: 'Unauthorized' },
         { status: 401 }
-      )
-    }
+    )
+  }
 
-    const { searchParams } = new URL(request.url)
-    const domain = searchParams.get('domain')
-
-    if (!domain) {
+  const searchParams = request.nextUrl.searchParams
+  const domain = searchParams.get('domain')    if (!domain) {
       return NextResponse.json(
         { success: false, error: 'Missing domain' },
         { status: 400 }

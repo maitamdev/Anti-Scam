@@ -4,7 +4,7 @@ import prisma from '@/app/lib/db'
 // GET - Lấy danh sách guides với filter
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url)
+    const searchParams = request.nextUrl.searchParams
     const category = searchParams.get('category')
     const search = searchParams.get('search')
     const page = parseInt(searchParams.get('page') || '1')
