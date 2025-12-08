@@ -72,118 +72,122 @@ async function callGroq(url: string, domain: string, content: WebContent | null)
     ? `TITLE: ${content.title}\nDESC: ${content.description}\nTEXT: ${content.bodyText.slice(0, 2500)}\nLOGIN: ${content.hasLoginForm}\nPAYMENT: ${content.hasPaymentForm}`
     : 'KHÔNG THỂ TRUY CẬP'
 
-  const prompt = `Bạn là chuyên gia phân tích an ninh mạng và nhận diện website. Nhiệm vụ: PHÂN TÍCH CHI TIẾT website và đưa ra đánh giá an toàn.
-
-🔍 PHÂN TÍCH WEBSITE THEO CÁC KHÍA CẠNH:
+  const prompt = `Bạn là chuyên gia an ninh mạng. Phân tích chuyên sâu website sau:
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📌 BƯỚC 1: XÁC ĐỊNH LOẠI WEBSITE VÀ CHỨC NĂNG
+🔍 1. PHÂN TÍCH KỸ THUẬT
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Dựa vào URL, domain, title, description và nội dung, hãy xác định:
+SSL/TLS & HTTPS:
+✅ HTTPS hợp lệ, SSL certificate tin cậy
+❌ HTTP không mã hóa
+❌ Self-signed certificate
+❌ Certificate hết hạn
 
-🏢 LOẠI WEBSITE:
-- Ngân hàng/Tài chính
-- Thương mại điện tử (E-commerce)
-- Mạng xã hội/Nhắn tin
-- Tin tức/Báo chí
-- Chính phủ/Giáo dục
-- Dịch vụ email/Cloud
-- Giải trí/Streaming
-- Cờ bạc/Casino (NGUY HIỂM)
-- Phishing/Lừa đảo (NGUY HIỂM)
-- Blog/Website cá nhân
-- Dịch vụ công nghệ
-- Khác
+Domain:
+✅ Domain lâu năm (>1 năm), WHOIS công khai
+❌ Domain mới (<3 tháng)
+❌ WHOIS ẩn danh, privacy protection
+❌ Đăng ký ở nước ngoài lạ
+❌ TLD miễn phí (.tk, .ml, .ga, .cf)
 
-🎯 CHỨC NĂNG CHÍNH:
-- Đăng nhập/Đăng ký tài khoản
-- Thanh toán/Chuyển tiền
-- Mua sắm online
-- Đọc tin tức
-- Chat/Nhắn tin
-- Tải file/Ứng dụng
-- Xem video/Nghe nhạc
-- Đăng bài/Chia sẻ
-- Tìm kiếm thông tin
-- Cung cấp dịch vụ
-- Đầu tư/Giao dịch
-- Cá cược/Casino (NGUY HIỂM)
+Hosting & Server:
+✅ Server uy tín (AWS, Google Cloud, Azure)
+❌ Server lạ, IP blacklist
+❌ Server ở quốc gia đáng ngờ
+❌ Shared hosting rẻ tiền
 
-🔎 MỤC ĐÍCH WEBSITE:
-- Cung cấp dịch vụ chính thức
-- Kinh doanh hợp pháp
-- Chia sẻ thông tin
-- Giải trí
-- NGUY HIỂM: Lừa đảo người dùng
-- NGUY HIỂM: Đánh cắp thông tin
-- NGUY HIỂM: Phishing tài khoản
-- NGUY HIỂM: Cờ bạc trực tuyến
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📌 BƯỚC 2: KIỂM TRA AN TOÀN
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-1️⃣ URL & DOMAIN:
-❌ Domain lạ, dài bất thường (>30 ký tự)
-❌ Dấu -, số lạ (fb-support-vn-login.com)
-❌ Nhái thương hiệu (paypa1.com, vietcombannk.vn)
-❌ TLD miễn phí (.tk, .ml, .ga, .cf, .gq)
-❌ Subdomain giả (login.paypal.com.scam.xyz)
-✅ Domain chính thống của thương hiệu
-
-2️⃣ BẢO MẬT:
-❌ Không HTTPS
-❌ SSL không hợp lệ
-❌ Form đăng nhập không an toàn
-✅ HTTPS + SSL hợp lệ
-
-3️⃣ NỘI DUNG:
-❌ Lỗi chính tả nhiều
-❌ Logo mờ, giao diện kém
-❌ Popup spam
-❌ "Nhận quà", "Nhập OTP", "Giàu nhanh"
-❌ Yêu cầu số thẻ/CVV/mật khẩu
-✅ Nội dung chuyên nghiệp
-
-4️⃣ HÀNH VI:
-❌ Yêu cầu thông tin cá nhân ngay
-❌ Tải .apk/.exe đáng ngờ
-❌ Form login/payment giả
+Hành vi nguy hiểm:
 ❌ Redirect liên tục
-✅ Hành vi bình thường
-
-5️⃣ DANH TIẾNG:
-❌ Domain mới < 6 tháng
-❌ Không có thông tin công ty
-❌ Email miễn phí (@gmail)
-✅ Thương hiệu uy tín
+❌ Iframe ẩn
+❌ Script obfuscated/minified đáng ngờ
+❌ Auto-download file .exe/.apk
+❌ Mining script
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📌 BƯỚC 3: ĐÁNH GIÁ & KẾT LUẬN
+🔍 2. PHÂN TÍCH NỘI DUNG
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-🔴 NGUY HIỂM (80-100 điểm):
-- Giả mạo ngân hàng/ví/thương hiệu → "phishing"
-- Cờ bạc/casino/lô đề → "gambling"
-- Lừa đảo đầu tư/forex → "scam"
-- Yêu cầu OTP/mật khẩu/thẻ → "scam"
-- ≥3 dấu hiệu nguy hiểm
+Chất lượng nội dung:
+✅ Chuyên nghiệp, không lỗi chính tả
+❌ Lỗi chính tả nhiều
+❌ Văn phong kém, dịch máy
+❌ Copy từ website khác
 
-🟡 ĐÁNG NGỜ (40-79 điểm):
-- Domain mới/TLD lạ → "suspicious"
-- Thiếu HTTPS/thông tin pháp lý
-- 1-2 dấu hiệu đáng ngờ
-- Quảng cáo hấp dẫn bất thường
+Dấu hiệu giả mạo:
+❌ Logo mờ, kém chất lượng
+❌ Màu sắc nhái thương hiệu (bank, ví điện tử)
+❌ Tên giống thương hiệu lớn
+❌ Claim là đại diện chính thức nhưng domain sai
 
-🟢 AN TOÀN (0-39 điểm):
-- Website chính thống → "safe"
-- Domain đúng (.gov.vn, vietcombank.com.vn)
-- Subdomain hợp lệ (mail.google.com, chat.zalo.me)
-- Không có dấu hiệu lừa đảo
+Yêu cầu thông tin:
+✅ Chỉ hỏi thông tin cần thiết
+❌ Hỏi số CMND, thẻ tín dụng, CVV
+❌ Yêu cầu mã OTP
+❌ Hỏi mật khẩu ngân hàng
+❌ Upload ảnh CMND/passport
+
+Nội dung đáng ngờ:
+❌ "Nhận 10 triệu miễn phí"
+❌ "Đầu tư lãi 30%/tháng"
+❌ "Nhấp link nhận quà"
+❌ "Xác minh tài khoản ngay"
+❌ "Tài khoản bị khóa, click để mở"
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📊 DỮ LIỆU PHÂN TÍCH:
+🔍 3. PHÂN TÍCH GIAO DIỆN (UI/UX)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Chất lượng thiết kế:
+✅ Giao diện chuyên nghiệp, responsive
+❌ Giao diện rẻ tiền, template free
+❌ Thiếu nhất quán (font, màu, layout)
+❌ Không responsive mobile
+
+Hành vi đáng ngờ:
+❌ Nút "Download" dẫn đến link lạ
+❌ Nút "Login" redirect sang domain khác
+❌ Popup không tắt được
+❌ Popup yêu cầu nhập thông tin
+❌ Auto-play video/audio
+❌ Countdown giả tạo áp lực
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔍 4. PHÂN TÍCH MÃ NGUỒN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+JavaScript nguy hiểm:
+❌ Keylogger (ghi phím)
+❌ Clipboard hijacking
+❌ Form data stealing
+❌ Cookie stealing
+❌ Crypto mining script
+❌ Eval() với code đáng ngờ
+
+Link & API:
+❌ Hidden iframe
+❌ Link ẩn trong nút
+❌ API call tới server lạ
+❌ POST data tới domain khác
+❌ Load script từ nguồn không rõ
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔍 5. DANH TIẾNG & NGUỒN NGOÀI
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Kiểm tra:
+✅ Có trên Google Safe Browsing (safe)
+✅ Không có báo cáo trên PhishTank
+✅ ScamAdviser rating cao
+✅ VirusTotal clean
+✅ Reviews tích cực
+❌ Listed trên blacklist
+❌ Phàn nàn lừa đảo
+❌ VirusTotal phát hiện malware
+❌ Không tìm thấy thông tin
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 DỮ LIỆU PHÂN TÍCH
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 URL: ${url}
@@ -191,43 +195,48 @@ DOMAIN: ${domain}
 ${contentInfo}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🎯 YÊU CẦU OUTPUT:
+🎯 CÁCH ĐÁNH GIÁ
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Trả về JSON với format SAU (KHÔNG thêm markdown):
+SCORE 0-100:
+• 0-20: Hoàn toàn an toàn, website chính thống
+• 21-40: Khả năng an toàn cao
+• 41-60: Đáng ngờ, cần thận trọng
+• 61-80: Nguy hiểm, nhiều dấu hiệu lừa đảo
+• 81-100: Cực kỳ nguy hiểm, chắc chắn lừa đảo
+
+CATEGORY:
+• "safe": Website an toàn, chính thống
+• "suspicious": Đáng ngờ, thiếu thông tin
+• "phishing": Giả mạo ngân hàng/tổ chức
+• "scam": Lừa đảo đầu tư/kiếm tiền
+• "gambling": Cờ bạc/casino trực tuyến
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 FORMAT OUTPUT (JSON ONLY)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 {
   "score": <0-100>,
-  "category": "safe|phishing|scam|gambling|suspicious",
+  "category": "safe|suspicious|phishing|scam|gambling",
   "reasons": [
-    "🏢 Loại website: [Tên loại] - [Chức năng chính]",
-    "🎯 Mục đích: [Mô tả mục đích website]",
-    "✅ Dấu hiệu tích cực 1 (nếu có)",
-    "❌ Dấu hiệu nguy hiểm 1 (nếu có)",
-    "... thêm 2-4 dấu hiệu quan trọng nhất"
+    "🏢 [Loại website] - [Chức năng chính]",
+    "🎯 Mục đích: [Mô tả mục đích]",
+    "🔒 Bảo mật: [Đánh giá SSL/HTTPS]",
+    "🌐 Domain: [Tuổi domain, WHOIS, TLD]",
+    "⚠️ [Dấu hiệu cảnh báo nếu có]",
+    "✅ [Điểm tích cực nếu có]"
   ],
   "confidence": <0-1>
 }
 
-VÍ DỤ OUTPUT TốT:
-{
-  "score": 0,
-  "category": "safe",
-  "reasons": [
-    "🏢 Ngân hàng chính thống Vietcombank - Dịch vụ ngân hàng trực tuyến",
-    "🎯 Cung cấp dịch vụ banking, chuyển tiền, tra cứu tài khoản",
-    "✅ Domain chính xác vietcombank.com.vn",
-    "✅ SSL hợp lệ, website bảo mật cao",
-    "✅ Thương hiệu ngân hàng uy tín tại Việt Nam"
-  ],
-  "confidence": 0.95
-}
-
-QUAN TRỌNG:
-- Reasons PHẢI bắt đầu bằng 2 dòng mô tả loại website và mục đích
-- Sau đó liệt kê các dấu hiệu cụ thể (✅ tích cực, ❌ nguy hiểm)
-- MỖI reason phải rõ ràng, cụ thể, dễ hiểu
-- KHÔNG chung chung kiểu "website an toàn" hay "có vấn đề"`
+LƯU Ý:
+- Reasons phải CỤ THỂ, RÕ RÀNG
+- Bắt đầu với loại website và mục đích
+- Sau đó đánh giá kỹ thuật (SSL, domain)
+- Cuối cùng liệt kê rủi ro/ưu điểm
+- MỖI reason độc lập, dễ hiểu
+- KHÔNG chung chung, KHÔNG lặp lại`
 
   try {
     const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
