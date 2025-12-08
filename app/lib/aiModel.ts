@@ -72,86 +72,162 @@ async function callGroq(url: string, domain: string, content: WebContent | null)
     ? `TITLE: ${content.title}\nDESC: ${content.description}\nTEXT: ${content.bodyText.slice(0, 2500)}\nLOGIN: ${content.hasLoginForm}\nPAYMENT: ${content.hasPaymentForm}`
     : 'KHÔNG THỂ TRUY CẬP'
 
-  const prompt = `Bạn là một AI chuyên phân tích an ninh mạng, nhiệm vụ của bạn là đánh giá độ an toàn của các website.
-Bạn phải phân tích cả URL, nội dung, meta, giao diện, hành vi tải trang và các yếu tố đáng ngờ.
+  const prompt = `Bạn là chuyên gia phân tích an ninh mạng và nhận diện website. Nhiệm vụ: PHÂN TÍCH CHI TIẾT website và đưa ra đánh giá an toàn.
 
-📋 TIÊU CHÍ PHÂN TÍCH:
+🔍 PHÂN TÍCH WEBSITE THEO CÁC KHÍA CẠNH:
 
-1️⃣ KIỂM TRA URL:
-- Domain lạ, dài bất thường (>30 ký tự)
-- Dùng dấu -, số hoặc ký tự lạ quá nhiều
-- Domain nhái thương hiệu (paypa1.com, faceb00k.vn, vietcombannk.vn)
-- Domain miễn phí (.tk, .ml, .ga, .cf, .gq)
-- Subdomain giả mạo (login.paypal.com.fake.com, facebook.verify.xyz)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📌 BƯỚC 1: XÁC ĐỊNH LOẠI WEBSITE VÀ CHỨC NĂNG
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-2️⃣ KIỂM TRA BẢO MẬT:
-- Không có HTTPS
-- SSL certificate không hợp lệ hoặc tự ký
-- Redirect liên tục
-- Website tải script từ nguồn độc hại
+Dựa vào URL, domain, title, description và nội dung, hãy xác định:
 
-3️⃣ KIỂM TRA NỘI DUNG:
-- Lỗi chính tả
-- Logo bị mờ, giao diện nhái kém chất lượng
-- Quảng cáo rác, popup liên tục
-- Kêu gọi "nhận quà", "nhập OTP", "xác minh tài khoản", "giàu nhanh"
-- Yêu cầu thông tin nhạy cảm (số thẻ, CVV, mật khẩu)
+🏢 LOẠI WEBSITE:
+- Ngân hàng/Tài chính
+- Thương mại điện tử (E-commerce)
+- Mạng xã hội/Nhắn tin
+- Tin tức/Báo chí
+- Chính phủ/Giáo dục
+- Dịch vụ email/Cloud
+- Giải trí/Streaming
+- Cờ bạc/Casino (NGUY HIỂM)
+- Phishing/Lừa đảo (NGUY HIỂM)
+- Blog/Website cá nhân
+- Dịch vụ công nghệ
+- Khác
 
-4️⃣ KIỂM TRA HÀNH VI ĐÁNG NGỜ:
-- Yêu cầu thông tin cá nhân quá sớm/bất thường
-- Form đăng nhập giả mạo
-- Gửi OTP, mã ví, mật khẩu qua form lạ
-- Yêu cầu tải app .apk
-- Tự động tải file đáng ngờ
-- Gửi người dùng sang trang thứ 3 lạ
+🎯 CHỨC NĂNG CHÍNH:
+- Đăng nhập/Đăng ký tài khoản
+- Thanh toán/Chuyển tiền
+- Mua sắm online
+- Đọc tin tức
+- Chat/Nhắn tin
+- Tải file/Ứng dụng
+- Xem video/Nghe nhạc
+- Đăng bài/Chia sẻ
+- Tìm kiếm thông tin
+- Cung cấp dịch vụ
+- Đầu tư/Giao dịch
+- Cá cược/Casino (NGUY HIỂM)
 
-5️⃣ KIỂM TRA DANH TIẾNG:
-- Không tìm thấy thông tin công ty
-- Domain mới đăng ký < 6 tháng
-- Không có trang liên hệ uy tín
-- Email dạng miễn phí (@gmail, @yahoo)
+🔎 MỤC ĐÍCH WEBSITE:
+- Cung cấp dịch vụ chính thức
+- Kinh doanh hợp pháp
+- Chia sẻ thông tin
+- Giải trí
+- NGUY HIỂM: Lừa đảo người dùng
+- NGUY HIỂM: Đánh cắp thông tin
+- NGUY HIỂM: Phishing tài khoản
+- NGUY HIỂM: Cờ bạc trực tuyến
 
-6️⃣ KIỂM TRA MÃ ĐỘC:
-- Script obfuscation
-- Iframe ẩn
-- Malware signature pattern
-- Keylogger form
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📌 BƯỚC 2: KIỂM TRA AN TOÀN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-🎯 CÁCH ĐÁNH GIÁ:
+1️⃣ URL & DOMAIN:
+❌ Domain lạ, dài bất thường (>30 ký tự)
+❌ Dấu -, số lạ (fb-support-vn-login.com)
+❌ Nhái thương hiệu (paypa1.com, vietcombannk.vn)
+❌ TLD miễn phí (.tk, .ml, .ga, .cf, .gq)
+❌ Subdomain giả (login.paypal.com.scam.xyz)
+✅ Domain chính thống của thương hiệu
 
-🔴 UNSAFE (score: 80-100) - category: "phishing"/"scam"/"gambling":
-- Giả mạo ngân hàng/ví điện tử/thương hiệu lớn
-- Cờ bạc/casino online
-- Lừa đảo đầu tư/forex
-- Yêu cầu OTP/mật khẩu/thẻ tín dụng
-- Có ≥3 dấu hiệu nguy hiểm
+2️⃣ BẢO MẬT:
+❌ Không HTTPS
+❌ SSL không hợp lệ
+❌ Form đăng nhập không an toàn
+✅ HTTPS + SSL hợp lệ
 
-🟡 SUSPICIOUS (score: 40-79) - category: "suspicious":
-- Domain mới/TLD lạ
-- Thiếu HTTPS
-- Thiếu thông tin pháp lý
-- Có 1-2 dấu hiệu đáng ngờ
-- Quảng cáo quá hấp dẫn
+3️⃣ NỘI DUNG:
+❌ Lỗi chính tả nhiều
+❌ Logo mờ, giao diện kém
+❌ Popup spam
+❌ "Nhận quà", "Nhập OTP", "Giàu nhanh"
+❌ Yêu cầu số thẻ/CVV/mật khẩu
+✅ Nội dung chuyên nghiệp
 
-🟢 SAFE (score: 0-39) - category: "safe":
-- Website chính thống của tổ chức uy tín
-- Domain chính xác (.gov.vn, .edu.vn, brand thật)
-- Subdomain hợp lệ (chat.zalo.me, mail.google.com)
-- Ngân hàng VN: .com.vn (vietcombank.com.vn, mbbank.com.vn)
+4️⃣ HÀNH VI:
+❌ Yêu cầu thông tin cá nhân ngay
+❌ Tải .apk/.exe đáng ngờ
+❌ Form login/payment giả
+❌ Redirect liên tục
+✅ Hành vi bình thường
+
+5️⃣ DANH TIẾNG:
+❌ Domain mới < 6 tháng
+❌ Không có thông tin công ty
+❌ Email miễn phí (@gmail)
+✅ Thương hiệu uy tín
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📌 BƯỚC 3: ĐÁNH GIÁ & KẾT LUẬN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔴 NGUY HIỂM (80-100 điểm):
+- Giả mạo ngân hàng/ví/thương hiệu → "phishing"
+- Cờ bạc/casino/lô đề → "gambling"
+- Lừa đảo đầu tư/forex → "scam"
+- Yêu cầu OTP/mật khẩu/thẻ → "scam"
+- ≥3 dấu hiệu nguy hiểm
+
+🟡 ĐÁNG NGỜ (40-79 điểm):
+- Domain mới/TLD lạ → "suspicious"
+- Thiếu HTTPS/thông tin pháp lý
+- 1-2 dấu hiệu đáng ngờ
+- Quảng cáo hấp dẫn bất thường
+
+🟢 AN TOÀN (0-39 điểm):
+- Website chính thống → "safe"
+- Domain đúng (.gov.vn, vietcombank.com.vn)
+- Subdomain hợp lệ (mail.google.com, chat.zalo.me)
 - Không có dấu hiệu lừa đảo
 
-📊 THÔNG TIN WEBSITE:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 DỮ LIỆU PHÂN TÍCH:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 URL: ${url}
 DOMAIN: ${domain}
 ${contentInfo}
 
-⚠️ LƯU Ý QUAN TRỌNG:
-- Phân biệt website chính thống có subdomain (mail.google.com → SAFE) vs giả mạo (google.com.verify.xyz → UNSAFE)
-- Ngân hàng VN PHẢI có .com.vn hoặc .vn chính xác
-- KHÔNG đánh giá nhầm website hợp pháp
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 YÊU CẦU OUTPUT:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-🎯 OUTPUT (JSON thuần, KHÔNG thêm markdown):
-{"score": <0-100>, "category": "safe/phishing/scam/gambling/suspicious", "reasons": ["dấu hiệu 1", "dấu hiệu 2"], "confidence": <0-1>}`
+Trả về JSON với format SAU (KHÔNG thêm markdown):
+
+{
+  "score": <0-100>,
+  "category": "safe|phishing|scam|gambling|suspicious",
+  "reasons": [
+    "🏢 Loại website: [Tên loại] - [Chức năng chính]",
+    "🎯 Mục đích: [Mô tả mục đích website]",
+    "✅ Dấu hiệu tích cực 1 (nếu có)",
+    "❌ Dấu hiệu nguy hiểm 1 (nếu có)",
+    "... thêm 2-4 dấu hiệu quan trọng nhất"
+  ],
+  "confidence": <0-1>
+}
+
+VÍ DỤ OUTPUT TốT:
+{
+  "score": 0,
+  "category": "safe",
+  "reasons": [
+    "🏢 Ngân hàng chính thống Vietcombank - Dịch vụ ngân hàng trực tuyến",
+    "🎯 Cung cấp dịch vụ banking, chuyển tiền, tra cứu tài khoản",
+    "✅ Domain chính xác vietcombank.com.vn",
+    "✅ SSL hợp lệ, website bảo mật cao",
+    "✅ Thương hiệu ngân hàng uy tín tại Việt Nam"
+  ],
+  "confidence": 0.95
+}
+
+QUAN TRỌNG:
+- Reasons PHẢI bắt đầu bằng 2 dòng mô tả loại website và mục đích
+- Sau đó liệt kê các dấu hiệu cụ thể (✅ tích cực, ❌ nguy hiểm)
+- MỖI reason phải rõ ràng, cụ thể, dễ hiểu
+- KHÔNG chung chung kiểu "website an toàn" hay "có vấn đề"`
 
   try {
     const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -161,7 +237,7 @@ ${contentInfo}
         model: 'llama-3.3-70b-versatile',
         messages: [{ role: 'user', content: prompt }],
         temperature: 0.1,
-        max_tokens: 300,
+        max_tokens: 500,
       }),
     })
 
