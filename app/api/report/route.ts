@@ -3,6 +3,8 @@ import { z } from 'zod'
 import prisma from '@/app/lib/db'
 import { extractDomain, getToday } from '@/app/lib/utils'
 
+export const dynamic = 'force-dynamic'
+
 const reportSchema = z.object({
   url: z.string().min(1, 'URL is required'),
   reason: z.string().min(1, 'Reason is required'),

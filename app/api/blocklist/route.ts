@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/app/lib/db'
 
+export const dynamic = 'force-dynamic'
+
 // Get blocklist
 export async function GET(request: NextRequest) {
   try {
