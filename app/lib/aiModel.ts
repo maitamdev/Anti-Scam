@@ -86,14 +86,28 @@ Dựa vào title, description, nội dung - xác định:
 
 BƯỚC 2: ĐÁNH GIÁ AN TOÀN
 Kiểm tra:
-✅ SSL hợp lệ, domain chính xác (.com.vn, .edu.vn, .gov.vn)
-✅ Subdomain hợp lệ (khoahoc.28tech.com.vn, mail.google.com)
-✅ Nội dung chuyên nghiệp, có liên hệ đầy đủ
-❌ Giả mạo thương hiệu (paypa1.com, vietcombannk.vn)
+
+NGUY HIỂM CAO (80-100):
+❌ Giả mạo ngân hàng/ví (vietcombannk.vn, paypa1.com)
 ❌ Casino/cờ bạc/lô đề
-❌ Lừa đảo đầu tư/forex
-❌ Yêu cầu OTP/thẻ/mật khẩu
-❌ TLD miễn phí (.tk, .ml)
+❌ Lừa đảo đầu tư/forex/crypto
+❌ Yêu cầu OTP/mật khẩu/số thẻ
+❌ Phishing đánh cắp tài khoản
+
+ĐÁNG NGỜ (40-79):
+❌ TLD lạ/miễn phí (.tk, .ml, .ga, .cf, .li, .xyz, .top)
+❌ Không SSL (HTTP chứ không HTTPS)
+❌ Website lậu (phim lậu, phần mềm crack, mp3 không bản quyền)
+❌ Thiếu thông tin liên hệ/chính sách
+❌ Domain dài/lạ (>25 ký tự, nhiều dấu -)
+❌ Popup quảng cáo nhiều
+
+AN TOÀN (0-39):
+✅ Domain chính thống (.com.vn, .vn, .edu.vn, .gov.vn)
+✅ Subdomain hợp lệ của thương hiệu (mail.google.com, khoahoc.28tech.com.vn)
+✅ SSL hợp lệ (HTTPS)
+✅ Nội dung hợp pháp, có liên hệ rõ ràng
+✅ Thương hiệu uy tín (Vietcombank, Shopee, Zalo...)
 
 ĐIỂM SỐ:
 0-39 = AN TOÀN (safe)
