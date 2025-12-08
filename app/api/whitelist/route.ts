@@ -81,7 +81,9 @@ export async function DELETE(request: NextRequest) {
   }
 
   const searchParams = request.nextUrl.searchParams
-  const domain = searchParams.get('domain')    if (!domain) {
+  const domain = searchParams.get('domain')
+
+  if (!domain) {
       return NextResponse.json(
         { success: false, error: 'Missing domain' },
         { status: 400 }
