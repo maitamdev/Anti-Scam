@@ -72,171 +72,47 @@ async function callGroq(url: string, domain: string, content: WebContent | null)
     ? `TITLE: ${content.title}\nDESC: ${content.description}\nTEXT: ${content.bodyText.slice(0, 2500)}\nLOGIN: ${content.hasLoginForm}\nPAYMENT: ${content.hasPaymentForm}`
     : 'KHÔNG THỂ TRUY CẬP'
 
-  const prompt = `Bạn là chuyên gia an ninh mạng. Phân tích chuyên sâu website sau:
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔍 1. PHÂN TÍCH KỸ THUẬT
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-SSL/TLS & HTTPS:
-✅ HTTPS hợp lệ, SSL certificate tin cậy
-❌ HTTP không mã hóa
-❌ Self-signed certificate
-❌ Certificate hết hạn
-
-Domain:
-✅ Domain lâu năm (>1 năm), WHOIS công khai
-❌ Domain mới (<3 tháng)
-❌ WHOIS ẩn danh, privacy protection
-❌ Đăng ký ở nước ngoài lạ
-❌ TLD miễn phí (.tk, .ml, .ga, .cf)
-
-Hosting & Server:
-✅ Server uy tín (AWS, Google Cloud, Azure)
-❌ Server lạ, IP blacklist
-❌ Server ở quốc gia đáng ngờ
-❌ Shared hosting rẻ tiền
-
-Hành vi nguy hiểm:
-❌ Redirect liên tục
-❌ Iframe ẩn
-❌ Script obfuscated/minified đáng ngờ
-❌ Auto-download file .exe/.apk
-❌ Mining script
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔍 2. PHÂN TÍCH NỘI DUNG
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Chất lượng nội dung:
-✅ Chuyên nghiệp, không lỗi chính tả
-❌ Lỗi chính tả nhiều
-❌ Văn phong kém, dịch máy
-❌ Copy từ website khác
-
-Dấu hiệu giả mạo:
-❌ Logo mờ, kém chất lượng
-❌ Màu sắc nhái thương hiệu (bank, ví điện tử)
-❌ Tên giống thương hiệu lớn
-❌ Claim là đại diện chính thức nhưng domain sai
-
-Yêu cầu thông tin:
-✅ Chỉ hỏi thông tin cần thiết
-❌ Hỏi số CMND, thẻ tín dụng, CVV
-❌ Yêu cầu mã OTP
-❌ Hỏi mật khẩu ngân hàng
-❌ Upload ảnh CMND/passport
-
-Nội dung đáng ngờ:
-❌ "Nhận 10 triệu miễn phí"
-❌ "Đầu tư lãi 30%/tháng"
-❌ "Nhấp link nhận quà"
-❌ "Xác minh tài khoản ngay"
-❌ "Tài khoản bị khóa, click để mở"
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔍 3. PHÂN TÍCH GIAO DIỆN (UI/UX)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Chất lượng thiết kế:
-✅ Giao diện chuyên nghiệp, responsive
-❌ Giao diện rẻ tiền, template free
-❌ Thiếu nhất quán (font, màu, layout)
-❌ Không responsive mobile
-
-Hành vi đáng ngờ:
-❌ Nút "Download" dẫn đến link lạ
-❌ Nút "Login" redirect sang domain khác
-❌ Popup không tắt được
-❌ Popup yêu cầu nhập thông tin
-❌ Auto-play video/audio
-❌ Countdown giả tạo áp lực
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔍 4. PHÂN TÍCH MÃ NGUỒN
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-JavaScript nguy hiểm:
-❌ Keylogger (ghi phím)
-❌ Clipboard hijacking
-❌ Form data stealing
-❌ Cookie stealing
-❌ Crypto mining script
-❌ Eval() với code đáng ngờ
-
-Link & API:
-❌ Hidden iframe
-❌ Link ẩn trong nút
-❌ API call tới server lạ
-❌ POST data tới domain khác
-❌ Load script từ nguồn không rõ
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔍 5. DANH TIẾNG & NGUỒN NGOÀI
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Kiểm tra:
-✅ Có trên Google Safe Browsing (safe)
-✅ Không có báo cáo trên PhishTank
-✅ ScamAdviser rating cao
-✅ VirusTotal clean
-✅ Reviews tích cực
-❌ Listed trên blacklist
-❌ Phàn nàn lừa đảo
-❌ VirusTotal phát hiện malware
-❌ Không tìm thấy thông tin
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📊 DỮ LIỆU PHÂN TÍCH
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  const prompt = `Phân tích an ninh website. Trả về JSON CHÍNH XÁC:
 
 URL: ${url}
 DOMAIN: ${domain}
 ${contentInfo}
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🎯 CÁCH ĐÁNH GIÁ
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+YÊU CẦU:
+1. Xác định loại website (Ngân hàng, E-commerce, Giáo dục, Casino, Phishing...)
+2. Đánh giá bảo mật (SSL, domain, nội dung)
+3. Tìm dấu hiệu lừa đảo
 
-SCORE 0-100:
-• 0-20: Hoàn toàn an toàn, website chính thống
-• 21-40: Khả năng an toàn cao
-• 41-60: Đáng ngờ, cần thận trọng
-• 61-80: Nguy hiểm, nhiều dấu hiệu lừa đảo
-• 81-100: Cực kỳ nguy hiểm, chắc chắn lừa đảo
+ĐÁNH GIÁ:
+• 0-39: AN TOÀN - Website chính thống, không nguy hiểm
+• 40-79: ĐÁNG NGỜ - Thiếu thông tin, cần thận trọng
+• 80-100: NGUY HIỂM - Lừa đảo, phishing, casino
 
-CATEGORY:
-• "safe": Website an toàn, chính thống
-• "suspicious": Đáng ngờ, thiếu thông tin
-• "phishing": Giả mạo ngân hàng/tổ chức
-• "scam": Lừa đảo đầu tư/kiếm tiền
-• "gambling": Cờ bạc/casino trực tuyến
+NGUY HIỂM NẾU:
+❌ Giả mạo ngân hàng/ví/thương hiệu
+❌ Casino/cờ bạc/lô đề
+❌ Lừa đảo đầu tư/forex
+❌ Yêu cầu OTP/mật khẩu/thẻ
+❌ Domain giả (paypa1.com, vietcombannk.vn)
+❌ TLD miễn phí (.tk, .ml, .ga)
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📋 FORMAT OUTPUT (JSON ONLY)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+AN TOÀN NẾU:
+✅ Domain chính xác (.com.vn, .edu.vn, .gov.vn)
+✅ Subdomain hợp lệ (mail.google.com, khoahoc.28tech.com.vn)
+✅ Website giáo dục/tin tức/dịch vụ chính thống
+✅ Có SSL, thông tin liên hệ đầy đủ
 
+FORMAT (JSON ONLY, NO MARKDOWN):
 {
-  "score": <0-100>,
+  "score": 0-100,
   "category": "safe|suspicious|phishing|scam|gambling",
   "reasons": [
-    "🏢 [Loại website] - [Chức năng chính]",
-    "🎯 Mục đích: [Mô tả mục đích]",
-    "🔒 Bảo mật: [Đánh giá SSL/HTTPS]",
-    "🌐 Domain: [Tuổi domain, WHOIS, TLD]",
-    "⚠️ [Dấu hiệu cảnh báo nếu có]",
-    "✅ [Điểm tích cực nếu có]"
+    "🏢 [Loại website] - [Chức năng]",
+    "🔒 [Đánh giá SSL/Domain]",
+    "✅ [Điểm mạnh] hoặc ❌ [Nguy hiểm]"
   ],
-  "confidence": <0-1>
-}
-
-LƯU Ý:
-- Reasons phải CỤ THỂ, RÕ RÀNG
-- Bắt đầu với loại website và mục đích
-- Sau đó đánh giá kỹ thuật (SSL, domain)
-- Cuối cùng liệt kê rủi ro/ưu điểm
-- MỖI reason độc lập, dễ hiểu
-- KHÔNG chung chung, KHÔNG lặp lại`
+  "confidence": 0-1
+}`
 
   try {
     const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
