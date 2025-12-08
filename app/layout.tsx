@@ -16,7 +16,7 @@ const montserrat = Montserrat({
 export const metadata: Metadata = {
   metadataBase: new URL('https://anti-scam-kappa.vercel.app'),
   title: 'ANTI-SCAM - Kiểm tra & Cảnh báo Lừa đảo Mạng',
-  description: 'Nền tảng AI phân tích và cảnh báo website lừa đảo, bảo vệ người dùng Việt Nam khỏi các chiêu trò lừa đảo trực tuyến. Kiểm tra link nghi ngờ, học cách nhận biết lừa đảo.',
+  description: 'Nền tảng AI phân tích và cảnh báo website lừa đảo, bảo vệ người dùng Việt Nam khỏi các chiêu trò lừa đảo trực tuyến. Kiểm tra link nghi ngờ, học cách nhận biết lừa đảo ngay.',
   keywords: ['chống lừa đảo', 'kiểm tra link', 'phishing', 'scam', 'an toàn mạng', 'bảo mật', 'lừa đảo online', 'cảnh báo lừa đảo'],
   authors: [{ name: 'ANTI-SCAM Team' }],
   manifest: '/manifest.json',
