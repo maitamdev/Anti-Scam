@@ -183,6 +183,11 @@ export async function checkExternalSources(domain: string): Promise<{
   isKnownScam: boolean
   sources: string[]
   details?: string
+  virusTotal?: {
+    malicious: number
+    suspicious: number
+    total: number
+  }
 }> {
   const sources: string[] = []
 
@@ -205,9 +210,83 @@ export async function checkExternalSources(domain: string): Promise<{
     }
   }
 
+  // Check VirusTotal
+  let virusTotalData
+  try {
+    const vtResult = await checkVirusTotal(`https://${domain}`)
+    if (vtResult.stats) {
+      virusTotalData = {
+        malicious: vtResult.stats.malicious,
+        suspicious: vtResult.stats.suspicious,
+        total: vtResult.stats.total,
+      }
+      if (vtResult.detected) {
+        sources.push(
+          `VirusTotal: ${vtResult.stats.malicious} engines phát hiện nguy hiểm`
+        )
+      }
+    }
+  } catch (error) {
+    console.error('[VirusTotal] Error:', error)
+  }
+
   return {
     isKnownScam: sources.length > 0,
     sources,
+    virusTotal: virusTotalData,
+  }
+}
+
+// VirusTotal API check
+interface VirusTotalStats {
+  malicious: number
+  suspicious: number
+  harmless: number
+  undetected: number
+  total: number
+}
+
+async function checkVirusTotal(url: string): Promise<{
+  detected: boolean
+  stats: VirusTotalStats | null
+}> {
+  const apiKey = process.env.VIRUSTOTAL_API_KEY
+  
+  if (!apiKey || apiKey.includes('xxx')) {
+    return { detected: false, stats: null }
+  }
+
+  try {
+    const urlId = Buffer.from(url).toString('base64').replace(/=/g, '')
+    
+    const res = await fetch(
+      `https://www.virustotal.com/api/v3/urls/${urlId}`,
+      {
+        headers: { 'x-apikey': apiKey },
+      }
+    )
+
+    if (res.ok) {
+      const data = await res.json()
+      const stats = data.data?.attributes?.last_analysis_stats
+      
+      if (stats) {
+        return {
+          detected: stats.malicious > 0 || stats.suspicious > 2,
+          stats: {
+            malicious: stats.malicious || 0,
+            suspicious: stats.suspicious || 0,
+            harmless: stats.harmless || 0,
+            undetected: stats.undetected || 0,
+            total: stats.malicious + stats.suspicious + stats.harmless + stats.undetected,
+          },
+        }
+      }
+    }
+
+    return { detected: false, stats: null }
+  } catch (error) {
+    return { detected: false, stats: null }
   }
 }
 
