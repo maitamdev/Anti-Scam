@@ -12,6 +12,7 @@ import Link from 'next/link'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import RiskBadge from '../components/RiskBadge'
+import { safeStorage } from '../lib/safeStorage'
 
 interface WebsiteInfo {
   title?: string
@@ -33,6 +34,17 @@ interface WebsiteInfo {
   mobileOptimized?: boolean
 }
 
+interface VirusTotalResult {
+  detected: boolean
+  stats: {
+    malicious: number
+    suspicious: number
+    harmless: number
+    undetected: number
+    total: number
+  }
+}
+
 interface HistoryItem {
   url: string
   domain: string
@@ -46,6 +58,7 @@ interface HistoryItem {
   websiteInfo?: WebsiteInfo | null
   categoryGuess?: { category: string; confidence: number } | string
   externalSources?: string[]
+  virusTotal?: VirusTotalResult | null
 }
 
 export default function ResultPage() {
@@ -54,10 +67,10 @@ export default function ResultPage() {
   const [selectedResult, setSelectedResult] = useState<HistoryItem | null>(null)
 
   useEffect(() => {
-    // Load history from localStorage (only in browser)
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('scanHistory')
-      if (saved) {
+    // Load history from safeStorage
+    const saved = safeStorage.getItem('scanHistory')
+    if (saved) {
+      try {
         const parsed = JSON.parse(saved)
         setHistory(parsed)
         
@@ -67,23 +80,21 @@ export default function ResultPage() {
           const found = parsed.find((item: HistoryItem) => item.url === urlParam)
           if (found) setSelectedResult(found)
         }
+      } catch (error) {
+        console.warn('[Result] Failed to parse history:', error)
       }
     }
   }, [searchParams])
 
   const clearHistory = () => {
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('scanHistory')
-    }
+    safeStorage.removeItem('scanHistory')
     setHistory([])
     setSelectedResult(null)
   }
 
   const removeItem = (index: number) => {
     const newHistory = history.filter((_, i) => i !== index)
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('scanHistory', JSON.stringify(newHistory))
-    }
+    safeStorage.setItem('scanHistory', JSON.stringify(newHistory))
     setHistory(newHistory)
     if (selectedResult === history[index]) {
       setSelectedResult(null)

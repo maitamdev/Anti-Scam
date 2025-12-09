@@ -184,9 +184,14 @@ export async function checkExternalSources(domain: string): Promise<{
   sources: string[]
   details?: string
   virusTotal?: {
-    malicious: number
-    suspicious: number
-    total: number
+    detected: boolean
+    stats: {
+      malicious: number
+      suspicious: number
+      harmless: number
+      undetected: number
+      total: number
+    }
   }
 }> {
   const sources: string[] = []
@@ -213,12 +218,13 @@ export async function checkExternalSources(domain: string): Promise<{
   // Check VirusTotal
   let virusTotalData
   try {
+    console.log('[VirusTotal] Checking:', domain)
     const vtResult = await checkVirusTotal(`https://${domain}`)
+    console.log('[VirusTotal] Result:', vtResult)
     if (vtResult.stats) {
       virusTotalData = {
-        malicious: vtResult.stats.malicious,
-        suspicious: vtResult.stats.suspicious,
-        total: vtResult.stats.total,
+        detected: vtResult.detected,
+        stats: vtResult.stats,
       }
       if (vtResult.detected) {
         sources.push(
@@ -252,12 +258,16 @@ async function checkVirusTotal(url: string): Promise<{
 }> {
   const apiKey = process.env.VIRUSTOTAL_API_KEY
   
-  if (!apiKey || apiKey.includes('xxx')) {
+  console.log('[VirusTotal] API Key:', apiKey ? `${apiKey.substring(0, 10)}...` : 'NOT SET')
+  
+  if (!apiKey || apiKey.includes('xxx') || apiKey.includes('your_')) {
+    console.log('[VirusTotal] API key not configured')
     return { detected: false, stats: null }
   }
 
   try {
     const urlId = Buffer.from(url).toString('base64').replace(/=/g, '')
+    console.log('[VirusTotal] Fetching URL ID:', urlId)
     
     const res = await fetch(
       `https://www.virustotal.com/api/v3/urls/${urlId}`,
@@ -266,9 +276,13 @@ async function checkVirusTotal(url: string): Promise<{
       }
     )
 
+    console.log('[VirusTotal] Response status:', res.status)
+
     if (res.ok) {
       const data = await res.json()
       const stats = data.data?.attributes?.last_analysis_stats
+      
+      console.log('[VirusTotal] Stats:', stats)
       
       if (stats) {
         return {

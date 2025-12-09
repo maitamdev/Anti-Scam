@@ -30,6 +30,17 @@ interface WebsiteInfo {
   mobileOptimized: boolean
 }
 
+interface VirusTotalResult {
+  detected: boolean
+  stats: {
+    malicious: number
+    suspicious: number
+    harmless: number
+    undetected: number
+    total: number
+  }
+}
+
 interface ScanResult {
   url: string
   domain: string
@@ -42,6 +53,7 @@ interface ScanResult {
   websiteInfo?: WebsiteInfo | null
   categoryGuess?: { category: string; confidence: number } | string
   externalSources?: string[]
+  virusTotal?: VirusTotalResult | null
 }
 
 interface ResultCardProps {
@@ -212,7 +224,7 @@ ${result.reasons.map(r => `• ${r}`).join('\n')}
               className="space-y-4"
             >
               {/* Score Cards */}
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="bg-gray-800 rounded-xl p-4 text-center">
                   <div className={`text-3xl font-bold mb-1 ${getScoreColor(result.score)}`}>
                     {result.score}
@@ -249,6 +261,23 @@ ${result.reasons.map(r => `• ${r}`).join('\n')}
                     <span className="text-xs text-gray-500">Phân tích</span>
                   </div>
                 </div>
+
+                {result.virusTotal && (
+                  <div className="bg-gray-800 rounded-xl p-4 text-center">
+                    <div className={`text-3xl font-bold mb-1 ${
+                      result.virusTotal.stats.malicious > 0 ? 'text-red-400' :
+                      result.virusTotal.stats.suspicious > 0 ? 'text-yellow-400' :
+                      'text-green-400'
+                    }`}>
+                      {result.virusTotal.stats.total}
+                    </div>
+                    <div className="text-gray-400 text-xs">Antivirus Engines</div>
+                    <div className="mt-2 flex items-center justify-center gap-1">
+                      <Database className="w-4 h-4 text-green-400" />
+                      <span className="text-xs text-gray-500">VirusTotal</span>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Quick Info */}
@@ -275,6 +304,71 @@ ${result.reasons.map(r => `• ${r}`).join('\n')}
                   <p className="text-sm text-gray-300 truncate">{result.domain}</p>
                 </div>
               </div>
+
+              {/* VirusTotal Results */}
+              {result.virusTotal && (
+                <div className="bg-gradient-to-r from-green-500/10 to-blue-500/10 rounded-xl p-4 border border-green-500/20">
+                  <div className="flex items-center gap-3 mb-4">
+                    <Database className="w-5 h-5 text-green-400" />
+                    <h4 className="font-medium text-white">VirusTotal Security Scan</h4>
+                    <span className="ml-auto text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded">
+                      {result.virusTotal.stats.total} engines
+                    </span>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <div className="bg-gray-800/50 rounded-lg p-3 text-center">
+                      <div className="text-2xl font-bold text-red-400">
+                        {result.virusTotal.stats.malicious}
+                      </div>
+                      <div className="text-xs text-gray-400 mt-1">Malicious</div>
+                    </div>
+                    <div className="bg-gray-800/50 rounded-lg p-3 text-center">
+                      <div className="text-2xl font-bold text-yellow-400">
+                        {result.virusTotal.stats.suspicious}
+                      </div>
+                      <div className="text-xs text-gray-400 mt-1">Suspicious</div>
+                    </div>
+                    <div className="bg-gray-800/50 rounded-lg p-3 text-center">
+                      <div className="text-2xl font-bold text-green-400">
+                        {result.virusTotal.stats.harmless}
+                      </div>
+                      <div className="text-xs text-gray-400 mt-1">Harmless</div>
+                    </div>
+                    <div className="bg-gray-800/50 rounded-lg p-3 text-center">
+                      <div className="text-2xl font-bold text-gray-400">
+                        {result.virusTotal.stats.undetected}
+                      </div>
+                      <div className="text-xs text-gray-400 mt-1">Undetected</div>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 flex items-center gap-2">
+                    {result.virusTotal.stats.malicious > 0 ? (
+                      <>
+                        <ShieldX className="w-5 h-5 text-red-400" />
+                        <span className="text-sm text-red-400 font-medium">
+                          ⚠️ {result.virusTotal.stats.malicious} antivirus phát hiện mối đe dọa!
+                        </span>
+                      </>
+                    ) : result.virusTotal.stats.suspicious > 0 ? (
+                      <>
+                        <ShieldAlert className="w-5 h-5 text-yellow-400" />
+                        <span className="text-sm text-yellow-400 font-medium">
+                          ⚠️ {result.virusTotal.stats.suspicious} antivirus đánh dấu đáng ngờ
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <Shield className="w-5 h-5 text-green-400" />
+                        <span className="text-sm text-green-400 font-medium">
+                          ✓ Không phát hiện mối đe dọa từ {result.virusTotal.stats.total} antivirus engines
+                        </span>
+                      </>
+                    )}
+                  </div>
+                </div>
+              )}
             </motion.div>
           )}
 

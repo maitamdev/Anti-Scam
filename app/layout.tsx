@@ -66,6 +66,23 @@ export default function RootLayout({
 }) {
   return (
     <html lang="vi">
+      <head>
+        <script dangerouslySetInnerHTML={{
+          __html: `
+            if (typeof window !== 'undefined') {
+              const originalWarn = console.warn;
+              console.warn = (...args) => {
+                const msg = args[0]?.toString() || '';
+                if (msg.includes('Download the React DevTools') || 
+                    msg.includes('Extra attributes from the server') ||
+                    msg.includes('bis_register') ||
+                    msg.includes('__processed_')) return;
+                originalWarn.apply(console, args);
+              };
+            }
+          `
+        }} />
+      </head>
       <body className={`${inter.variable} ${montserrat.variable} font-sans bg-gray-900 text-white min-h-screen`}>
         {children}
       </body>

@@ -13,12 +13,16 @@ import {
   ChevronUp,
   RotateCcw,
   Loader2,
-  Image as ImageIcon
+  Image as ImageIcon,
+  Database,
+  ShieldAlert,
+  ShieldX
 } from 'lucide-react'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import ImageUpload from '../components/ImageUpload'
 import ScamTips from '../components/ScamTips'
+import { safeStorage } from '../lib/safeStorage'
 
 interface WebsiteInfo {
   title?: string
@@ -40,6 +44,17 @@ interface WebsiteInfo {
   mobileOptimized?: boolean
 }
 
+interface VirusTotalResult {
+  detected: boolean
+  stats: {
+    malicious: number
+    suspicious: number
+    harmless: number
+    undetected: number
+    total: number
+  }
+}
+
 interface ScanResult {
   url: string
   domain: string
@@ -52,6 +67,7 @@ interface ScanResult {
   websiteInfo?: WebsiteInfo | null
   categoryGuess?: { category: string; confidence: number } | string
   externalSources?: string[]
+  virusTotal?: VirusTotalResult | null
 }
 
 export default function ScanPage() {
@@ -87,10 +103,11 @@ export default function ScanPage() {
       setExpandedSection('details')
 
       // Save to localStorage (only in browser)
-      if (typeof window !== 'undefined') {
-        const history = JSON.parse(localStorage.getItem('scanHistory') || '[]')
+      const saved = safeStorage.getItem('scanHistory')
+      if (saved !== null) {
+        const history = JSON.parse(saved || '[]')
         history.unshift({ ...data.data, timestamp: new Date().toISOString() })
-        localStorage.setItem('scanHistory', JSON.stringify(history.slice(0, 20)))
+        safeStorage.setItem('scanHistory', JSON.stringify(history.slice(0, 20)))
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Có lỗi xảy ra')
@@ -416,6 +433,71 @@ export default function ScanPage() {
                                       )}
                                       <span className="text-gray-300 text-xs">Form thanh toán</span>
                                     </div>
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* VirusTotal Results */}
+                              {result.virusTotal && (
+                                <div className="bg-gradient-to-r from-green-500/10 to-blue-500/10 border border-green-500/20 rounded-lg p-3">
+                                  <div className="flex items-center gap-2 mb-3">
+                                    <Database className="w-4 h-4 text-green-400" />
+                                    <p className="text-gray-200 text-xs font-medium">VirusTotal Security Scan</p>
+                                    <span className="ml-auto text-xs bg-green-500/20 text-green-400 px-2 py-0.5 rounded">
+                                      {result.virusTotal.stats.total} engines
+                                    </span>
+                                  </div>
+                                  
+                                  <div className="grid grid-cols-4 gap-2 mb-3">
+                                    <div className="bg-gray-800/50 rounded p-2 text-center">
+                                      <div className="text-lg font-bold text-red-400">
+                                        {result.virusTotal.stats.malicious}
+                                      </div>
+                                      <div className="text-[10px] text-gray-400">Malicious</div>
+                                    </div>
+                                    <div className="bg-gray-800/50 rounded p-2 text-center">
+                                      <div className="text-lg font-bold text-yellow-400">
+                                        {result.virusTotal.stats.suspicious}
+                                      </div>
+                                      <div className="text-[10px] text-gray-400">Suspicious</div>
+                                    </div>
+                                    <div className="bg-gray-800/50 rounded p-2 text-center">
+                                      <div className="text-lg font-bold text-green-400">
+                                        {result.virusTotal.stats.harmless}
+                                      </div>
+                                      <div className="text-[10px] text-gray-400">Harmless</div>
+                                    </div>
+                                    <div className="bg-gray-800/50 rounded p-2 text-center">
+                                      <div className="text-lg font-bold text-gray-400">
+                                        {result.virusTotal.stats.undetected}
+                                      </div>
+                                      <div className="text-[10px] text-gray-400">Undetected</div>
+                                    </div>
+                                  </div>
+
+                                  <div className="flex items-center gap-2 text-xs">
+                                    {result.virusTotal.stats.malicious > 0 ? (
+                                      <>
+                                        <ShieldX className="w-4 h-4 text-red-400" />
+                                        <span className="text-red-400 font-medium">
+                                          ⚠️ {result.virusTotal.stats.malicious} antivirus phát hiện mối đe dọa!
+                                        </span>
+                                      </>
+                                    ) : result.virusTotal.stats.suspicious > 0 ? (
+                                      <>
+                                        <ShieldAlert className="w-4 h-4 text-yellow-400" />
+                                        <span className="text-yellow-400 font-medium">
+                                          ⚠️ {result.virusTotal.stats.suspicious} antivirus đánh dấu đáng ngờ
+                                        </span>
+                                      </>
+                                    ) : (
+                                      <>
+                                        <Shield className="w-4 h-4 text-green-400" />
+                                        <span className="text-green-400 font-medium">
+                                          ✓ Không phát hiện mối đe dọa từ {result.virusTotal.stats.total} antivirus engines
+                                        </span>
+                                      </>
+                                    )}
                                   </div>
                                 </div>
                               )}
