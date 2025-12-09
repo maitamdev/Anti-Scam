@@ -130,6 +130,7 @@ export async function POST(request: NextRequest) {
             : null,
           categoryGuess: categoryGuess,
           externalSources: externalCheck.sources,
+          virusTotal: externalCheck.virusTotal,
         },
       },
       { headers: { ...headers, 'X-RateLimit-Remaining': String(rateLimit.remaining) } }
