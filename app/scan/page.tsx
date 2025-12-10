@@ -547,8 +547,8 @@ export default function ScanPage() {
                                   <h4 className="text-white text-sm font-semibold mb-3 border-b border-gray-700 pb-2">Chi tiết phân tích</h4>
                                   <div className="space-y-2">
                                     {result.reasons.map((reason, i) => {
-                                      // Remove ALL emoji icons from reason text
-                                      const cleanReason = reason.replace(/[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, '').trim()
+                                      // Remove ALL emoji icons from reason text - ES5 compatible
+                                      const cleanReason = reason.replace(/[\uD800-\uDFFF]./g, '').replace(/[\u2600-\u27BF]/g, '').trim()
                                       
                                       // Determine reason type based on content
                                       const isWarning = cleanReason.includes('Domain:') || cleanReason.includes('không phải là domain') || cleanReason.includes('có thể được xem là đáng ngờ')
