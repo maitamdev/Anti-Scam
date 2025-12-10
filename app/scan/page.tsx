@@ -439,11 +439,11 @@ export default function ScanPage() {
 
                               {/* VirusTotal Results */}
                               {result.virusTotal && result.virusTotal.stats && (
-                                <div className="bg-gradient-to-r from-green-500/10 to-blue-500/10 border border-green-500/20 rounded-lg p-3">
+                                <div className="bg-gradient-to-r from-blue-500/10 to-blue-600/10 border border-blue-500/20 rounded-lg p-3">
                                   <div className="flex items-center gap-2 mb-3">
-                                    <Database className="w-4 h-4 text-green-400" />
+                                    <Database className="w-4 h-4 text-blue-400" />
                                     <p className="text-gray-200 text-xs font-medium">VirusTotal Security Scan</p>
-                                    <span className="ml-auto text-xs bg-green-500/20 text-green-400 px-2 py-0.5 rounded">
+                                    <span className="ml-auto text-xs bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded">
                                       {result.virusTotal.stats.total} engines
                                     </span>
                                   </div>
@@ -492,8 +492,8 @@ export default function ScanPage() {
                                       </>
                                     ) : (
                                       <>
-                                        <Shield className="w-4 h-4 text-green-400" />
-                                        <span className="text-green-400 font-medium">
+                                        <Shield className="w-4 h-4 text-blue-400" />
+                                        <span className="text-blue-400 font-medium">
                                           ✓ Không phát hiện mối đe dọa từ {result.virusTotal.stats.total} antivirus engines
                                         </span>
                                       </>
@@ -529,11 +529,11 @@ export default function ScanPage() {
 
                               {/* Trust Factors */}
                               {result.websiteInfo?.trustFactors && result.websiteInfo.trustFactors.length > 0 && (
-                                <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-3">
-                                  <p className="text-green-400 text-xs mb-2 font-medium">✓ Yếu tố tin cậy</p>
+                                <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3">
+                                  <p className="text-blue-400 text-xs mb-2 font-medium">✓ Yếu tố tin cậy</p>
                                   <ul className="space-y-1">
                                     {result.websiteInfo.trustFactors.map((factor, i) => (
-                                      <li key={i} className="text-green-300 text-xs flex items-start gap-2">
+                                      <li key={i} className="text-blue-300 text-xs flex items-start gap-2">
                                         <span>•</span>{factor}
                                       </li>
                                     ))}

@@ -107,7 +107,7 @@ export default function ResultPage() {
       
       <main className="flex-1 pt-20">
         <section className="py-8 px-4">
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-7xl mx-auto">
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-4">
                 <Link href="/" className="p-2 hover:bg-gray-700 rounded-lg transition-colors">

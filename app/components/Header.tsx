@@ -66,9 +66,7 @@ export default function Header() {
               <span className="text-lg sm:text-xl font-bold bg-gradient-to-r from-white via-blue-100 to-cyan-200 bg-clip-text text-transparent">
                 ANTI-SCAM
               </span>
-              <span className="text-[10px] text-blue-400/70 hidden sm:block -mt-1">
-                Bảo vệ bạn online
-              </span>
+              
             </div>
           </Link>
 
@@ -102,7 +100,7 @@ export default function Header() {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
-                      transition={{ type: "spring", bounce: 0.2, duration: 0.4 }}
+                      transition={{ type: "spring", bounce: 0.2, duration: 0.8 }}
                     />
                   )}
                   
@@ -115,10 +113,10 @@ export default function Header() {
                       layoutId="navLine"
                       className={`absolute -bottom-0.5 left-1/2 -translate-x-1/2 h-0.5 rounded-full ${
                         isActive 
-                          ? 'w-8 bg-gradient-to-r from-blue-400 to-cyan-400' 
+                          ? 'w-8 bg-gradient-to-r from-blue-400 to-blue-500' 
                           : 'w-4 bg-white/50'
                       }`}
-                      transition={{ type: "spring", bounce: 0.25, duration: 0.4 }}
+                      transition={{ type: "spring", bounce: 0.25, duration: 0.8 }}
                     />
                   )}
                 </Link>
@@ -133,7 +131,7 @@ export default function Header() {
             >
               <Link
                 href="/scan"
-                className="flex items-center gap-1.5 px-3 lg:px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 rounded-lg text-sm font-semibold text-white transition-all shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30"
+                className="flex items-center gap-1.5 px-3 lg:px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 rounded-lg text-sm font-semibold text-white transition-all shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30"
               >
                 <span>Kiểm tra ngay</span>
               </Link>

@@ -137,7 +137,7 @@ export default function GuideDetailPage() {
       <Header />
 
       <main className="flex-1 pt-24 pb-12">
-        <article className="max-w-4xl mx-auto px-4">
+        <article className="max-w-7xl mx-auto px-4">
           {/* Back link */}
           <Link
             href="/guide"

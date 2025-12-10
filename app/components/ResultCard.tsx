@@ -307,11 +307,11 @@ ${result.reasons.map(r => `• ${r}`).join('\n')}
 
               {/* VirusTotal Results */}
               {result.virusTotal && (
-                <div className="bg-gradient-to-r from-green-500/10 to-blue-500/10 rounded-xl p-4 border border-green-500/20">
+                <div className="bg-gradient-to-r from-blue-500/10 to-blue-600/10 rounded-xl p-4 border border-blue-500/20">
                   <div className="flex items-center gap-3 mb-4">
-                    <Database className="w-5 h-5 text-green-400" />
+                    <Database className="w-5 h-5 text-blue-400" />
                     <h4 className="font-medium text-white">VirusTotal Security Scan</h4>
-                    <span className="ml-auto text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded">
+                    <span className="ml-auto text-xs bg-blue-500/20 text-blue-400 px-2 py-1 rounded">
                       {result.virusTotal.stats.total} engines
                     </span>
                   </div>
@@ -321,25 +321,25 @@ ${result.reasons.map(r => `• ${r}`).join('\n')}
                       <div className="text-2xl font-bold text-red-400">
                         {result.virusTotal.stats.malicious}
                       </div>
-                      <div className="text-xs text-gray-400 mt-1">Malicious</div>
+                      <div className="text-xs text-gray-400 mt-1">Độc hại</div>
                     </div>
                     <div className="bg-gray-800/50 rounded-lg p-3 text-center">
                       <div className="text-2xl font-bold text-yellow-400">
                         {result.virusTotal.stats.suspicious}
                       </div>
-                      <div className="text-xs text-gray-400 mt-1">Suspicious</div>
+                      <div className="text-xs text-gray-400 mt-1">Đáng ngờ</div>
                     </div>
                     <div className="bg-gray-800/50 rounded-lg p-3 text-center">
-                      <div className="text-2xl font-bold text-green-400">
+                      <div className="text-2xl font-bold text-blue-400">
                         {result.virusTotal.stats.harmless}
                       </div>
-                      <div className="text-xs text-gray-400 mt-1">Harmless</div>
+                      <div className="text-xs text-gray-400 mt-1">An toàn</div>
                     </div>
                     <div className="bg-gray-800/50 rounded-lg p-3 text-center">
                       <div className="text-2xl font-bold text-gray-400">
                         {result.virusTotal.stats.undetected}
                       </div>
-                      <div className="text-xs text-gray-400 mt-1">Undetected</div>
+                      <div className="text-xs text-gray-400 mt-1">Chưa xác định</div>
                     </div>
                   </div>
 
@@ -360,8 +360,8 @@ ${result.reasons.map(r => `• ${r}`).join('\n')}
                       </>
                     ) : (
                       <>
-                        <Shield className="w-5 h-5 text-green-400" />
-                        <span className="text-sm text-green-400 font-medium">
+                        <Shield className="w-5 h-5 text-blue-400" />
+                        <span className="text-sm text-blue-400 font-medium">
                           ✓ Không phát hiện mối đe dọa từ {result.virusTotal.stats.total} antivirus engines
                         </span>
                       </>

@@ -13,7 +13,7 @@ export default function ReportPage() {
       
       <main className="flex-1 pt-20">
         <section className="py-16 px-4">
-          <div className="max-w-2xl mx-auto">
+          <div className="max-w-7xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}

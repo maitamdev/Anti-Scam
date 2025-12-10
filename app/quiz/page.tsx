@@ -156,14 +156,14 @@ export default function QuizPage() {
       <div className="min-h-screen flex flex-col bg-[#0a0f1a]">
         <Header />
         <main className="flex-1 pt-24 pb-12">
-          <div className="max-w-4xl mx-auto px-4">
+          <div className="max-w-7xl mx-auto px-4">
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               className="text-center mb-8 sm:mb-10"
             >
               <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 flex items-center justify-center gap-2 sm:gap-3">
-                <Brain className="w-8 h-8 sm:w-10 sm:h-10 text-purple-400" />
+                <Brain className="w-8 h-8 sm:w-10 sm:h-10 text-blue-400" />
                 Quiz Nhận Biết Lừa Đảo
               </h1>
               <p className="text-gray-400 text-sm sm:text-lg px-2">
@@ -175,9 +175,9 @@ export default function QuizPage() {
             <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-6 sm:mb-8">
               {[
                 { mode: 'quick' as GameMode, icon: Zap, title: 'Chơi Nhanh', desc: '10 câu ngẫu nhiên', color: 'blue' },
-                { mode: 'challenge' as GameMode, icon: Trophy, title: 'Thử Thách', desc: '20 câu, giới hạn thời gian', color: 'yellow' },
-                { mode: 'practice' as GameMode, icon: Target, title: 'Luyện Tập', desc: 'Chọn chủ đề', color: 'green' },
-                { mode: 'custom' as GameMode, icon: Award, title: 'Tùy Chỉnh', desc: 'Thiết lập theo ý muốn', color: 'purple' },
+                { mode: 'challenge' as GameMode, icon: Trophy, title: 'Thử Thách', desc: '20 câu, giới hạn thời gian', color: 'blue' },
+                { mode: 'practice' as GameMode, icon: Target, title: 'Luyện Tập', desc: 'Chọn chủ đề', color: 'blue' },
+                { mode: 'custom' as GameMode, icon: Award, title: 'Tùy Chỉnh', desc: 'Thiết lập theo ý muốn', color: 'blue' },
               ].map(({ mode, icon: Icon, title, desc, color }) => (
                 <motion.button
                   key={mode}
@@ -303,7 +303,7 @@ export default function QuizPage() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={startGame}
-              className="w-full py-3 sm:py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-xl font-semibold text-base sm:text-lg flex items-center justify-center gap-2"
+              className="w-full py-3 sm:py-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 rounded-xl font-semibold text-base sm:text-lg flex items-center justify-center gap-2"
             >
               <Zap className="w-5 h-5" />
               Bắt Đầu Chơi
@@ -324,17 +324,17 @@ export default function QuizPage() {
       <div className="min-h-screen flex flex-col bg-[#0a0f1a]">
         <Header />
         <main className="flex-1 pt-24 pb-12">
-          <div className="max-w-2xl mx-auto px-4">
+          <div className="max-w-7xl mx-auto px-4">
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               className="bg-gray-800/50 rounded-2xl p-8 border border-gray-700 text-center"
             >
               <div className={`w-24 h-24 mx-auto mb-6 rounded-full flex items-center justify-center ${
-                percentage >= 80 ? 'bg-green-500/20' : percentage >= 50 ? 'bg-yellow-500/20' : 'bg-red-500/20'
+                percentage >= 80 ? 'bg-blue-500/20' : percentage >= 50 ? 'bg-blue-400/20' : 'bg-red-500/20'
               }`}>
                 <Trophy className={`w-12 h-12 ${
-                  percentage >= 80 ? 'text-green-400' : percentage >= 50 ? 'text-yellow-400' : 'text-red-400'
+                  percentage >= 80 ? 'text-blue-400' : percentage >= 50 ? 'text-blue-300' : 'text-red-400'
                 }`} />
               </div>
 
@@ -361,7 +361,7 @@ export default function QuizPage() {
                   <p className="text-gray-400 text-sm">Đúng</p>
                 </div>
                 <div className="bg-gray-700/50 rounded-xl p-4">
-                  <p className="text-3xl font-bold text-purple-400">{timeTaken}s</p>
+                  <p className="text-3xl font-bold text-blue-400">{timeTaken}s</p>
                   <p className="text-gray-400 text-sm">Thời gian</p>
                 </div>
               </div>
@@ -395,7 +395,7 @@ export default function QuizPage() {
     <div className="min-h-screen flex flex-col bg-[#0a0f1a]">
       <Header />
       <main className="flex-1 pt-24 pb-12">
-        <div className="max-w-3xl mx-auto px-4">
+        <div className="max-w-7xl mx-auto px-4">
           {/* Progress Bar */}
           <div className="mb-6">
             <div className="flex justify-between text-sm mb-2">
@@ -404,7 +404,7 @@ export default function QuizPage() {
             </div>
             <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
               <motion.div
-                className="h-full bg-gradient-to-r from-blue-500 to-purple-500"
+                className="h-full bg-gradient-to-r from-blue-500 to-blue-600"
                 initial={{ width: 0 }}
                 animate={{ width: `${progress}%` }}
               />
@@ -435,8 +435,8 @@ export default function QuizPage() {
                     {currentQuestion.category}
                   </span>
                   <span className={`px-3 py-1 rounded-full text-xs ${
-                    currentQuestion.difficulty === 'easy' ? 'bg-green-500/20 text-green-400' :
-                    currentQuestion.difficulty === 'medium' ? 'bg-yellow-500/20 text-yellow-400' :
+                    currentQuestion.difficulty === 'easy' ? 'bg-blue-500/20 text-blue-400' :
+                    currentQuestion.difficulty === 'medium' ? 'bg-blue-400/20 text-blue-300' :
                     'bg-red-500/20 text-red-400'
                   }`}>
                     {currentQuestion.difficulty === 'easy' ? 'Dễ' : currentQuestion.difficulty === 'medium' ? 'TB' : 'Khó'}

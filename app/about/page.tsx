@@ -44,7 +44,7 @@ export default function AboutPage() {
       <main className="flex-1 pt-24 pb-12">
         {/* Hero */}
         <section className="px-4 mb-16">
-          <div className="max-w-4xl mx-auto text-center">
+          <div className="max-w-7xl mx-auto text-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -53,7 +53,7 @@ export default function AboutPage() {
                 <Image src="/logo.png" alt="ANTI-SCAM" width={80} height={80} className="rounded-2xl" />
               </div>
               <h1 className="text-4xl md:text-5xl font-bold mb-6">
-                Về <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">ANTI-SCAM</span>
+                Về <span className="bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent">ANTI-SCAM</span>
               </h1>
               <p className="text-xl text-gray-400 max-w-2xl mx-auto">
                 Công cụ miễn phí giúp người dùng Việt Nam kiểm tra và nhận biết 
@@ -164,7 +164,7 @@ export default function AboutPage() {
 
         {/* CTA */}
         <section className="px-4">
-          <div className="max-w-4xl mx-auto text-center">
+          <div className="max-w-7xl mx-auto text-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}

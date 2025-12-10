@@ -14,6 +14,8 @@ import {
 import Image from 'next/image'
 import Header from './components/Header'
 import Footer from './components/Footer'
+import StatsCounter from './components/StatsCounter'
+import TrustBadges from './components/TrustBadges'
 import { useRouter } from 'next/navigation'
 
 const features = [
@@ -21,27 +23,27 @@ const features = [
     icon: Search,
     title: 'Kiểm tra URL',
     description: 'Dán link website đáng ngờ để kiểm tra các dấu hiệu phishing, giả mạo ngân hàng, TMĐT.',
-    color: 'from-blue-500 to-cyan-500'
+    color: 'from-blue-500 to-blue-600'
   },
   {
     icon: Eye,
     title: 'Phân tích Hình ảnh',
     description: 'Upload ảnh chụp tin nhắn Zalo, SMS, email để AI nhận diện các chiêu trò lừa đảo.',
-    color: 'from-purple-500 to-pink-500'
+    color: 'from-blue-400 to-blue-500'
   },
   {
     icon: Brain,
     title: 'Quiz Trắc nghiệm',
     description: '5000+ câu hỏi giúp bạn nhận biết các hình thức lừa đảo phổ biến tại Việt Nam.',
-    color: 'from-green-500 to-emerald-500'
+    color: 'from-blue-500 to-blue-600'
   }
 ]
 
 const stats = [
-  { value: '5000+', label: 'Câu hỏi Quiz' },
-  { value: '15+', label: 'Loại lừa đảo' },
-  { value: '100%', label: 'Miễn phí' },
-  { value: '24/7', label: 'Hoạt động' },
+  { value: '50000', label: 'Websites đã quét', suffix: '+' },
+  { value: '98', label: 'Antivirus Engines' },
+  { value: '100', label: 'Miễn phí', suffix: '%' },
+  { value: '24', label: 'Hoạt động', suffix: '/7' },
 ]
 
 const howItWorks = [
@@ -103,7 +105,7 @@ export default function Home() {
                   <br />
                   <span className="whitespace-nowrap">
                     <span className="text-white">lướt mạng </span>
-                    <span className="bg-gradient-to-r from-emerald-400 to-green-500 bg-clip-text text-transparent">
+                    <span className="bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent">
                       an toàn?
                     </span>
                   </span>
@@ -117,7 +119,7 @@ export default function Home() {
                 <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                   <motion.button
                     onClick={() => router.push('/scan')}
-                    className="px-6 py-3 sm:px-8 sm:py-4 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 rounded-xl font-semibold text-white flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25"
+                    className="px-6 py-3 sm:px-8 sm:py-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 rounded-xl font-semibold text-white flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
@@ -182,23 +184,14 @@ export default function Home() {
         {/* Stats Section */}
         <section className="py-8 sm:py-12 px-4 border-y border-gray-800/50 bg-[#0d1320]/50">
           <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8">
-              {stats.map((stat, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  className="text-center"
-                >
-                  <p className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-                    {stat.value}
-                  </p>
-                  <p className="text-gray-400 text-sm sm:text-base mt-1">{stat.label}</p>
-                </motion.div>
-              ))}
-            </div>
+            <StatsCounter stats={stats} />
+          </div>
+        </section>
+
+        {/* Trust Badges */}
+        <section className="py-12 px-4 bg-gradient-to-b from-[#0d1320]/50 to-transparent">
+          <div className="max-w-7xl mx-auto">
+            <TrustBadges />
           </div>
         </section>
 
