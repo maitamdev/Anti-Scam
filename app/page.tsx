@@ -97,12 +97,12 @@ export default function Home() {
                   <span className="text-sm text-gray-300 font-medium">Công cụ hỗ trợ phát hiện lừa đảo</span>
                 </motion.div>
                 
-                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black leading-[1.1] mb-4 sm:mb-6 uppercase tracking-tight italic relative z-30">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black leading-[1.1] mb-4 sm:mb-6 uppercase tracking-wider italic relative z-30" style={{ letterSpacing: '0.05em' }}>
                   <span className="text-white drop-shadow-lg">Bạn có đang</span>
                   <br />
                   <span className="whitespace-nowrap">
                     <span className="text-white drop-shadow-lg">lướt mạng </span>
-                    <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent relative z-30" style={{ textShadow: '0 0 30px rgba(59, 130, 246, 0.5)' }}>
+                    <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent relative z-30" style={{ textShadow: '0 0 30px rgba(59, 130, 246, 0.5)', letterSpacing: '0.08em' }}>
                       an toàn?
                     </span>
                   </span>

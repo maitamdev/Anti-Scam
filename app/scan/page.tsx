@@ -53,7 +53,8 @@ interface VirusTotalResult {
     harmless: number
     undetected: number
     total: number
-  }
+  } | null
+  notFound?: boolean
 }
 
 interface ScanResult {
@@ -441,67 +442,87 @@ export default function ScanPage() {
                               )}
 
                               {/* VirusTotal Results */}
-                              {result.virusTotal && result.virusTotal.stats && (
+                              {result.virusTotal && (
                                 <div className="bg-gradient-to-r from-blue-500/10 to-blue-600/10 border border-blue-500/20 rounded-lg p-3">
                                   <div className="flex items-center gap-2 mb-3">
                                     <Database className="w-4 h-4 text-blue-400" />
                                     <p className="text-gray-200 text-xs font-medium">VirusTotal Security Scan</p>
-                                    <span className="ml-auto text-xs bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded">
-                                      {result.virusTotal.stats.total} engines
-                                    </span>
-                                  </div>
-                                  
-                                  <div className="grid grid-cols-4 gap-2 mb-3">
-                                    <div className="bg-gray-800/50 rounded p-2 text-center">
-                                      <div className="text-lg font-bold text-red-400">
-                                        {result.virusTotal.stats.malicious}
-                                      </div>
-                                      <div className="text-[10px] text-gray-400">Độc hại</div>
-                                    </div>
-                                    <div className="bg-gray-800/50 rounded p-2 text-center">
-                                      <div className="text-lg font-bold text-yellow-400">
-                                        {result.virusTotal.stats.suspicious}
-                                      </div>
-                                      <div className="text-[10px] text-gray-400">Đáng ngờ</div>
-                                    </div>
-                                    <div className="bg-gray-800/50 rounded p-2 text-center">
-                                      <div className="text-lg font-bold text-green-400">
-                                        {result.virusTotal.stats.harmless}
-                                      </div>
-                                      <div className="text-[10px] text-gray-400">An toàn</div>
-                                    </div>
-                                    <div className="bg-gray-800/50 rounded p-2 text-center">
-                                      <div className="text-lg font-bold text-gray-400">
-                                        {result.virusTotal.stats.undetected}
-                                      </div>
-                                      <div className="text-[10px] text-gray-400">Chưa xác định</div>
-                                    </div>
-                                  </div>
-
-                                  <div className="flex items-center gap-2 text-xs">
-                                    {result.virusTotal.stats.malicious > 0 ? (
-                                      <>
-                                        <ShieldX className="w-4 h-4 text-red-400" />
-                                        <span className="text-red-400 font-medium">
-                                          ⚠️ {result.virusTotal.stats.malicious} antivirus phát hiện mối đe dọa!
-                                        </span>
-                                      </>
-                                    ) : result.virusTotal.stats.suspicious > 0 ? (
-                                      <>
-                                        <ShieldAlert className="w-4 h-4 text-yellow-400" />
-                                        <span className="text-yellow-400 font-medium">
-                                          ⚠️ {result.virusTotal.stats.suspicious} antivirus đánh dấu đáng ngờ
-                                        </span>
-                                      </>
-                                    ) : (
-                                      <>
-                                        <Shield className="w-4 h-4 text-blue-400" />
-                                        <span className="text-blue-400 font-medium">
-                                          ✓ Không phát hiện mối đe dọa từ {result.virusTotal.stats.total} antivirus engines
-                                        </span>
-                                      </>
+                                    {result.virusTotal.stats && (
+                                      <span className="ml-auto text-xs bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded">
+                                        {result.virusTotal.stats.total} engines
+                                      </span>
                                     )}
                                   </div>
+                                  
+                                  {result.virusTotal.notFound ? (
+                                    <div className="flex items-center gap-2 text-xs bg-gray-800/50 rounded p-3">
+                                      <ShieldAlert className="w-4 h-4 text-yellow-400" />
+                                      <span className="text-yellow-400 font-medium">
+                                        ⚠️ URL chưa được quét trên VirusTotal
+                                      </span>
+                                    </div>
+                                  ) : result.virusTotal.stats ? (
+                                    <>
+                                      <div className="grid grid-cols-4 gap-2 mb-3">
+                                        <div className="bg-gray-800/50 rounded p-2 text-center">
+                                          <div className="text-lg font-bold text-red-400">
+                                            {result.virusTotal.stats.malicious}
+                                          </div>
+                                          <div className="text-[10px] text-gray-400">Độc hại</div>
+                                        </div>
+                                        <div className="bg-gray-800/50 rounded p-2 text-center">
+                                          <div className="text-lg font-bold text-yellow-400">
+                                            {result.virusTotal.stats.suspicious}
+                                          </div>
+                                          <div className="text-[10px] text-gray-400">Đáng ngờ</div>
+                                        </div>
+                                        <div className="bg-gray-800/50 rounded p-2 text-center">
+                                          <div className="text-lg font-bold text-green-400">
+                                            {result.virusTotal.stats.harmless}
+                                          </div>
+                                          <div className="text-[10px] text-gray-400">An toàn</div>
+                                        </div>
+                                        <div className="bg-gray-800/50 rounded p-2 text-center">
+                                          <div className="text-lg font-bold text-gray-400">
+                                            {result.virusTotal.stats.undetected}
+                                          </div>
+                                          <div className="text-[10px] text-gray-400">Chưa xác định</div>
+                                        </div>
+                                      </div>
+
+                                      <div className="flex items-center gap-2 text-xs">
+                                        {result.virusTotal.stats.malicious > 0 ? (
+                                          <>
+                                            <ShieldX className="w-4 h-4 text-red-400" />
+                                            <span className="text-red-400 font-medium">
+                                              ⚠️ {result.virusTotal.stats.malicious} antivirus phát hiện mối đe dọa!
+                                            </span>
+                                          </>
+                                        ) : result.virusTotal.stats.suspicious > 0 ? (
+                                          <>
+                                            <ShieldAlert className="w-4 h-4 text-yellow-400" />
+                                            <span className="text-yellow-400 font-medium">
+                                              ⚠️ {result.virusTotal.stats.suspicious} antivirus đánh dấu đáng ngờ
+                                            </span>
+                                          </>
+                                        ) : (
+                                          <>
+                                            <Shield className="w-4 h-4 text-blue-400" />
+                                            <span className="text-blue-400 font-medium">
+                                              ✓ Không phát hiện mối đe dọa từ {result.virusTotal.stats.total} antivirus engines
+                                            </span>
+                                          </>
+                                        )}
+                                      </div>
+                                    </>
+                                  ) : (
+                                    <div className="flex items-center gap-2 text-xs bg-gray-800/50 rounded p-3">
+                                      <Shield className="w-4 h-4 text-gray-400" />
+                                      <span className="text-gray-400">
+                                        Không có dữ liệu từ VirusTotal
+                                      </span>
+                                    </div>
+                                  )}
                                 </div>
                               )}
 

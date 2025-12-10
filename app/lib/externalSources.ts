@@ -191,7 +191,8 @@ export async function checkExternalSources(domain: string): Promise<{
       harmless: number
       undetected: number
       total: number
-    }
+    } | null
+    notFound?: boolean
   }
 }> {
   const sources: string[] = []
@@ -221,10 +222,18 @@ export async function checkExternalSources(domain: string): Promise<{
     console.log('[VirusTotal] Checking:', domain)
     const vtResult = await checkVirusTotal(`https://${domain}`)
     console.log('[VirusTotal] Result:', vtResult)
-    if (vtResult.stats) {
+    if (vtResult.notFound) {
+      // URL never scanned - indicate this in UI
+      virusTotalData = {
+        detected: false,
+        stats: null,
+        notFound: true,
+      }
+    } else if (vtResult.stats) {
       virusTotalData = {
         detected: vtResult.detected,
         stats: vtResult.stats,
+        notFound: false,
       }
       if (vtResult.detected) {
         sources.push(
@@ -255,6 +264,7 @@ interface VirusTotalStats {
 async function checkVirusTotal(url: string): Promise<{
   detected: boolean
   stats: VirusTotalStats | null
+  notFound?: boolean
 }> {
   const apiKey = process.env.VIRUSTOTAL_API_KEY
   
@@ -277,6 +287,12 @@ async function checkVirusTotal(url: string): Promise<{
     )
 
     console.log('[VirusTotal] Response status:', res.status)
+
+    if (res.status === 404) {
+      // URL never scanned before
+      console.log('[VirusTotal] URL not found in database')
+      return { detected: false, stats: null, notFound: true }
+    }
 
     if (res.ok) {
       const data = await res.json()

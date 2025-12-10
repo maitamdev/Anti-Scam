@@ -140,6 +140,9 @@ export const GAMBLING_KEYWORDS = [
   '68', '88', '99', '789', '888', '666', '777', '168',
   'sv388', 'sunwin', 'iwin', 'go88', 'rik', 'b52',
   'may88', 'hit', 'club', 'fun', 'live',
+  // Casino-specific patterns
+  'inn', 'palace', 'crown', 'royal', 'diamond', 'gold', 'king', 'queen',
+  'vegas', 'monte', 'atlantic', 'roulette', 'dice', 'chip',
 ]
 
 // Brand keywords that scammers often impersonate

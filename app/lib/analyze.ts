@@ -104,20 +104,37 @@ function runHeuristics(url: string, domain: string): { score: number; reasons: s
     }
   }
 
-  // Gambling
+  // Gambling detection - stricter
   const gamblingHits = GAMBLING_KEYWORDS.filter(k => domainLower.includes(k) || urlLower.includes(k))
-  if (gamblingHits.length >= 2) {
-    score += 50
+  if (gamblingHits.length >= 3) {
+    score += 70
+    reasons.push('🎰 Website cờ bạc rõ ràng!')
+  } else if (gamblingHits.length === 2) {
+    score += 60
     reasons.push('🎰 Website cờ bạc!')
   } else if (gamblingHits.length === 1) {
-    score += 25
-    reasons.push(`⚠️ Dấu hiệu cờ bạc: ${gamblingHits[0]}`)
+    // Single gambling keyword but check context
+    const keyword = gamblingHits[0]
+    if (['casino', 'bet', 'slot', 'poker', 'inn', 'palace', 'crown'].includes(keyword)) {
+      score += 50
+      reasons.push(`🎰 Tên miền có dấu hiệu casino: ${keyword}`)
+    } else {
+      score += 30
+      reasons.push(`⚠️ Dấu hiệu cờ bạc: ${keyword}`)
+    }
+  }
+
+  // Casino/Inn specific patterns (oaxacainn, etc)
+  if (/(casino|inn|club|palace|royal|crown|diamond|gold)(vip|win|bet|88|game)/i.test(domainLower) ||
+      /(vip|win|bet|88|game)(casino|inn|club|palace|royal)/i.test(domainLower)) {
+    score += 60
+    reasons.push('🎰 Pattern tên casino điển hình')
   }
 
   // Gambling domain pattern
   if (/\d{2,3}(vip|club|win|bet|game|slot)/i.test(domainLower) ||
       /(vip|club|win|bet|game|slot)\d{2,3}/i.test(domainLower)) {
-    score += 40
+    score += 45
     reasons.push('🎰 Pattern cờ bạc')
   }
 
@@ -176,6 +193,21 @@ export async function analyzeUrl(url: string): Promise<AnalysisResult> {
     Promise.resolve(runHeuristics(url, domain)),
     analyzeWithAI(url, domain),
   ])
+
+  // Special case: gambling keywords + unreachable website = very dangerous
+  const hasGamblingKeyword = GAMBLING_KEYWORDS.some(k => domain.toLowerCase().includes(k))
+  const isUnreachable = !ai.contentFetched
+  
+  if (hasGamblingKeyword && isUnreachable) {
+    // Dead gambling site or blocked - extremely suspicious
+    return {
+      url, domain, score: 95, label: LABELS.DANGEROUS,
+      reasons: ['🚨 Website cờ bạc không truy cập được', '⚠️ Domain đã chết hoặc bị chặn', ...heuristic.reasons.slice(0, 3)],
+      aiConfidence: 0.95,
+      heuristicScore: heuristic.score,
+      aiScore: 95,
+    }
+  }
 
   // Weight: AI more when content fetched
   const aiWeight = ai.contentFetched ? 0.7 : 0.4
