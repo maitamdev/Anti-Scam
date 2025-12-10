@@ -438,7 +438,7 @@ export default function ScanPage() {
                               )}
 
                               {/* VirusTotal Results */}
-                              {result.virusTotal && (
+                              {result.virusTotal && result.virusTotal.stats && (
                                 <div className="bg-gradient-to-r from-green-500/10 to-blue-500/10 border border-green-500/20 rounded-lg p-3">
                                   <div className="flex items-center gap-2 mb-3">
                                     <Database className="w-4 h-4 text-green-400" />
