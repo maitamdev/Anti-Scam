@@ -135,9 +135,7 @@ export default function Header() {
                 href="/scan"
                 className="flex items-center gap-1.5 px-3 lg:px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 rounded-lg text-sm font-semibold text-white transition-all shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30"
               >
-                <Sparkles className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
-                <span className="hidden lg:inline">Quét ngay</span>
-                <span className="lg:hidden">Quét</span>
+                <span>Kiểm tra ngay</span>
               </Link>
             </motion.div>
           </div>
