@@ -20,6 +20,17 @@ const config: Config = {
         caution: '#f59e0b',
         dangerous: '#ef4444',
       },
+      animation: {
+        'gradient-x': 'gradient-x 3s ease infinite',
+        'scan-line': 'scan-line 2s ease-in-out infinite',
+        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+      },
+      keyframes: {
+        'gradient-x': {
+          '0%, 100%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+        },
+      },
     },
   },
   plugins: [],

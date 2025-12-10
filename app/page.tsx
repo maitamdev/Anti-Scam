@@ -74,12 +74,8 @@ export default function Home() {
       <main className="flex-1">
         {/* Hero Section */}
         <section className="pt-20 sm:pt-28 pb-12 sm:pb-20 px-4 relative overflow-hidden">
-          {/* Background effects */}
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
-            <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl" />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-blue-500/5 to-purple-500/5 rounded-full blur-3xl" />
-          </div>
+          {/* Static background gradient - no animations to prevent lag */}
+          <div className="absolute inset-0 bg-gradient-to-br from-[#0a0f1a] via-[#0d1320] to-[#0a0f1a] pointer-events-none" />
           
           <div className="max-w-7xl mx-auto relative z-10">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -88,6 +84,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
+                className="relative z-20"
               >
                 {/* Badge */}
                 <motion.div 
@@ -100,12 +97,12 @@ export default function Home() {
                   <span className="text-sm text-gray-300 font-medium">Công cụ hỗ trợ phát hiện lừa đảo</span>
                 </motion.div>
                 
-                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black leading-[1.15] mb-4 sm:mb-6 font-display uppercase tracking-wide italic">
-                  <span className="text-white">Bạn có đang</span>
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black leading-[1.1] mb-4 sm:mb-6 uppercase tracking-tight italic relative z-30">
+                  <span className="text-white drop-shadow-lg">Bạn có đang</span>
                   <br />
                   <span className="whitespace-nowrap">
-                    <span className="text-white">lướt mạng </span>
-                    <span className="bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent">
+                    <span className="text-white drop-shadow-lg">lướt mạng </span>
+                    <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent relative z-30" style={{ textShadow: '0 0 30px rgba(59, 130, 246, 0.5)' }}>
                       an toàn?
                     </span>
                   </span>

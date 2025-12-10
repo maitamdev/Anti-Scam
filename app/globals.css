@@ -48,6 +48,35 @@ body {
 /* Glass effect */
 .glass {
   background: rgba(17, 24, 39, 0.8);
+}
+
+/* Animated gradient */
+@keyframes gradient-x {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient-x {
+  background-size: 200% 200%;
+  animation: gradient-x 3s ease infinite;
+}
+
+/* Scan line animation */
+@keyframes scan-line {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+}
+
+.animate-scan-line {
+  animation: scan-line 2s ease-in-out infinite;
   backdrop-filter: blur(12px);
   border: 1px solid rgba(59, 130, 246, 0.1);
 }

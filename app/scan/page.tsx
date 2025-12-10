@@ -22,6 +22,7 @@ import Header from '../components/Header'
 import Footer from '../components/Footer'
 import ImageUpload from '../components/ImageUpload'
 import ScamTips from '../components/ScamTips'
+import AnimatedEye from '../components/AnimatedEye'
 import { safeStorage } from '../lib/safeStorage'
 
 interface WebsiteInfo {
@@ -260,14 +261,16 @@ export default function ScanPage() {
             className="mb-8 sm:mb-10"
           >
             <div className="flex flex-col sm:flex-row gap-3">
-              <div className="flex-1 relative">
-                <Link2 className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
+              <div className="flex-1 relative group">
+                <div className="absolute left-4 sm:left-5 top-1/2 -translate-y-1/2 transition-transform group-focus-within:scale-110 z-10">
+                  <AnimatedEye />
+                </div>
                 <input
                   type="text"
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
                   placeholder="Dán URL website vào đây..."
-                  className="w-full bg-[#111827] border border-gray-700 rounded-lg sm:rounded-xl py-3 sm:py-4 pl-10 sm:pl-12 pr-4 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-colors text-sm sm:text-base"
+                  className="w-full bg-[#111827] border border-gray-700 rounded-lg sm:rounded-xl py-3 sm:py-4 pl-24 sm:pl-32 pr-4 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all text-sm sm:text-base"
                   disabled={isLoading}
                 />
               </div>
