@@ -11,6 +11,7 @@ export default function ReportForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState('')
+  const [scanUrl, setScanUrl] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -28,7 +29,9 @@ export default function ReportForm() {
 
       if (!res.ok) throw new Error('Gửi báo cáo thất bại')
 
+      const data = await res.json()
       setSubmitted(true)
+      setScanUrl(data.data?.scanUrl || '')
       setUrl('')
       setReason('')
       setDescription('')
@@ -48,11 +51,29 @@ export default function ReportForm() {
       >
         <CheckCircle className="w-16 h-16 text-green-400 mx-auto mb-4" />
         <h3 className="text-xl font-semibold mb-2">Cảm ơn bạn đã báo cáo!</h3>
-        <p className="text-gray-400 mb-6">
-          Báo cáo của bạn sẽ được xem xét và giúp bảo vệ cộng đồng.
+        <p className="text-gray-400 mb-2">
+          Báo cáo của bạn đã được gửi thành công và công khai trên URLScan.io 🌍
         </p>
+        {scanUrl && (
+          <a
+            href={scanUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block text-blue-400 hover:text-blue-300 text-sm mb-6 underline"
+          >
+            Xem kết quả scan tại URLScan.io →
+          </a>
+        )}
+        {!scanUrl && (
+          <p className="text-gray-500 text-sm mb-6">
+            Báo cáo đã được lưu và sẽ giúp bảo vệ cộng đồng.
+          </p>
+        )}
         <button
-          onClick={() => setSubmitted(false)}
+          onClick={() => {
+            setSubmitted(false)
+            setScanUrl('')
+          }}
           className="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
         >
           Gửi báo cáo khác

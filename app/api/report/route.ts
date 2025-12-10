@@ -38,34 +38,35 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    // Submit to PhishTank API
-    let phishTankSubmitted = false
+    // Submit to URLScan.io API (Public submission - no API key needed!)
+    let publicSubmitted = false
+    let scanUrl = ''
     try {
-      const phishTankApiKey = process.env.PHISHTANK_API_KEY
+      // URLScan.io - Free public submission
+      const urlscanRes = await fetch('https://urlscan.io/api/v1/scan/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          url: normalizedUrl,
+          visibility: 'public',
+          tags: ['phishing', 'scam', 'anti-scam-vn'],
+        }),
+      })
       
-      if (phishTankApiKey && reason === 'phishing') {
-        const formData = new URLSearchParams()
-        formData.append('url', normalizedUrl)
-        formData.append('format', 'json')
-        
-        const phishTankRes = await fetch('https://phishtank.org/add_web_phish.php', {
-          method: 'POST',
-          headers: {
-            'User-Agent': 'ANTI-SCAM/1.0',
-          },
-          body: formData,
-        })
-        
-        if (phishTankRes.ok) {
-          phishTankSubmitted = true
-          console.log('✅ PhishTank submission successful for:', normalizedUrl)
-        } else {
-          console.warn('⚠️ PhishTank submission failed:', await phishTankRes.text())
-        }
+      if (urlscanRes.ok) {
+        const data = await urlscanRes.json()
+        publicSubmitted = true
+        scanUrl = data.result || ''
+        console.log('✅ URLScan.io submission successful:', normalizedUrl)
+        console.log('📊 Scan result:', data.result)
+      } else {
+        console.warn('⚠️ URLScan.io submission failed:', await urlscanRes.text())
       }
-    } catch (phishTankError) {
-      console.error('PhishTank API error:', phishTankError)
-      // Continue even if PhishTank fails
+    } catch (submitError) {
+      console.error('URLScan.io API error:', submitError)
+      // Continue even if submission fails
     }
 
     // Update daily stats
@@ -85,10 +86,11 @@ export async function POST(request: NextRequest) {
       success: true,
       data: {
         id: report.id,
-        message: phishTankSubmitted 
-          ? 'Báo cáo đã được gửi thành công và đã báo cáo lên PhishTank!' 
+        message: publicSubmitted 
+          ? `Báo cáo đã được gửi thành công và đã công khai trên URLScan.io! 🌍` 
           : 'Báo cáo đã được gửi thành công',
-        phishTankSubmitted,
+        publicSubmitted,
+        scanUrl,
       },
     })
   } catch (error) {
