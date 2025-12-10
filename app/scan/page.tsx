@@ -173,7 +173,7 @@ export default function ScanPage() {
       <Header />
       
       <main className="flex-1 pt-24 pb-12">
-        <div className="max-w-3xl mx-auto px-4">
+        <div className="max-w-7xl mx-auto px-4">
           {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -543,15 +543,36 @@ export default function ScanPage() {
 
                               {/* Analysis Reasons */}
                               {result.reasons.length > 0 && (
-                                <div className="bg-[#0d1320] rounded-lg p-3">
-                                  <p className="text-gray-400 text-xs mb-2 font-medium">Phân tích nội dung</p>
-                                  <ul className="space-y-1">
-                                    {result.reasons.map((reason, i) => (
-                                      <li key={i} className="text-gray-300 text-xs flex items-start gap-2">
-                                        <span className="text-blue-400">•</span>{reason}
-                                      </li>
-                                    ))}
-                                  </ul>
+                                <div className="bg-[#0d1320] rounded-lg p-4">
+                                  <h4 className="text-white text-sm font-semibold mb-3 border-b border-gray-700 pb-2">Chi tiết phân tích</h4>
+                                  <div className="space-y-2">
+                                    {result.reasons.map((reason, i) => {
+                                      // Remove emoji icons from reason text
+                                      const cleanReason = reason.replace(/🤖|🏢|🎯|🔒|❌|✅/g, '').trim()
+                                      
+                                      // Determine reason type based on content
+                                      const isWarning = cleanReason.includes('Domain:') || cleanReason.includes('không phải là domain') || cleanReason.includes('có thể được xem là đáng ngờ')
+                                      const isInfo = cleanReason.includes('Website') || cleanReason.includes('Mục đích:')
+                                      const isDanger = cleanReason.includes('vi phạm bản quyền') || cleanReason.includes('không rõ ràng')
+                                      
+                                      return (
+                                        <div key={i} className={`p-3 rounded-lg border ${
+                                          isDanger ? 'bg-red-500/5 border-red-500/20' :
+                                          isWarning ? 'bg-yellow-500/5 border-yellow-500/20' :
+                                          'bg-blue-500/5 border-blue-500/20'
+                                        }`}>
+                                          <div className="flex items-start gap-3">
+                                            <div className={`w-1.5 h-1.5 rounded-full mt-2 flex-shrink-0 ${
+                                              isDanger ? 'bg-red-400' :
+                                              isWarning ? 'bg-yellow-400' :
+                                              'bg-blue-400'
+                                            }`} />
+                                            <p className="text-gray-200 text-sm leading-relaxed flex-1">{cleanReason}</p>
+                                          </div>
+                                        </div>
+                                      )
+                                    })}
+                                  </div>
                                 </div>
                               )}
 

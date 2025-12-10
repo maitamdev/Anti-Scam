@@ -88,26 +88,26 @@ BƯỚC 2: ĐÁNH GIÁ AN TOÀN
 Kiểm tra:
 
 NGUY HIỂM CAO (80-100):
-❌ Giả mạo ngân hàng/ví (vietcombannk.vn, paypa1.com)
-❌ Casino/cờ bạc/lô đề
-❌ Lừa đảo đầu tư/forex/crypto
-❌ Yêu cầu OTP/mật khẩu/số thẻ
-❌ Phishing đánh cắp tài khoản
+- Giả mạo ngân hàng/ví (vietcombannk.vn, paypa1.com)
+- Casino/cờ bạc/lô đề
+- Lừa đảo đầu tư/forex/crypto
+- Yêu cầu OTP/mật khẩu/số thẻ
+- Phishing đánh cắp tài khoản
 
 ĐÁNG NGỜ (40-79):
-❌ TLD lạ/miễn phí (.tk, .ml, .ga, .cf, .li, .xyz, .top)
-❌ Không SSL (HTTP chứ không HTTPS)
-❌ Website lậu (phim lậu, phần mềm crack, mp3 không bản quyền)
-❌ Thiếu thông tin liên hệ/chính sách
-❌ Domain dài/lạ (>25 ký tự, nhiều dấu -)
-❌ Popup quảng cáo nhiều
+- TLD lạ/miễn phí (.tk, .ml, .ga, .cf, .li, .xyz, .top)
+- Không SSL (HTTP chứ không HTTPS)
+- Website lậu (phim lậu, phần mềm crack, mp3 không bản quyền)
+- Thiếu thông tin liên hệ/chính sách
+- Domain dài/lạ (>25 ký tự, nhiều dấu -)
+- Popup quảng cáo nhiều
 
 AN TOÀN (0-39):
-✅ Domain chính thống (.com.vn, .vn, .edu.vn, .gov.vn)
-✅ Subdomain hợp lệ của thương hiệu (mail.google.com, khoahoc.28tech.com.vn)
-✅ SSL hợp lệ (HTTPS)
-✅ Nội dung hợp pháp, có liên hệ rõ ràng
-✅ Thương hiệu uy tín (Vietcombank, Shopee, Zalo...)
+- Domain chính thống (.com.vn, .vn, .edu.vn, .gov.vn)
+- Subdomain hợp lệ của thương hiệu (mail.google.com, khoahoc.28tech.com.vn)
+- SSL hợp lệ (HTTPS)
+- Nội dung hợp pháp, có liên hệ rõ ràng
+- Thương hiệu uy tín (Vietcombank, Shopee, Zalo...)
 
 ĐIỂM SỐ:
 0-39 = AN TOÀN (safe)
@@ -119,28 +119,31 @@ OUTPUT (JSON ONLY):
   "score": <số>,
   "category": "safe|suspicious|phishing|scam|gambling",
   "reasons": [
-    "🏢 Website [Tên loại] - [Chức năng chính cụ thể]",
-    "🎯 Mục đích: [Mô tả chi tiết website làm gì, phục vụ ai]",
-    "🔒 Domain: [domain].vn - [Đánh giá domain có hợp lệ không]",
-    "✅ [Điểm tốt]" hoặc "❌ [Nguy hiểm]",
-    "✅ hoặc ❌ [thêm 1-2 điểm quan trọng]"
+    "Loại website: [Tên loại cụ thể] - [Chức năng chính]",
+    "Mục đích: [Mô tả chi tiết website làm gì, phục vụ ai, hoạt động thế nào]",
+    "Đánh giá domain: [domain] - [Phân tích tên miền có hợp lệ, uy tín không và lý do]",
+    "[Điểm mạnh hoặc điểm yếu về bảo mật]",
+    "[Nhận xét bổ sung về độ tin cậy hoặc rủi ro]"
   ],
   "confidence": <0-1>
 }
 
 LƯU Ý:
-- reason[0]: BẮT BUỘC mô tả website là GÌ + chức năng GÌ
-- reason[1]: BẮT BUỘC giải thích MỤC ĐÍCH làm gì
-- Sau đó mới đánh giá an toàn
-- CỤ THỂ, KHÔNG chung chung!
+- reason[0]: BẮT BUỘC mô tả CHÍNH XÁC website là loại gì + chức năng cụ thể
+- reason[1]: BẮT BUỘC giải thích CHI TIẾT mục đích, hoạt động, đối tượng phục vụ
+- reason[2]: BẮT BUỘC phân tích tên miền (domain) có hợp lệ không và tại sao
+- reason[3-4]: Đánh giá các yếu tố bảo mật, rủi ro, uy tín
+- Phải CỤ THỂ, CHI TIẾT, không được chung chung!
 
-VÍ DỤ TỐT:
-"🏢 Nền tảng học lập trình trực tuyến 28Tech - Cung cấp khóa học C++, Java, DSA"
-"🎯 Website giáo dục giúp sinh viên học lập trình qua video, bài tập và thi online"
+VÍ DỤ ĐÚNG:
+"Loại website: Nền tảng học lập trình trực tuyến 28Tech - Cung cấp khóa học C++, Java, cấu trúc dữ liệu và giải thuật"
+"Mục đích: Website giáo dục trực tuyến chuyên về lập trình cho sinh viên và người đi làm, cung cấp video bài giảng, bài tập thực hành, hệ thống chấm điểm tự động và diễn đàn hỏi đáp"
+"Đánh giá domain: 28tech.com.vn - Tên miền .com.vn là domain Việt Nam hợp pháp, tên ngắn gọn dễ nhớ, phù hợp với thương hiệu giáo dục"
 
-VÍ DỤ TỆ:
-"🏢 Website thương mại điện tử"
-"🎯 Cung cấp dịch vụ"`
+VÍ DỤ SAI (quá chung chung):
+"Loại website: Website thương mại điện tử"
+"Mục đích: Cung cấp dịch vụ"
+"Đánh giá domain: Domain có vẻ bình thường"`
 
   try {
     const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
