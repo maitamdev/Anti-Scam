@@ -453,25 +453,25 @@ export default function ScanPage() {
                                       <div className="text-lg font-bold text-red-400">
                                         {result.virusTotal.stats.malicious}
                                       </div>
-                                      <div className="text-[10px] text-gray-400">Malicious</div>
+                                      <div className="text-[10px] text-gray-400">Độc hại</div>
                                     </div>
                                     <div className="bg-gray-800/50 rounded p-2 text-center">
                                       <div className="text-lg font-bold text-yellow-400">
                                         {result.virusTotal.stats.suspicious}
                                       </div>
-                                      <div className="text-[10px] text-gray-400">Suspicious</div>
+                                      <div className="text-[10px] text-gray-400">Đáng ngờ</div>
                                     </div>
                                     <div className="bg-gray-800/50 rounded p-2 text-center">
                                       <div className="text-lg font-bold text-green-400">
                                         {result.virusTotal.stats.harmless}
                                       </div>
-                                      <div className="text-[10px] text-gray-400">Harmless</div>
+                                      <div className="text-[10px] text-gray-400">An toàn</div>
                                     </div>
                                     <div className="bg-gray-800/50 rounded p-2 text-center">
                                       <div className="text-lg font-bold text-gray-400">
                                         {result.virusTotal.stats.undetected}
                                       </div>
-                                      <div className="text-[10px] text-gray-400">Undetected</div>
+                                      <div className="text-[10px] text-gray-400">Chưa xác định</div>
                                     </div>
                                   </div>
 
@@ -547,8 +547,8 @@ export default function ScanPage() {
                                   <h4 className="text-white text-sm font-semibold mb-3 border-b border-gray-700 pb-2">Chi tiết phân tích</h4>
                                   <div className="space-y-2">
                                     {result.reasons.map((reason, i) => {
-                                      // Remove emoji icons from reason text
-                                      const cleanReason = reason.replace(/🤖|🏢|🎯|🔒|❌|✅/g, '').trim()
+                                      // Remove ALL emoji icons from reason text
+                                      const cleanReason = reason.replace(/[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, '').trim()
                                       
                                       // Determine reason type based on content
                                       const isWarning = cleanReason.includes('Domain:') || cleanReason.includes('không phải là domain') || cleanReason.includes('có thể được xem là đáng ngờ')

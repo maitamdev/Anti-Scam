@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
                       request.headers.get('x-real-ip') || 
                       'unknown'
 
-    // Save report
+    // Save report to database
     const report = await prisma.report.create({
       data: {
         url: normalizedUrl,
@@ -37,6 +37,36 @@ export async function POST(request: NextRequest) {
         ipAddress,
       },
     })
+
+    // Submit to PhishTank API
+    let phishTankSubmitted = false
+    try {
+      const phishTankApiKey = process.env.PHISHTANK_API_KEY
+      
+      if (phishTankApiKey && reason === 'phishing') {
+        const formData = new URLSearchParams()
+        formData.append('url', normalizedUrl)
+        formData.append('format', 'json')
+        
+        const phishTankRes = await fetch('https://phishtank.org/add_web_phish.php', {
+          method: 'POST',
+          headers: {
+            'User-Agent': 'ANTI-SCAM/1.0',
+          },
+          body: formData,
+        })
+        
+        if (phishTankRes.ok) {
+          phishTankSubmitted = true
+          console.log('✅ PhishTank submission successful for:', normalizedUrl)
+        } else {
+          console.warn('⚠️ PhishTank submission failed:', await phishTankRes.text())
+        }
+      }
+    } catch (phishTankError) {
+      console.error('PhishTank API error:', phishTankError)
+      // Continue even if PhishTank fails
+    }
 
     // Update daily stats
     const today = getToday()
@@ -55,7 +85,10 @@ export async function POST(request: NextRequest) {
       success: true,
       data: {
         id: report.id,
-        message: 'Báo cáo đã được gửi thành công',
+        message: phishTankSubmitted 
+          ? 'Báo cáo đã được gửi thành công và đã báo cáo lên PhishTank!' 
+          : 'Báo cáo đã được gửi thành công',
+        phishTankSubmitted,
       },
     })
   } catch (error) {

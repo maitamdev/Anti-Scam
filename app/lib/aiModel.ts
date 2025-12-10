@@ -128,7 +128,9 @@ OUTPUT (JSON ONLY):
   "confidence": <0-1>
 }
 
-LƯU Ý:
+QUY TẮC QUAN TRỌNG:
+- TUYỆT ĐỐI KHÔNG sử dụng emoji trong response (không dùng 🤖🏢🎯🔒✅❌ hay bất kỳ emoji nào)
+- Chỉ sử dụng text thuần túy, không icon, không ký tự đặc biệt
 - reason[0]: BẮT BUỘC mô tả CHÍNH XÁC website là loại gì + chức năng cụ thể
 - reason[1]: BẮT BUỘC giải thích CHI TIẾT mục đích, hoạt động, đối tượng phục vụ
 - reason[2]: BẮT BUỘC phân tích tên miền (domain) có hợp lệ không và tại sao
@@ -140,10 +142,10 @@ VÍ DỤ ĐÚNG:
 "Mục đích: Website giáo dục trực tuyến chuyên về lập trình cho sinh viên và người đi làm, cung cấp video bài giảng, bài tập thực hành, hệ thống chấm điểm tự động và diễn đàn hỏi đáp"
 "Đánh giá domain: 28tech.com.vn - Tên miền .com.vn là domain Việt Nam hợp pháp, tên ngắn gọn dễ nhớ, phù hợp với thương hiệu giáo dục"
 
-VÍ DỤ SAI (quá chung chung):
-"Loại website: Website thương mại điện tử"
-"Mục đích: Cung cấp dịch vụ"
-"Đánh giá domain: Domain có vẻ bình thường"`
+VÍ DỤ SAI:
+"Loại website: Website thương mại điện tử" (quá chung chung)
+"🤖 Mục đích: Cung cấp dịch vụ" (có emoji và không chi tiết)
+"Đánh giá domain: Domain có vẻ bình thường" (không phân tích cụ thể)`
 
   try {
     const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {

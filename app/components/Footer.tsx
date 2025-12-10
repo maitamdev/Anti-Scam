@@ -56,7 +56,7 @@ export default function Footer() {
         {/* Bottom */}
         <div className="pt-6 sm:pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center gap-3 sm:gap-4">
           <p className="text-gray-500 text-xs sm:text-sm text-center md:text-left">
-            © {currentYear} ANTI-SCAM. Được phát triển với <Heart className="w-3 h-3 sm:w-4 sm:h-4 inline text-red-500" /> tại Việt Nam.
+            © {currentYear} ANTI-SCAM. Được phát triển bởi <a href="https://github.com/maitamdev" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 transition-colors">MaiTamDev</a>.
           </p>
           <p className="text-gray-500 text-xs sm:text-sm text-center md:text-right">
             Công cụ mang tính chất tham khảo.
