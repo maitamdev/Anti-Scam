@@ -122,7 +122,6 @@ export default function Home() {
                     whileTap={{ scale: 0.98 }}
                   >
                     Kiểm tra ngay
-                    <ArrowRight className="w-5 h-5" />
                   </motion.button>
                   
                   <motion.button
