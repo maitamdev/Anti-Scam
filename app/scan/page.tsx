@@ -509,11 +509,21 @@ export default function ScanPage() {
                                           <>
                                             <Shield className="w-4 h-4 text-blue-400" />
                                             <span className="text-blue-400 font-medium">
-                                              ✓ Không phát hiện mối đe dọa từ {result.virusTotal.stats.total} antivirus engines
+                                              ✓ Không phát hiện virus/malware từ {result.virusTotal.stats.total} antivirus engines
                                             </span>
                                           </>
                                         )}
                                       </div>
+                                      
+                                      {/* Warning for gambling/scam sites that are "clean" */}
+                                      {result.label === 'DANGEROUS' && result.virusTotal.stats.malicious === 0 && (
+                                        <div className="mt-2 flex items-start gap-2 text-xs bg-yellow-500/10 border border-yellow-500/20 rounded p-2">
+                                          <ShieldAlert className="w-3.5 h-3.5 text-yellow-400 mt-0.5 flex-shrink-0" />
+                                          <span className="text-yellow-300">
+                                            <strong>Lưu ý:</strong> VirusTotal chỉ quét virus/malware kỹ thuật. Website này vẫn nguy hiểm do vi phạm pháp luật VN (cờ bạc/lừa đảo).
+                                          </span>
+                                        </div>
+                                      )}
                                     </>
                                   ) : (
                                     <div className="flex items-center gap-2 text-xs bg-gray-800/50 rounded p-3">
