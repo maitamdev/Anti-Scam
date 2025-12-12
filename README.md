@@ -4,14 +4,14 @@ Nền tảng AI phân tích và cảnh báo website lừa đảo, bảo vệ ng�
 
 ## ✨ Tính năng
 
-- 🔍 **Kiểm tra URL** - Phân tích độ an toàn của website bằng AI + heuristic
-- 🤖 **AI Engine** - Sử dụng HuggingFace/Groq API để phát hiện mẫu lừa đảo
-- 📊 **Dashboard** - Thống kê trực quan với biểu đồ
-- 📝 **Báo cáo cộng đồng** - Người dùng có thể báo cáo website đáng ngờ
-- 🔄 **Tự học** - Mô hình AI được huấn luyện lại từ dữ liệu cộng đồng
-- 🌐 **API Public** - REST API cho developer tích hợp
+-  **Kiểm tra URL** - Phân tích độ an toàn của website bằng AI + heuristic
+-  **AI Engine** - Sử dụng HuggingFace/Groq API để phát hiện mẫu lừa đảo
+-  **Dashboard** - Thống kê trực quan với biểu đồ
+-  **Báo cáo cộng đồng** - Người dùng có thể báo cáo website đáng ngờ
+-  **Tự học** - Mô hình AI được huấn luyện lại từ dữ liệu cộng đồng
+-  **API Public** - REST API cho developer tích hợp
 
-## 🚀 Cài đặt
+##  Cài đặt
 
 ### Yêu cầu
 - Node.js 18+
@@ -230,4 +230,3 @@ MIT License
 
 ---
 
-Made with ❤️ for Vietnamese internet users
