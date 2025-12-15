@@ -23,6 +23,7 @@ import Footer from '../components/Footer'
 import ImageUpload from '../components/ImageUpload'
 import ScamTips from '../components/ScamTips'
 import AnimatedEye from '../components/AnimatedEye'
+import ScanMascot from '../components/ScanMascot'
 import { safeStorage } from '../lib/safeStorage'
 
 interface WebsiteInfo {
@@ -318,13 +319,17 @@ export default function ScanPage() {
               >
                 <h2 className="text-xl font-semibold mb-4">Kết quả phân tích</h2>
 
-                {/* Main Result Card */}
+                {/* Main Result Card with Mascot */}
                 <div className={`bg-[#111827] rounded-2xl p-6 border ${config.borderColor} mb-4`}>
-                  <div className="flex items-start gap-5">
-                    <div className={`w-16 h-16 rounded-2xl ${config.iconBg} flex items-center justify-center flex-shrink-0`}>
-                      <config.icon className={`w-8 h-8 ${config.iconColor}`} />
+                  <div className="flex flex-col sm:flex-row items-center gap-5">
+                    {/* Mascot */}
+                    <div className="flex-shrink-0">
+                      <ScanMascot 
+                        state={result.label === 'SAFE' ? 'safe' : result.label === 'CAUTION' ? 'caution' : 'danger'} 
+                        size={100} 
+                      />
                     </div>
-                    <div>
+                    <div className="text-center sm:text-left">
                       <p className={`text-sm font-semibold ${config.labelColor} mb-1`}>{config.label}</p>
                       <h3 className="text-xl font-semibold mb-2">{config.title}</h3>
                       <p className="text-gray-400">{config.description}</p>
