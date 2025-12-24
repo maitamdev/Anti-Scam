@@ -1,14 +1,20 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
+  // Removed 'output: export' - Now using full Next.js with API routes
   images: {
-    unoptimized: true,
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
   },
-  // Chỉ sử dụng basePath khi deploy lên GitHub Pages với repo name
-  // Nếu dùng custom domain hoặc username.github.io thì comment dòng này
-  // basePath: '/your-repo-name',
-  // assetPrefix: '/your-repo-name/',
-  trailingSlash: true,
+  // Server-side rendering enabled for Vercel deployment
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '2mb',
+    },
+  },
 }
 
 module.exports = nextConfig
