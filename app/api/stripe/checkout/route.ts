@@ -9,6 +9,9 @@ import { authOptions } from '@/app/lib/auth'
 import { createCheckoutSession } from '@/app/lib/stripe'
 import { z } from 'zod'
 
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
+
 const checkoutSchema = z.object({
   priceId: z.string(),
   tier: z.enum(['PRO', 'BUSINESS']),

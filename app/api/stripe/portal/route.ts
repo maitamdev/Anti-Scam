@@ -9,6 +9,9 @@ import { authOptions } from '@/app/lib/auth'
 import { createCustomerPortalSession } from '@/app/lib/stripe'
 import prisma from '@/app/lib/db'
 
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
+
 export async function POST(request: NextRequest) {
   try {
     if (!process.env.STRIPE_SECRET_KEY) {

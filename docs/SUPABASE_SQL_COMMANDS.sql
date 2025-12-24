@@ -148,7 +148,7 @@ SELECT
   ak.name as api_key_name,
   ak.prefix,
   COUNT(au.id) as total_requests,
-  MAX(au."timestamp") as last_used
+  MAX(au."createdAt") as last_used
 FROM "ApiKey" ak
 JOIN "User" u ON ak."userId" = u.id
 LEFT JOIN "ApiUsage" au ON ak.id = au."apiKeyId"

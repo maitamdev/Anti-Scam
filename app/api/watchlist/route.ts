@@ -8,6 +8,9 @@ import { authOptions } from '@/app/lib/auth'
 import prisma from '@/app/lib/db'
 import { z } from 'zod'
 
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
+
 const watchlistSchema = z.object({
   type: z.enum(['DOMAIN', 'EMAIL', 'PHONE', 'BANK_ACCOUNT', 'SOCIAL_MEDIA']),
   value: z.string().min(1),

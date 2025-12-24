@@ -18,6 +18,9 @@ import { checkExternalSources } from '@/app/lib/externalSources'
 import { checkRateLimit, incrementUsage, checkIPRateLimit as checkAnonLimit } from '@/app/lib/rate-limit'
 import { nanoid } from 'nanoid'
 
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
+
 export async function POST(request: NextRequest) {
   const headers = getSecurityHeaders()
   

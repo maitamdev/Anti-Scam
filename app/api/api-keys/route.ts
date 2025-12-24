@@ -8,7 +8,8 @@ import { authOptions } from '@/app/lib/auth'
 import prisma from '@/app/lib/db'
 import { nanoid } from 'nanoid'
 import { hash } from 'bcryptjs'
-
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
