@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter, Montserrat } from 'next/font/google'
 import './globals.css'
+import { Providers } from './components/Providers'
 
 const inter = Inter({ 
   subsets: ['latin', 'vietnamese'],
@@ -84,7 +85,9 @@ export default function RootLayout({
         }} />
       </head>
       <body className={`${inter.variable} ${montserrat.variable} font-sans bg-gray-900 text-white min-h-screen`}>
-        {children}
+        <Providers>
+          {children}
+        </Providers>
       </body>
     </html>
   )

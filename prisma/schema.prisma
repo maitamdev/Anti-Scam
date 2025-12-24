@@ -8,6 +8,343 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+// ============================================
+// AUTHENTICATION & USER MANAGEMENT
+// ============================================
+
+model User {
+  id                String              @id @default(uuid())
+  email             String              @unique
+  emailVerified     DateTime?
+  name              String?
+  avatar            String?
+  password          String?             // Hashed password for email login
+  role              Role                @default(USER)
+  tier              Tier                @default(FREE)
+  status            UserStatus          @default(ACTIVE)
+  
+  // Subscription info
+  stripeCustomerId  String?             @unique
+  subscription      Subscription?
+  
+  // Usage tracking
+  dailyScans        Int                 @default(0)
+  dailyImageScans   Int                 @default(0)
+  totalScans        Int                 @default(0)
+  lastResetAt       DateTime            @default(now())
+  
+  // API access
+  apiKeys           ApiKey[]
+  
+  // NextAuth relations
+  accounts          Account[]
+  sessions          Session[]
+  
+  // Relations
+  scanHistory       ScanHistory[]
+  imageHistory      ImageScanHistory[]
+  watchlists        Watchlist[]
+  reports           UserReport[]
+  organizations     OrganizationMember[]
+  contributions     CommunityContribution[]
+  campaigns         CampaignEnrollment[]
+  
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+
+  @@index([email])
+  @@index([tier])
+  @@index([stripeCustomerId])
+}
+
+enum Role {
+  USER
+  ADMIN
+  MODERATOR
+}
+
+enum Tier {
+  FREE
+  PRO
+  BUSINESS
+  ENTERPRISE
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+  BANNED
+}
+
+model Account {
+  id                String  @id @default(uuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ============================================
+// SUBSCRIPTION & BILLING
+// ============================================
+
+model Subscription {
+  id                     String              @id @default(uuid())
+  userId                 String              @unique
+  user                   User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  tier                   Tier
+  status                 SubscriptionStatus
+  
+  // Stripe info
+  stripeSubscriptionId   String?             @unique
+  stripePriceId          String?
+  stripeCurrentPeriodEnd DateTime?
+  
+  // Billing
+  currentPeriodStart     DateTime
+  currentPeriodEnd       DateTime
+  cancelAtPeriodEnd      Boolean             @default(false)
+  canceledAt             DateTime?
+  
+  // Trial
+  trialStart             DateTime?
+  trialEnd               DateTime?
+  
+  createdAt              DateTime            @default(now())
+  updatedAt              DateTime            @updatedAt
+
+  @@index([userId])
+  @@index([status])
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  PAST_DUE
+  CANCELED
+  TRIALING
+  UNPAID
+  INCOMPLETE
+}
+
+model Payment {
+  id              String   @id @default(uuid())
+  userId          String
+  amount          Float
+  currency        String   @default("USD")
+  status          PaymentStatus
+  method          String   // stripe, vnpay, momo
+  
+  // Stripe
+  stripePaymentId String?  @unique
+  invoiceUrl      String?
+  receiptUrl      String?
+  
+  // Metadata
+  description     String?
+  metadata        Json?
+  
+  createdAt       DateTime @default(now())
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+  REFUNDED
+}
+
+// ============================================
+// API KEY MANAGEMENT
+// ============================================
+
+model ApiKey {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  name        String   // User-defined name for the key
+  key         String   @unique // The actual API key (hashed)
+  prefix      String   // First 8 chars for display (e.g., "as_1234...")
+  
+  lastUsedAt  DateTime?
+  expiresAt   DateTime?
+  
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+  @@index([key])
+}
+
+model ApiUsage {
+  id          String   @id @default(uuid())
+  userId      String
+  apiKeyId    String?
+  
+  endpoint    String   // /api/scan, /api/report, etc.
+  method      String   // GET, POST
+  statusCode  Int
+  
+  ipAddress   String?
+  userAgent   String?
+  
+  createdAt   DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([endpoint])
+}
+
+// ============================================
+// SCAN HISTORY (Freemium Feature)
+// ============================================
+
+model ScanHistory {
+  id           String   @id @default(uuid())
+  userId       String?
+  user         User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  url          String
+  domain       String
+  score        Int
+  label        String
+  reasons      String[]
+  aiConfidence Float
+  
+  // Additional metadata
+  heuristicScore Int?
+  aiScore        Int?
+  isBlocked      Boolean @default(false)
+  isWhitelisted  Boolean @default(false)
+  
+  // Sharing
+  shareToken     String?  @unique // For sharing results
+  isPublic       Boolean  @default(false)
+  
+  ipAddress      String?
+  userAgent      String?
+  createdAt      DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([domain])
+  @@index([label])
+  @@index([shareToken])
+}
+
+model ImageScanHistory {
+  id            String   @id @default(uuid())
+  userId        String?
+  user          User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  imageHash     String
+  imageUrl      String?  // S3/Cloudinary URL
+  score         Int
+  label         String
+  category      String?
+  reasons       String[]
+  extractedText String?  @db.Text
+  confidence    Float
+  
+  // Sharing
+  shareToken    String?  @unique
+  isPublic      Boolean  @default(false)
+  
+  ipAddress     String?
+  createdAt     DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([imageHash])
+  @@index([label])
+}
+
+// ============================================
+// WATCHLIST (Freemium Feature)
+// ============================================
+
+model Watchlist {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  type        WatchlistType
+  value       String   // domain, email, phone, account
+  name        String?  // User-defined name
+  notes       String?  @db.Text
+  
+  alertEmail  Boolean  @default(true)
+  alertInApp  Boolean  @default(true)
+  
+  alerts      WatchlistAlert[]
+  
+  createdAt   DateTime @default(now())
+
+  @@unique([userId, type, value])
+  @@index([userId])
+  @@index([type, value])
+}
+
+enum WatchlistType {
+  DOMAIN
+  EMAIL
+  PHONE
+  BANK_ACCOUNT
+  SOCIAL_MEDIA
+}
+
+model WatchlistAlert {
+  id           String    @id @default(uuid())
+  watchlistId  String
+  watchlist    Watchlist @relation(fields: [watchlistId], references: [id], onDelete: Cascade)
+  
+  matchType    String    // exact, similar, pattern
+  matchedValue String
+  context      String?   @db.Text
+  
+  isRead       Boolean   @default(false)
+  createdAt    DateTime  @default(now())
+
+  @@index([watchlistId, createdAt])
+  @@index([isRead])
+}
+
+// ============================================
+// LEGACY MODELS (Keep for backward compatibility)
+// ============================================
+
 model Scan {
   id           String   @id @default(uuid())
   url          String
@@ -41,6 +378,50 @@ model Report {
   @@index([domain])
   @@index([verified])
   @@index([createdAt])
+}
+
+model UserReport {
+  id            String   @id @default(uuid())
+  userId        String?
+  user          User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  url           String
+  domain        String
+  reason        String
+  description   String?  @db.Text
+  screenshot    String?
+  
+  // Moderation
+  status        ReportStatus @default(PENDING)
+  verified      Boolean      @default(false)
+  label         String?
+  moderatorNote String?      @db.Text
+  verifiedAt    DateTime?
+  verifiedBy    String?      // Admin/Moderator ID
+  
+  // Community impact
+  upvotes       Int          @default(0)
+  downvotes     Int          @default(0)
+  trustScore    Float        @default(0)
+  
+  ipAddress     String?
+  userAgent     String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  @@index([userId])
+  @@index([domain])
+  @@index([status])
+  @@index([verified])
+  @@index([createdAt])
+}
+
+enum ReportStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  SPAM
+  DUPLICATE
 }
 
 model Whitelist {
@@ -192,4 +573,367 @@ model Guide {
   @@index([slug])
   @@index([categoryId])
   @@index([isPublished])
+}
+
+// ============================================
+// B2B/B2E - ORGANIZATIONS
+// ============================================
+
+model Organization {
+  id              String               @id @default(uuid())
+  name            String
+  slug            String               @unique
+  logo            String?
+  industry        String?              // education, finance, healthcare, ecommerce
+  size            OrganizationSize     @default(SMALL)
+  
+  // Subscription
+  tier            Tier                 @default(FREE)
+  maxMembers      Int                  @default(5)
+  
+  // Branding
+  primaryColor    String?
+  logoUrl         String?
+  customDomain    String?              @unique
+  
+  // Contact
+  contactEmail    String?
+  contactPhone    String?
+  website         String?
+  
+  // Relations
+  members         OrganizationMember[]
+  campaigns       Campaign[]
+  customQuizzes   CustomQuiz[]
+  resources       DownloadableResource[]
+  
+  status          OrgStatus            @default(ACTIVE)
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+
+  @@index([slug])
+  @@index([tier])
+  @@index([industry])
+}
+
+enum OrganizationSize {
+  SMALL          // < 50
+  MEDIUM         // 50-500
+  LARGE          // 500-5000
+  ENTERPRISE     // > 5000
+}
+
+enum OrgStatus {
+  ACTIVE
+  SUSPENDED
+  TRIAL
+  EXPIRED
+}
+
+model OrganizationMember {
+  id             String       @id @default(uuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  role           OrgRole      @default(MEMBER)
+  department     String?
+  jobTitle       String?
+  
+  // Permissions
+  canManageMembers    Boolean  @default(false)
+  canCreateCampaigns  Boolean  @default(false)
+  canViewAnalytics    Boolean  @default(true)
+  
+  joinedAt       DateTime     @default(now())
+
+  @@unique([organizationId, userId])
+  @@index([organizationId])
+  @@index([userId])
+}
+
+enum OrgRole {
+  OWNER
+  ADMIN
+  TRAINER
+  MEMBER
+}
+
+// ============================================
+// B2B/B2E - TRAINING CAMPAIGNS
+// ============================================
+
+model Campaign {
+  id              String              @id @default(uuid())
+  organizationId  String?
+  organization    Organization?       @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  
+  name            String
+  slug            String              @unique
+  description     String?             @db.Text
+  
+  // Campaign settings
+  type            CampaignType
+  duration        Int                 // Days (e.g., 7, 14, 30)
+  questionsPerDay Int                 @default(3)
+  
+  // Scheduling
+  startDate       DateTime?
+  endDate         DateTime?
+  
+  // Content
+  quizIds         String[]            // Array of quiz IDs
+  contentIds      String[]            // Array of guide IDs
+  
+  // Public campaign (for CSR)
+  isPublic        Boolean             @default(false)
+  publicUrl       String?             @unique
+  targetParticipants Int?
+  
+  // Sponsors (for CSR campaigns)
+  sponsors        CampaignSponsor[]
+  
+  // Tracking
+  enrollments     CampaignEnrollment[]
+  totalCompleted  Int                 @default(0)
+  averageScore    Float?
+  
+  status          CampaignStatus      @default(DRAFT)
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  @@index([organizationId])
+  @@index([slug])
+  @@index([isPublic])
+  @@index([status])
+}
+
+enum CampaignType {
+  TRAINING_7DAY
+  TRAINING_14DAY
+  TRAINING_30DAY
+  ONBOARDING
+  ASSESSMENT
+  PUBLIC_AWARENESS
+}
+
+enum CampaignStatus {
+  DRAFT
+  SCHEDULED
+  ACTIVE
+  COMPLETED
+  ARCHIVED
+}
+
+model CampaignEnrollment {
+  id            String    @id @default(uuid())
+  campaignId    String
+  campaign      Campaign  @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Progress tracking
+  currentDay    Int       @default(1)
+  totalScore    Int       @default(0)
+  maxScore      Int       @default(0)
+  accuracy      Float?
+  
+  completedDays Int[]     // Array of completed day numbers
+  
+  // Status
+  status        EnrollmentStatus @default(ACTIVE)
+  startedAt     DateTime  @default(now())
+  completedAt   DateTime?
+  lastActivityAt DateTime @default(now())
+
+  @@unique([campaignId, userId])
+  @@index([campaignId])
+  @@index([userId])
+  @@index([status])
+}
+
+enum EnrollmentStatus {
+  ACTIVE
+  COMPLETED
+  DROPPED
+  FAILED
+}
+
+model CampaignSponsor {
+  id          String   @id @default(uuid())
+  campaignId  String
+  campaign    Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  
+  name        String
+  logo        String?
+  website     String?
+  tier        SponsorTier @default(BRONZE)
+  
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  @@index([campaignId])
+}
+
+enum SponsorTier {
+  PLATINUM
+  GOLD
+  SILVER
+  BRONZE
+}
+
+// ============================================
+// B2B/B2E - CUSTOM QUIZ SYSTEM
+// ============================================
+
+model CustomQuiz {
+  id              String       @id @default(uuid())
+  organizationId  String?
+  organization    Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  
+  title           String
+  description     String?      @db.Text
+  
+  // Industry-specific
+  industry        String?      // education, finance, healthcare
+  difficulty      String       @default("medium") // easy, medium, hard
+  
+  // Content
+  questions       Json         // Array of question objects
+  timeLimit       Int?         // Seconds per quiz
+  passingScore    Int          @default(70) // Percentage
+  
+  // Settings
+  randomizeQuestions Boolean   @default(true)
+  randomizeAnswers   Boolean   @default(true)
+  showCorrectAnswers Boolean   @default(true)
+  
+  // Tracking
+  totalAttempts   Int          @default(0)
+  averageScore    Float?
+  
+  isPublic        Boolean      @default(false)
+  isActive        Boolean      @default(true)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  @@index([organizationId])
+  @@index([industry])
+  @@index([isPublic])
+}
+
+// ============================================
+// CSR & COMMUNITY
+// ============================================
+
+model CommunityContribution {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  type        ContributionType
+  description String?  @db.Text
+  
+  // Points & rewards
+  points      Int      @default(0)
+  
+  // Verification
+  verified    Boolean  @default(false)
+  verifiedBy  String?
+  verifiedAt  DateTime?
+  
+  // References
+  reportId    String?  // If contribution is a report
+  guideId     String?  // If contribution is a guide
+  
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+  @@index([type])
+  @@index([verified])
+  @@index([createdAt])
+}
+
+enum ContributionType {
+  REPORT_SCAM
+  VERIFY_REPORT
+  CREATE_GUIDE
+  SHARE_CAMPAIGN
+  HELP_OTHERS
+}
+
+model CampaignPage {
+  id            String   @id @default(uuid())
+  campaignId    String?  @unique
+  
+  title         String
+  slug          String   @unique
+  description   String   @db.Text
+  
+  // Hero section
+  heroImage     String?
+  tagline       String?
+  
+  // Stats (auto-updated)
+  totalScans    Int      @default(0)
+  totalReports  Int      @default(0)
+  scamsPrevented Int     @default(0)
+  
+  // Content sections
+  sections      Json?    // Flexible content blocks
+  
+  // Sponsors
+  showSponsors  Boolean  @default(true)
+  
+  isPublished   Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([slug])
+}
+
+model DownloadableResource {
+  id              String        @id @default(uuid())
+  organizationId  String?
+  organization    Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  
+  title           String
+  description     String?       @db.Text
+  type            ResourceType
+  category        String        // poster, infographic, checklist, slide
+  
+  // File info
+  fileUrl         String
+  thumbnailUrl    String?
+  fileSize        Int?          // Bytes
+  format          String?       // PDF, PNG, PPTX
+  
+  // Customization
+  customizable    Boolean       @default(false)
+  templateData    Json?
+  
+  // Tracking
+  downloads       Int           @default(0)
+  
+  // Tags
+  tags            String[]
+  industry        String[]      // education, finance, general
+  
+  isPublic        Boolean       @default(true)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([type])
+  @@index([category])
+  @@index([isPublic])
+}
+
+enum ResourceType {
+  POSTER
+  INFOGRAPHIC
+  CHECKLIST
+  PRESENTATION
+  HANDOUT
+  VIDEO
 }
