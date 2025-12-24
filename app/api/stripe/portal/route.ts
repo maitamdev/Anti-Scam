@@ -11,6 +11,13 @@ import prisma from '@/app/lib/db'
 
 export async function POST(request: NextRequest) {
   try {
+    if (!process.env.STRIPE_SECRET_KEY) {
+      return NextResponse.json(
+        { error: 'Stripe not configured' },
+        { status: 500 }
+      )
+    }
+
     const session = await getServerSession(authOptions)
 
     if (!session?.user) {
