@@ -438,11 +438,15 @@ model Blocklist {
   id        String   @id @default(uuid())
   domain    String   @unique
   reason    String
-  severity  String   // HIGH, MEDIUM, LOW
-  source    String   // community, auto, manual
+  severity  String   // CRITICAL, HIGH, MEDIUM, LOW
+  source    String   // openphish, phishtank, phishstats, urlhaus, spamhaus, community, auto, manual
+  metadata  Json?    // Additional data from threat feeds
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([domain])
+  @@index([source])
+  @@index([severity])
 }
 
 model ModelVersion {
@@ -936,4 +940,19 @@ enum ResourceType {
   PRESENTATION
   HANDOUT
   VIDEO
+}
+
+// Threat intelligence sync logs
+model ThreatFeedLog {
+  id            String   @id @default(uuid())
+  source        String   // openphish, phishtank, phishstats, urlhaus, spamhaus
+  status        String   // SUCCESS, FAILED, PARTIAL
+  recordsAdded  Int      @default(0)
+  recordsFailed Int      @default(0)
+  errorMessage  String?  @db.Text
+  executionTime Int?     // milliseconds
+  createdAt     DateTime @default(now())
+
+  @@index([source])
+  @@index([createdAt])
 }

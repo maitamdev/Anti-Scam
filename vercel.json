@@ -19,6 +19,19 @@
     },
     "app/api/scan/route.ts": {
       "maxDuration": 15
+    },
+    "app/api/admin/threat-feeds/route.ts": {
+      "maxDuration": 60
+    },
+    "app/api/cron/sync-threat-feeds/route.ts": {
+      "maxDuration": 300
     }
-  }
+  },
+  "crons": [
+    {
+      "path": "/api/cron/sync-threat-feeds",
+      "schedule": "0 */6 * * *"
+    }
+  ]
 }
+

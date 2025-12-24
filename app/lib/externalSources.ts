@@ -4,6 +4,7 @@
  */
 
 import { prisma } from './db'
+import { checkGoogleSafeBrowsing } from './threatFeeds'
 
 // Vietnamese scam domains from community reports
 const VN_SCAM_DOMAINS = [
@@ -178,11 +179,13 @@ export async function syncExternalData() {
   return { addedScam, addedTrusted }
 }
 
-// Check domain against external sources (for future API integration)
-export async function checkExternalSources(domain: string): Promise<{
+// Check domain against external sources
+export async function checkExternalSources(domain: string, fullUrl?: string): Promise<{
   isKnownScam: boolean
   sources: string[]
   details?: string
+  googleSafeBrowsing?: any
+  abuseIPDB?: any
   virusTotal?: {
     detected: boolean
     stats: {
@@ -216,38 +219,62 @@ export async function checkExternalSources(domain: string): Promise<{
     }
   }
 
-  // Check VirusTotal
+  // Check VirusTotal (PRO version only - deep analysis)
   let virusTotalData
-  try {
-    console.log('[VirusTotal] Checking:', domain)
-    const vtResult = await checkVirusTotal(`https://${domain}`)
-    console.log('[VirusTotal] Result:', vtResult)
-    if (vtResult.notFound) {
-      // URL never scanned - indicate this in UI
-      virusTotalData = {
-        detected: false,
-        stats: null,
-        notFound: true,
+  const vtApiKey = process.env.VIRUSTOTAL_API_KEY_PRO || process.env.VIRUSTOTAL_API_KEY
+  
+  if (vtApiKey && vtApiKey.length > 64) {
+    // Only use VirusTotal if PRO key is configured (64+ chars)
+    try {
+      console.log('[VirusTotal PRO] Deep analysis:', domain)
+      const vtResult = await checkVirusTotal(`https://${domain}`)
+      console.log('[VirusTotal PRO] Result:', vtResult)
+      if (vtResult.notFound) {
+        virusTotalData = {
+          detected: false,
+          stats: null,
+          notFound: true,
+        }
+      } else if (vtResult.stats) {
+        virusTotalData = {
+          detected: vtResult.detected,
+          stats: vtResult.stats,
+          notFound: false,
+        }
+        if (vtResult.detected) {
+          sources.push(
+            `VirusTotal PRO: ${vtResult.stats.malicious} engines phát hiện nguy hiểm`
+          )
+        }
       }
-    } else if (vtResult.stats) {
-      virusTotalData = {
-        detected: vtResult.detected,
-        stats: vtResult.stats,
-        notFound: false,
-      }
-      if (vtResult.detected) {
-        sources.push(
-          `VirusTotal: ${vtResult.stats.malicious} engines phát hiện nguy hiểm`
-        )
-      }
+    } catch (error) {
+      console.error('[VirusTotal PRO] Error:', error)
     }
-  } catch (error) {
-    console.error('[VirusTotal] Error:', error)
   }
+  
+  // Check Google Safe Browsing (free, fast lookup)
+  let googleSafeBrowsingData
+  if (fullUrl) {
+    try {
+      const gsbResult = await checkGoogleSafeBrowsing(fullUrl)
+      googleSafeBrowsingData = gsbResult
+      if (!gsbResult.safe) {
+        sources.push(`Google Safe Browsing: ${gsbResult.threats?.join(', ') || 'Threat detected'}`)
+      }
+    } catch (error) {
+      console.error('[Google Safe Browsing] Error:', error)
+    }
+  }
+  
+  // Check AbuseIPDB for IP reputation (if we have IP)
+  let abuseIPDBData
+  // Note: IP extraction would happen in websiteAnalyzer.ts, this is placeholder
 
   return {
     isKnownScam: sources.length > 0,
     sources,
+    googleSafeBrowsing: googleSafeBrowsingData,
+    abuseIPDB: abuseIPDBData,
     virusTotal: virusTotalData,
   }
 }
