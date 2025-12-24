@@ -9,9 +9,17 @@ import Stripe from 'stripe'
 import { stripe } from '@/app/lib/stripe'
 import prisma from '@/app/lib/db'
 
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
+const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || ''
 
 export async function POST(req: NextRequest) {
+  // Runtime check for Stripe configuration
+  if (!process.env.STRIPE_SECRET_KEY || !webhookSecret) {
+    return NextResponse.json(
+      { error: 'Stripe not configured' },
+      { status: 500 }
+    )
+  }
+
   const body = await req.text()
   const headersList = await headers()
   const signature = headersList.get('stripe-signature')!
