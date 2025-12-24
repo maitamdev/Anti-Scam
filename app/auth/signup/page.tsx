@@ -238,19 +238,3 @@ export default function SignUpPage() {
     </div>
   )
 }
-
-          <p className="mt-4 text-xs text-center text-gray-500">
-            Bằng việc đăng ký, bạn đồng ý với{' '}
-            <Link href="/terms" className="text-blue-600 hover:underline">
-              Điều khoản dịch vụ
-            </Link>{' '}
-            và{' '}
-            <Link href="/privacy" className="text-blue-600 hover:underline">
-              Chính sách bảo mật
-            </Link>
-          </p>
-        </div>
-      </div>
-    </div>
-  )
-}
