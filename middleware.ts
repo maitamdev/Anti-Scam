@@ -10,7 +10,6 @@ export async function middleware(request: NextRequest) {
   const protectedRoutes = [
     '/dashboard',
     '/org',
-    '/api/scan-v2',
     '/api/history',
     '/api/watchlist',
     '/api/api-keys',
