@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { 
   Brain, Trophy, Target, Clock, CheckCircle, XCircle, 
   ArrowRight, RotateCcw, Home, Zap, Award, TrendingUp,
-  ChevronDown
+  ChevronDown, ArrowLeft
 } from 'lucide-react'
 import Link from 'next/link'
 import Header from '../components/Header'
@@ -157,6 +157,15 @@ export default function QuizPage() {
         <Header />
         <main className="flex-1 pt-24 pb-12">
           <div className="max-w-7xl mx-auto px-4">
+            {/* Back Button */}
+            <Link 
+              href="/" 
+              className="inline-flex items-center gap-2 text-gray-400 hover:text-blue-400 mb-8 transition-colors"
+            >
+              <ArrowLeft size={20} />
+              <span>Quay lại trang chủ</span>
+            </Link>
+
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}

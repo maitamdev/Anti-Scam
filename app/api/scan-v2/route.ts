@@ -45,15 +45,16 @@ export async function POST(request: NextRequest) {
         )
       }
     } else {
-      // Anonymous user - IP-based rate limiting
+      // Anonymous user - IP-based rate limiting (loose limit)
       const ipLimit = checkAnonLimit(clientIP)
       
       if (!ipLimit.allowed) {
         return NextResponse.json(
           { 
             success: false, 
-            error: 'Quá nhiều yêu cầu. Vui lòng đăng ký tài khoản để quét nhiều hơn.',
+            error: 'Quá nhiều yêu cầu. Vui lòng đăng ký tài khoản miễn phí để quét nhiều hơn.',
             remaining: ipLimit.remaining,
+            note: 'Đăng nhập để lưu lịch sử và nhận thêm tính năng!',
           },
           { status: 429, headers }
         )
@@ -84,7 +85,7 @@ export async function POST(request: NextRequest) {
       detectCategoryFromDomain(result.domain),
     ])
 
-    // Save to database (legacy Scan table for stats)
+    // Save to database (legacy Scan table for global stats - ALWAYS save)
     const today = getToday()
     await Promise.all([
       prisma.scan.create({
@@ -117,7 +118,7 @@ export async function POST(request: NextRequest) {
       }),
     ])
 
-    // Save to ScanHistory if user is authenticated
+    // Save to ScanHistory ONLY if user is authenticated (for personal history)
     let shareToken: string | undefined
     if (session?.user) {
       shareToken = nanoid(16)

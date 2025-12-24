@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { Mail, Lock, LogIn, Chrome } from 'lucide-react'
+import { Mail, Lock, LogIn, Chrome, ArrowLeft } from 'lucide-react'
 
 export default function SignInPage() {
   const [email, setEmail] = useState('')
@@ -57,6 +57,15 @@ export default function SignInPage() {
         transition={{ duration: 0.5 }}
         className="max-w-md w-full relative z-10"
       >
+        {/* Back Button */}
+        <Link 
+          href="/"
+          className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-6 transition-colors"
+        >
+          <ArrowLeft className="w-5 h-5" />
+          <span>Quay lại trang chủ</span>
+        </Link>
+
         {/* Header */}
         <div className="text-center mb-8">
           <motion.div

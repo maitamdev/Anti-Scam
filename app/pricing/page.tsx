@@ -1,9 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import { Check } from 'lucide-react'
+import { Check, ArrowLeft } from 'lucide-react'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 const plans = [
   {
@@ -146,6 +147,15 @@ export default function PricingPage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-4">
       <div className="max-w-7xl mx-auto">
+        {/* Back Button */}
+        <Link 
+          href="/"
+          className="inline-flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white mb-8 transition-colors"
+        >
+          <ArrowLeft className="w-5 h-5" />
+          <span>Quay lại trang chủ</span>
+        </Link>
+
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">

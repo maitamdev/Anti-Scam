@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Shield, Target, Users, Heart, Github, Mail, Zap, Brain, Eye, Lock } from 'lucide-react'
+import { Shield, Target, Users, Heart, Github, Mail, Zap, Brain, Eye, Lock, ArrowLeft } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import Header from '../components/Header'
@@ -42,6 +42,17 @@ export default function AboutPage() {
       <Header />
       
       <main className="flex-1 pt-24 pb-12">
+        {/* Back Button */}
+        <div className="max-w-7xl mx-auto px-4 mb-8">
+          <Link 
+            href="/" 
+            className="inline-flex items-center gap-2 text-gray-400 hover:text-blue-400 transition-colors"
+          >
+            <ArrowLeft size={20} />
+            <span>Quay lại trang chủ</span>
+          </Link>
+        </div>
+
         {/* Hero */}
         <section className="px-4 mb-16">
           <div className="max-w-7xl mx-auto text-center">

@@ -1,7 +1,8 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Flag, Shield, AlertTriangle } from 'lucide-react'
+import { Flag, Shield, AlertTriangle, ArrowLeft } from 'lucide-react'
+import Link from 'next/link'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import ReportForm from '../components/ReportForm'
@@ -14,6 +15,15 @@ export default function ReportPage() {
       <main className="flex-1 pt-20">
         <section className="py-16 px-4">
           <div className="max-w-7xl mx-auto">
+            {/* Back Button */}
+            <Link 
+              href="/" 
+              className="inline-flex items-center gap-2 text-gray-400 hover:text-blue-400 mb-8 transition-colors"
+            >
+              <ArrowLeft size={20} />
+              <span>Quay lại trang chủ</span>
+            </Link>
+
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}

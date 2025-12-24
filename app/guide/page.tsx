@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Search, ChevronLeft, ChevronRight, Shield, Lock, Mail, Wifi, Smartphone, RefreshCw } from 'lucide-react'
+import { Search, ChevronLeft, ChevronRight, Shield, Lock, Mail, Wifi, Smartphone, RefreshCw, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
@@ -108,6 +108,15 @@ export default function GuidePage() {
 
       <main className="flex-1 pt-24 pb-12">
         <div className="max-w-7xl mx-auto px-4">
+          {/* Back Button */}
+          <Link 
+            href="/" 
+            className="inline-flex items-center gap-2 text-gray-400 hover:text-blue-400 mb-8 transition-colors"
+          >
+            <ArrowLeft size={20} />
+            <span>Quay lại trang chủ</span>
+          </Link>
+
           {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}

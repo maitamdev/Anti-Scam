@@ -1,10 +1,18 @@
-import { Shield, Lock, Database, Eye, Trash2, FileText } from 'lucide-react'
+import { Shield, Lock, Database, Eye, Trash2, FileText, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 
 export default function TransparencyPage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Back Button */}
+        <Link 
+          href="/" 
+          className="inline-flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 mb-8 transition-colors"
+        >
+          <ArrowLeft size={20} />
+          <span>Quay lại trang chủ</span>
+        </Link>
         <div className="text-center mb-12">
           <Shield size={64} className="mx-auto text-blue-600 mb-4" />
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
