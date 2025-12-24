@@ -12,7 +12,7 @@ const navLinks = [
   { href: '/scan', label: 'Phân tích' },
   { href: '/quiz', label: 'Trắc nghiệm' },
   { href: '/guide', label: 'Cẩm nang' },
-  { href: '/report', label: 'Báo cáo' },
+  { href: '/pricing', label: '💰 Bảng giá' },
   { href: '/about', label: 'Giới thiệu' },
 ]
 
@@ -123,19 +123,27 @@ export default function Header() {
               )
             })}
             
-            {/* CTA Button */}
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="ml-2 lg:ml-4"
-            >
+            {/* Auth Buttons */}
+            <div className="flex items-center gap-2 ml-2 lg:ml-4">
               <Link
-                href="/scan"
-                className="flex items-center gap-1.5 px-3 lg:px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 rounded-lg text-sm font-semibold text-white transition-all shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30"
+                href="/auth/signin"
+                className="px-3 lg:px-4 py-2 text-sm font-medium text-gray-300 hover:text-white transition-colors rounded-lg hover:bg-white/5"
               >
-                <span>Kiểm tra ngay</span>
+                Đăng nhập
               </Link>
-            </motion.div>
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <Link
+                  href="/auth/signup"
+                  className="flex items-center gap-1.5 px-3 lg:px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 rounded-lg text-sm font-semibold text-white transition-all shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30"
+                >
+                  <Sparkles className="w-4 h-4" />
+                  <span>Đăng ký</span>
+                </Link>
+              </motion.div>
+            </div>
           </div>
           </LayoutGroup>
 
@@ -212,15 +220,22 @@ export default function Header() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
-                  className="pt-3"
+                  className="pt-3 space-y-2"
                 >
                   <Link
-                    href="/scan"
+                    href="/auth/signin"
+                    className="flex items-center justify-center gap-2 mx-4 py-3 bg-white/5 hover:bg-white/10 rounded-xl text-gray-300 hover:text-white font-medium transition-colors border border-gray-700"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Đăng nhập
+                  </Link>
+                  <Link
+                    href="/auth/signup"
                     className="flex items-center justify-center gap-2 mx-4 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-xl text-white font-semibold"
                     onClick={() => setIsOpen(false)}
                   >
                     <Sparkles className="w-4 h-4" />
-                    Quét ngay
+                    Đăng ký miễn phí
                   </Link>
                 </motion.div>
               </div>
