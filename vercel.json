@@ -30,7 +30,7 @@
   "crons": [
     {
       "path": "/api/cron/sync-threat-feeds",
-      "schedule": "0 */6 * * *"
+      "schedule": "0 2 * * *"
     }
   ]
 }
