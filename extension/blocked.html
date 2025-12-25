@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trang Web Bị Chặn - ANTISCAM</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 16px;
+      padding: 40px;
+      max-width: 600px;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .icon {
+      font-size: 80px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      color: #EF4444;
+      font-size: 32px;
+      margin-bottom: 16px;
+    }
+
+    .url {
+      background: #FEE2E2;
+      color: #991B1B;
+      padding: 12px 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      word-break: break-all;
+      font-family: monospace;
+      font-size: 14px;
+    }
+
+    p {
+      color: #666;
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .warning-box {
+      background: #FEF3C7;
+      border-left: 4px solid #F59E0B;
+      padding: 16px;
+      border-radius: 6px;
+      text-align: left;
+      margin: 24px 0;
+    }
+
+    .warning-box h3 {
+      color: #92400E;
+      margin-bottom: 8px;
+      font-size: 16px;
+    }
+
+    .warning-box ul {
+      color: #78350F;
+      margin-left: 20px;
+      font-size: 14px;
+    }
+
+    .warning-box li {
+      margin: 6px 0;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+      background: #667eea;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #5568d3;
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: #E5E7EB;
+      color: #374151;
+    }
+
+    .btn-secondary:hover {
+      background: #D1D5DB;
+    }
+
+    .btn-danger {
+      background: transparent;
+      color: #EF4444;
+      border: 2px solid #EF4444;
+    }
+
+    .btn-danger:hover {
+      background: #FEE2E2;
+    }
+
+    .footer {
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid #E5E7EB;
+      color: #9CA3AF;
+      font-size: 14px;
+    }
+
+    .footer a {
+      color: #667eea;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="icon">🛡️</div>
+    <h1>Trang Web Nguy Hiểm Bị Chặn</h1>
+    
+    <p>
+      ANTISCAM đã phát hiện trang web này có nguy cơ lừa đảo cao và đã chặn để bảo vệ bạn.
+    </p>
+
+    <div class="url" id="blockedUrl">
+      <!-- URL will be inserted here -->
+    </div>
+
+    <div class="warning-box">
+      <h3>⚠️ Tại sao trang này bị chặn?</h3>
+      <ul>
+        <li>Trang web được báo cáo là lừa đảo</li>
+        <li>Phát hiện các mẫu nguy hiểm</li>
+        <li>Có trong danh sách đen của hệ thống</li>
+        <li>AI phát hiện mức độ rủi ro cao</li>
+      </ul>
+    </div>
+
+    <div class="buttons">
+      <button class="btn btn-primary" onclick="goBack()">
+        ← Quay Lại Trang An Toàn
+      </button>
+      <button class="btn btn-secondary" onclick="openDashboard()">
+        📊 Xem Chi Tiết
+      </button>
+      <button class="btn btn-danger" onclick="proceedAnyway()">
+        Tiếp Tục (Không An Toàn)
+      </button>
+    </div>
+
+    <div class="footer">
+      Bảo vệ bởi <a href="https://antiscam.vercel.app" target="_blank">ANTISCAM</a> - 
+      <a href="https://antiscam.vercel.app/report" target="_blank">Báo cáo sai</a>
+    </div>
+  </div>
+
+  <script>
+    // Get URL from query parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const blockedUrl = urlParams.get('url');
+    
+    if (blockedUrl) {
+      document.getElementById('blockedUrl').textContent = decodeURIComponent(blockedUrl);
+    } else {
+      document.getElementById('blockedUrl').textContent = 'URL không xác định';
+    }
+
+    function goBack() {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.href = 'https://antiscam.vercel.app';
+      }
+    }
+
+    function openDashboard() {
+      window.location.href = 'https://antiscam.vercel.app/dashboard';
+    }
+
+    function proceedAnyway() {
+      const confirmed = confirm(
+        'CẢNH BÁO: Trang này có thể nguy hiểm!\n\n' +
+        'Bạn có chắc chắn muốn tiếp tục?\n\n' +
+        '• Không nhập thông tin cá nhân\n' +
+        '• Không cung cấp mật khẩu\n' +
+        '• Không tải xuống file\n' +
+        '• Không thực hiện giao dịch tài chính'
+      );
+      
+      if (confirmed && blockedUrl) {
+        // Log the decision
+        console.warn('User proceeded to dangerous site:', blockedUrl);
+        
+        // Redirect
+        window.location.href = decodeURIComponent(blockedUrl);
+      }
+    }
+
+    // Prevent accidental navigation
+    window.addEventListener('beforeunload', (e) => {
+      if (blockedUrl) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    });
+  </script>
+</body>
+</html>

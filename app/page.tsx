@@ -132,6 +132,16 @@ export default function Home() {
                     <Play className="w-5 h-5" />
                     Kiểm tra kiến thức
                   </motion.button>
+                  
+                  <motion.button
+                    onClick={() => router.push('/report')}
+                    className="px-6 py-3 sm:px-8 sm:py-4 bg-red-600/20 hover:bg-red-600/30 border border-red-500/50 rounded-xl font-semibold text-red-400 hover:text-red-300 flex items-center justify-center gap-2"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <Shield className="w-5 h-5" />
+                    Báo cáo lừa đảo
+                  </motion.button>
                 </div>
               </motion.div>
 
@@ -408,6 +418,16 @@ export default function Home() {
                     whileTap={{ scale: 0.98 }}
                   >
                     Làm Quiz Trắc nghiệm
+                  </motion.button>
+                  
+                  <motion.button
+                    onClick={() => router.push('/report')}
+                    className="px-6 py-3 sm:px-8 sm:py-4 bg-red-600/20 hover:bg-red-600/30 border border-red-500/50 rounded-xl font-semibold text-red-400 hover:text-red-300 flex items-center justify-center gap-2"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <Shield className="w-5 h-5" />
+                    Báo cáo lừa đảo
                   </motion.button>
                 </div>
               </div>

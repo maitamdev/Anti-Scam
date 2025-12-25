@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ANTISCAM Extension</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <img src="../icons/icon48.png" alt="ANTISCAM" class="logo">
+      <h1>ANTISCAM</h1>
+    </div>
+
+    <div class="status-section">
+      <div id="statusIndicator" class="status-indicator safe">
+        <span class="status-icon">✓</span>
+        <span id="statusText">Đang bảo vệ</span>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button id="scanCurrentPage" class="btn btn-primary">
+        <span class="btn-icon">🔍</span>
+        Quét Trang Này
+      </button>
+
+      <button id="scanImages" class="btn btn-secondary">
+        <span class="btn-icon">🖼️</span>
+        Quét Hình Ảnh
+      </button>
+
+      <button id="reportPage" class="btn btn-warning">
+        <span class="btn-icon">⚠️</span>
+        Báo Cáo Lừa Đảo
+      </button>
+    </div>
+
+    <div id="results" class="results hidden">
+      <div class="result-header">
+        <h3>Kết Quả Quét</h3>
+        <button id="closeResults" class="close-btn">×</button>
+      </div>
+      <div id="resultContent" class="result-content">
+        <!-- Dynamic content -->
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat-item">
+        <div class="stat-value" id="scansToday">0</div>
+        <div class="stat-label">Lượt quét hôm nay</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="threatsBlocked">0</div>
+        <div class="stat-label">Mối đe dọa chặn</div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <button id="settings" class="link-btn">⚙️ Cài đặt</button>
+      <button id="openDashboard" class="link-btn">📊 Dashboard</button>
+    </div>
+
+    <div id="loading" class="loading hidden">
+      <div class="spinner"></div>
+      <p>Đang quét...</p>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
