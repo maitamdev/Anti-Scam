@@ -2,9 +2,9 @@
 
 import { motion } from 'framer-motion'
 import { Download, Chrome, CheckCircle, AlertCircle } from 'lucide-react'
+import Link from 'next/link'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
-import Link from 'next/link'
 
 export default function ExtensionPage() {
   return (
