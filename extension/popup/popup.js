@@ -47,8 +47,8 @@ async function scanCurrentPage() {
     const tab = await getCurrentTab();
     const url = tab.url;
 
-    if (!url || url.startsWith('chrome://') || url.startsWith('edge://')) {
-      showError('Không thể quét trang này');
+    if (!url || url.startsWith('chrome://') || url.startsWith('edge://') || url.startsWith('chrome-extension://')) {
+      showError('Không thể quét trang chrome:// hoặc edge://. Vui lòng mở một trang web thông thường.');
       return;
     }
 
@@ -61,7 +61,8 @@ async function scanCurrentPage() {
     });
 
     if (!response.ok) {
-      throw new Error('Lỗi khi quét URL');
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || 'Lỗi khi quét URL');
     }
 
     const data = await response.json();
@@ -73,7 +74,7 @@ async function scanCurrentPage() {
 
   } catch (error) {
     console.error('Scan error:', error);
-    showError('Lỗi khi quét trang. Vui lòng thử lại.');
+    showError(error.message || 'Lỗi khi quét trang. Vui lòng thử lại.');
   } finally {
     showLoading(false);
   }
