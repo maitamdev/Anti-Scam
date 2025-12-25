@@ -30,6 +30,8 @@ chrome.runtime.onInstalled.addListener((details) => {
 
 // Create context menus
 function createContextMenus() {
+  if (!chrome.contextMenus) return;
+  
   chrome.contextMenus.create({
     id: 'scanUrl',
     title: 'Quét URL với ANTISCAM',
@@ -248,13 +250,15 @@ function updateBadge(tabId, level) {
 
 // Show notification
 function showNotification(title, message) {
-  chrome.notifications.create({
-    type: 'basic',
-    iconUrl: 'icons/icon128.png',
-    title: title,
-    message: message,
-    priority: 2
-  });
+  if (chrome.notifications) {
+    chrome.notifications.create({
+      type: 'basic',
+      iconUrl: 'icons/icon128.png',
+      title: title,
+      message: message,
+      priority: 2
+    });
+  }
 }
 
 // Cache management
