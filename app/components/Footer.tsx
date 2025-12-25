@@ -39,6 +39,7 @@ export default function Footer() {
               <li><Link href="/scan" className="text-gray-400 hover:text-white transition-colors">Phân tích hình ảnh</Link></li>
               <li><Link href="/quiz" className="text-gray-400 hover:text-white transition-colors">Quiz trắc nghiệm</Link></li>
               <li><Link href="/guide" className="text-gray-400 hover:text-white transition-colors">Cẩm nang</Link></li>
+              <li><Link href="/extension" className="text-gray-400 hover:text-white transition-colors">Browser Extension</Link></li>
             </ul>
           </div>
 

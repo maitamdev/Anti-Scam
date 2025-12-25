@@ -13,6 +13,7 @@ const navLinks = [
   { href: '/quiz', label: 'Trắc nghiệm' },
   { href: '/guide', label: 'Cẩm nang' },
   { href: '/report', label: 'Báo cáo' },
+  { href: '/extension', label: 'Extension' },
   { href: '/pricing', label: 'Bảng giá' },
   { href: '/about', label: 'Giới thiệu' },
 ]
