@@ -66,6 +66,9 @@ async function scanCurrentPage() {
     }
 
     const data = await response.json();
+    console.log('API Response:', data);
+    console.log('Score:', data.data?.score);
+    console.log('Label:', data.data?.label);
     displayScanResults(data);
     updateStats('scan');
 
