@@ -22,7 +22,14 @@ document.addEventListener('DOMContentLoaded', init);
 async function init() {
   loadStats();
   attachEventListeners();
-  checkCurrentPageStatus();
+  
+  // Auto-scan current page on popup open
+  const tab = await getCurrentTab();
+  if (tab && tab.url && !tab.url.startsWith('chrome://') && !tab.url.startsWith('edge://') && !tab.url.startsWith('chrome-extension://')) {
+    scanCurrentPage();
+  } else {
+    checkCurrentPageStatus();
+  }
 }
 
 function attachEventListeners() {
