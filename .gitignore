@@ -17,6 +17,9 @@ dist
 # Misc
 .DS_Store
 *.pem
+training-data/
+*.csv
+*.json.backup
 
 # Debug
 npm-debug.log*

@@ -62,20 +62,123 @@ async function fetchContent(url: string): Promise<WebContent | null> {
   }
 }
 
+async function checkDatabase(domain: string) {
+  try {
+    const prisma = (await import('./db')).default
+    
+    // Check blocklist
+    const blocked = await prisma.blocklist.findUnique({
+      where: { domain },
+    })
+    
+    if (blocked) {
+      return {
+        isBlocked: true,
+        reason: blocked.reason,
+        source: blocked.source,
+        severity: blocked.severity,
+      }
+    }
+    
+    // Check whitelist (known safe)
+    const whitelist = await prisma.whitelist.findUnique({
+      where: { domain },
+    })
+    
+    if (whitelist) {
+      return {
+        isWhitelisted: true,
+        reason: whitelist.reason,
+      }
+    }
+    
+    return null
+  } catch {
+    return null
+  }
+}
+
+async function analyzeWebsiteSecurity(url: string, content: WebContent | null) {
+  const analysis = {
+    hasSSL: url.startsWith('https://'),
+    hasLoginForm: content?.hasLoginForm || false,
+    hasPaymentForm: content?.hasPaymentForm || false,
+    suspiciousTLD: /\.(tk|ml|ga|cf|gq)$/i.test(url),
+    shortDomain: new URL(url).hostname.length < 6,
+    hasNumbers: /\d{3,}/.test(url),
+    hasHyphens: (url.match(/-/g) || []).length > 2,
+  }
+  
+  const riskFactors = []
+  if (!analysis.hasSSL) riskFactors.push('Không có SSL (HTTP)')
+  if (analysis.suspiciousTLD) riskFactors.push('TLD miễn phí đáng ngờ')
+  if (analysis.hasNumbers) riskFactors.push('Domain chứa nhiều số')
+  if (analysis.hasHyphens) riskFactors.push('Domain có nhiều dấu gạch ngang')
+  if (analysis.hasLoginForm && !analysis.hasSSL) riskFactors.push('Form đăng nhập không bảo mật')
+  
+  return { analysis, riskFactors }
+}
+
 async function callGroq(url: string, domain: string, content: WebContent | null): Promise<AIAnalysisResult> {
   const apiKey = process.env.GROQ_API_KEY
   if (!apiKey || apiKey.includes('xxx')) {
     return { score: 50, confidence: 0, reasons: ['API chưa cấu hình'], category: 'unknown', contentFetched: false, analysisTime: 0 }
   }
+  
+  // Check database first
+  const dbCheck = await checkDatabase(domain)
+  if (dbCheck?.isBlocked) {
+    return {
+      score: 100,
+      confidence: 1,
+      reasons: [
+        `Đã bị chặn: ${dbCheck.reason}`,
+        `Nguồn: ${dbCheck.source}`,
+        `Mức độ: ${dbCheck.severity}`,
+      ],
+      category: 'scam',
+      contentFetched: false,
+      analysisTime: 0,
+    }
+  }
+  
+  if (dbCheck?.isWhitelisted) {
+    return {
+      score: 0,
+      confidence: 1,
+      reasons: [
+        `Website tin cậy: ${dbCheck.reason}`,
+        'Đã được xác minh an toàn',
+      ],
+      category: 'safe',
+      contentFetched: false,
+      analysisTime: 0,
+    }
+  }
+  
+  // Advanced security analysis
+  const security = await analyzeWebsiteSecurity(url, content)
 
   const contentInfo = content
     ? `TITLE: ${content.title}\nDESC: ${content.description}\nTEXT: ${content.bodyText.slice(0, 2500)}\nLOGIN: ${content.hasLoginForm}\nPAYMENT: ${content.hasPaymentForm}`
     : 'KHÔNG THỂ TRUY CẬP'
 
-  const prompt = `Phân tích website này. Trả về JSON:
+  const securityInfo = `
+SSL: ${security.analysis.hasSSL ? 'CÓ' : 'KHÔNG'}
+LOGIN FORM: ${security.analysis.hasLoginForm ? 'CÓ' : 'KHÔNG'}
+PAYMENT FORM: ${security.analysis.hasPaymentForm ? 'CÓ' : 'KHÔNG'}
+RISK FACTORS: ${security.riskFactors.join(', ') || 'Không có'}
+`
+
+  const prompt = `Phân tích website này VỚI ĐẦY ĐỦ THÔNG TIN. Trả về JSON:
 
 URL: ${url}
 DOMAIN: ${domain}
+
+THÔNG TIN BẢO MẬT:
+${securityInfo}
+
+NỘI DUNG WEBSITE:
 ${contentInfo}
 
 BƯỚC 1: XÁC ĐỊNH WEBSITE
@@ -84,7 +187,7 @@ Dựa vào title, description, nội dung - xác định:
 - Chức năng CHÍNH? (Đăng nhập, Thanh toán, Học online, Đọc tin, Cá cược...)
 - Mục đích? (Cung cấp dịch vụ, Kinh doanh, Giáo dục, LỪA ĐẢO...)
 
-BƯỚC 2: ĐÁNH GIÁ AN TOÀN
+BƯỚC 2: ĐÁNH GIÁ AN TOÀN (DỰA VÀO DỮ LIỆU THẬT)
 Kiểm tra:
 
 NGUY HIỂM CAO (80-100):
