@@ -175,27 +175,34 @@ async function reportPage() {
 function displayScanResults(data) {
   let html = '';
   
-  const riskLevel = data.riskScore > 70 ? 'high' : data.riskScore > 40 ? 'medium' : 'low';
-  const riskText = data.riskScore > 70 ? 'Nguy hiểm cao' : data.riskScore > 40 ? 'Cảnh báo' : 'An toàn';
+  // Extract actual data from API response
+  const scanData = data.data || data;
+  const riskScore = scanData.score || 0;
+  const url = scanData.url || 'N/A';
+  const label = scanData.label || 'N/A';
+  const reasons = scanData.reasons || [];
+  
+  const riskLevel = riskScore > 70 ? 'high' : riskScore > 40 ? 'medium' : 'low';
+  const riskText = riskScore > 70 ? 'Nguy hiểm cao' : riskScore > 40 ? 'Cảnh báo' : 'An toàn';
   
   html += `
     <div style="margin-bottom: 12px;">
-      <strong>URL:</strong> ${data.url || 'N/A'}
+      <strong>URL:</strong> <span style="font-size: 12px; word-break: break-all;">${url}</span>
     </div>
     <div style="margin-bottom: 12px;">
-      <span class="risk-badge ${riskLevel}">${riskText} - ${data.riskScore}%</span>
+      <span class="risk-badge ${riskLevel}">${riskText} - ${riskScore}%</span>
     </div>
     <div style="margin-bottom: 12px;">
-      <strong>Phân loại:</strong> ${data.classification || 'N/A'}
+      <strong>Phân loại:</strong> ${label}
     </div>
   `;
 
-  if (data.threats && data.threats.length > 0) {
+  if (reasons && reasons.length > 0) {
     html += `
       <div style="margin-top: 12px;">
-        <strong>Mối đe dọa phát hiện:</strong>
-        <ul style="margin-left: 20px; margin-top: 8px;">
-          ${data.threats.map(threat => `<li>${threat}</li>`).join('')}
+        <strong>Chi tiết:</strong>
+        <ul style="margin-left: 20px; margin-top: 8px; font-size: 13px;">
+          ${reasons.map(reason => `<li>${reason}</li>`).join('')}
         </ul>
       </div>
     `;
@@ -233,11 +240,15 @@ function displayImageResults(data, totalImages) {
 }
 
 function updatePageStatus(data) {
-  if (data.riskScore > 70) {
+  // Extract actual data from API response
+  const scanData = data.data || data;
+  const riskScore = scanData.score || 0;
+  
+  if (riskScore > 70) {
     statusIndicator.className = 'status-indicator danger';
     statusIndicator.querySelector('.status-icon').textContent = '⚠';
     statusText.textContent = 'Trang nguy hiểm!';
-  } else if (data.riskScore > 40) {
+  } else if (riskScore > 40) {
     statusIndicator.className = 'status-indicator warning';
     statusIndicator.querySelector('.status-icon').textContent = '!';
     statusText.textContent = 'Cần cảnh giác';
