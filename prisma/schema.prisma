@@ -442,7 +442,7 @@ model Blocklist {
   source    String   // openphish, phishtank, phishstats, urlhaus, spamhaus, community, auto, manual
   metadata  Json?    // Additional data from threat feeds
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime @default(now()) @updatedAt
 
   @@index([domain])
   @@index([source])
