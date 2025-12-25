@@ -77,11 +77,11 @@ export default function ExtensionPage() {
                   </ol>
                   
                   <a
-                    href="https://github.com/maitamdev/Anti-Scam/raw/main/antiscam-extension.zip"
+                    href="https://github.com/maitamdev/Anti-Scam/raw/main/public/antiscam-extension.zip"
                     className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold transition-colors"
                   >
                     <Download className="w-5 h-5" />
-                    Download Extension
+                    Tải Extension
                   </a>
                 </div>
 
