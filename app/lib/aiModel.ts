@@ -88,7 +88,7 @@ async function checkDatabase(domain: string) {
     if (whitelist) {
       return {
         isWhitelisted: true,
-        reason: whitelist.reason,
+        reason: `${whitelist.brand} - ${whitelist.category}`,
       }
     }
     
