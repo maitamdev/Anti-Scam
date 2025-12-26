@@ -194,13 +194,14 @@ function displayScanResults(data) {
   
   const riskLevel = riskScore > 70 ? 'high' : riskScore > 40 ? 'medium' : 'low';
   const riskText = riskScore > 70 ? 'Nguy hiểm cao' : riskScore > 40 ? 'Cảnh báo' : 'An toàn';
+  const safetyScore = 100 - riskScore; // Điểm an toàn = 100 - điểm rủi ro
   
   html += `
     <div style="margin-bottom: 12px;">
       <strong>URL:</strong> <span style="font-size: 12px; word-break: break-all;">${url}</span>
     </div>
     <div style="margin-bottom: 12px;">
-      <span class="risk-badge ${riskLevel}">${riskText} - ${riskScore}%</span>
+      <span class="risk-badge ${riskLevel}">${riskText} - ${safetyScore}%</span>
     </div>
     <div style="margin-bottom: 12px;">
       <strong>Phân loại:</strong> ${label}
@@ -237,10 +238,11 @@ function displayImageResults(data, totalImages) {
   if (data.riskScore !== undefined) {
     const riskLevel = data.riskScore > 70 ? 'high' : data.riskScore > 40 ? 'medium' : 'low';
     const riskText = data.riskScore > 70 ? 'Nguy hiểm cao' : data.riskScore > 40 ? 'Cảnh báo' : 'An toàn';
+    const safetyScore = 100 - data.riskScore; // Điểm an toàn = 100 - điểm rủi ro
     
     html += `
       <div style="margin-bottom: 12px;">
-        <span class="risk-badge ${riskLevel}">${riskText} - ${data.riskScore}%</span>
+        <span class="risk-badge ${riskLevel}">${riskText} - ${safetyScore}%</span>
       </div>
     `;
   }
