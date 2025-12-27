@@ -1,16 +1,12 @@
-/**
- * Authentication API Routes
- */
-
 import { NextRequest, NextResponse } from 'next/server'
 import { hash } from 'bcryptjs'
-import prisma from '@/app/lib/db'
 import { z } from 'zod'
+import prisma from '@/app/lib/db'
 
 const registerSchema = z.object({
   email: z.string().email('Email không hợp lệ'),
   password: z.string().min(8, 'Mật khẩu phải có ít nhất 8 ký tự'),
-  name: z.string().optional(),
+  name: z.string().min(2, 'Tên phải có ít nhất 2 ký tự'),
 })
 
 export async function POST(request: NextRequest) {
@@ -20,12 +16,12 @@ export async function POST(request: NextRequest) {
 
     // Check if user exists
     const existingUser = await prisma.user.findUnique({
-      where: { email }
+      where: { email: email.toLowerCase() },
     })
 
     if (existingUser) {
       return NextResponse.json(
-        { error: 'Email đã được sử dụng' },
+        { success: false, error: 'Email đã được sử dụng' },
         { status: 400 }
       )
     }
@@ -36,34 +32,35 @@ export async function POST(request: NextRequest) {
     // Create user
     const user = await prisma.user.create({
       data: {
-        email,
-        password: hashedPassword,
+        email: email.toLowerCase(),
         name,
-        tier: 'FREE',
+        password: hashedPassword,
         role: 'USER',
+        tier: 'FREE',
         status: 'ACTIVE',
-      }
+      },
     })
 
     return NextResponse.json({
       success: true,
-      user: {
+      data: {
         id: user.id,
         email: user.email,
         name: user.name,
-      }
+      },
     })
-
   } catch (error) {
+    console.error('Register error:', error)
+
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: error.errors[0].message },
+        { success: false, error: error.errors[0].message },
         { status: 400 }
       )
     }
 
     return NextResponse.json(
-      { error: 'Đã xảy ra lỗi khi đăng ký' },
+      { success: false, error: 'Lỗi hệ thống. Vui lòng thử lại.' },
       { status: 500 }
     )
   }

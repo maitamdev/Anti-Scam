@@ -1079,6 +1079,16 @@ function getRandomStaticQuestion(): QuizQuestion {
   } as QuizQuestion
 }
 
+// Helper to shuffle array (Fisher-Yates algorithm)
+function shuffleArray<T>(array: T[]): T[] {
+  const shuffled = [...array]
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+  }
+  return shuffled
+}
+
 // Generate questions - mix of templates (60%) and static (40%)
 export function generateQuestions(count: number): QuizQuestion[] {
   const questions: QuizQuestion[] = []
@@ -1100,8 +1110,13 @@ export function generateQuestions(count: number): QuizQuestion[] {
     } as QuizQuestion)
   }
   
-  // Shuffle all questions
-  return questions.sort(() => Math.random() - 0.5)
+  // Shuffle all questions and their options
+  return questions
+    .sort(() => Math.random() - 0.5)
+    .map(q => ({
+      ...q,
+      options: shuffleArray(q.options)
+    }))
 }
 
 // Generate questions by category - mix templates and static
@@ -1149,7 +1164,13 @@ export function generateQuestionsByCategory(category: string, count: number): Qu
     questions.push(generateQuestion())
   }
   
-  return questions.sort(() => Math.random() - 0.5)
+  // Shuffle questions and their options
+  return questions
+    .sort(() => Math.random() - 0.5)
+    .map(q => ({
+      ...q,
+      options: shuffleArray(q.options)
+    }))
 }
 
 // Generate questions by difficulty - mix templates and static
@@ -1191,7 +1212,13 @@ export function generateQuestionsByDifficulty(difficulty: 'easy' | 'medium' | 'h
     questions.push(generateQuestion())
   }
   
-  return questions.sort(() => Math.random() - 0.5)
+  // Shuffle questions and their options
+  return questions
+    .sort(() => Math.random() - 0.5)
+    .map(q => ({
+      ...q,
+      options: shuffleArray(q.options)
+    }))
 }
 
 // Get all available categories
