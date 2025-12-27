@@ -187,37 +187,56 @@ function displayScanResults(data) {
   
   // Extract actual data from API response
   const scanData = data.data || data;
-  const riskScore = scanData.score || 0;
+  const score = scanData.score || 0;
   const url = scanData.url || 'N/A';
   const label = scanData.label || 'N/A';
   const reasons = scanData.reasons || [];
+  const domain = scanData.domain || 'N/A';
+  const aiConfidence = scanData.aiConfidence ? (scanData.aiConfidence * 100).toFixed(0) : 'N/A';
   
-  const riskLevel = riskScore > 70 ? 'high' : riskScore > 40 ? 'medium' : 'low';
-  const riskText = riskScore > 70 ? 'Nguy hiểm cao' : riskScore > 40 ? 'Cảnh báo' : 'An toàn';
-  const safetyScore = 100 - riskScore; // Điểm an toàn = 100 - điểm rủi ro
+  // Determine label color and text
+  let labelClass = 'low';
+  let labelText = 'AN TOÀN';
+  if (label === 'DANGEROUS') {
+    labelClass = 'high';
+    labelText = 'NGUY HIỂM';
+  } else if (label === 'CAUTION') {
+    labelClass = 'medium';
+    labelText = 'CẢNH BÁO';
+  }
   
   html += `
     <div style="margin-bottom: 12px;">
-      <strong>URL:</strong> <span style="font-size: 12px; word-break: break-all;">${url}</span>
+      <strong>Domain:</strong> <span style="font-size: 12px; word-break: break-all;">${domain}</span>
     </div>
     <div style="margin-bottom: 12px;">
-      <span class="risk-badge ${riskLevel}">${riskText} - ${safetyScore}%</span>
+      <strong>Điểm rủi ro:</strong> <span style="font-size: 16px; font-weight: bold; color: ${score > 70 ? '#dc2626' : score > 40 ? '#f59e0b' : '#059669'};">${score}/100</span>
     </div>
     <div style="margin-bottom: 12px;">
-      <strong>Phân loại:</strong> ${label}
+      <span class="risk-badge ${labelClass}">${labelText}</span>
+    </div>
+    <div style="margin-bottom: 8px; font-size: 12px; color: #6b7280;">
+      <strong>Độ tin cậy AI:</strong> ${aiConfidence}%
     </div>
   `;
 
   if (reasons && reasons.length > 0) {
     html += `
       <div style="margin-top: 12px;">
-        <strong>Chi tiết:</strong>
-        <ul style="margin-left: 20px; margin-top: 8px; font-size: 13px;">
-          ${reasons.map(reason => `<li>${reason}</li>`).join('')}
+        <strong>Dấu hiệu phát hiện:</strong>
+        <ul style="margin-left: 20px; margin-top: 8px; font-size: 13px; line-height: 1.6;">
+          ${reasons.map(reason => `<li style="margin-bottom: 4px;">${reason}</li>`).join('')}
         </ul>
       </div>
     `;
   }
+  
+  // Add full URL at bottom
+  html += `
+    <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #e5e7eb; font-size: 11px; color: #6b7280; word-break: break-all;">
+      <strong>URL đầy đủ:</strong><br/>${url}
+    </div>
+  `;
 
   resultContent.innerHTML = html;
   showResults();
@@ -254,20 +273,22 @@ function displayImageResults(data, totalImages) {
 function updatePageStatus(data) {
   // Extract actual data from API response
   const scanData = data.data || data;
-  const riskScore = scanData.score || 0;
+  const score = scanData.score || 0;
+  const label = scanData.label || 'SAFE';
   
-  if (riskScore > 70) {
+  // Use label for accurate classification
+  if (label === 'DANGEROUS' || score > 70) {
     statusIndicator.className = 'status-indicator danger';
     statusIndicator.querySelector('.status-icon').textContent = '⚠';
-    statusText.textContent = 'Trang nguy hiểm!';
-  } else if (riskScore > 40) {
+    statusText.textContent = `Nguy hiểm (${score}/100)`;
+  } else if (label === 'CAUTION' || score > 40) {
     statusIndicator.className = 'status-indicator warning';
     statusIndicator.querySelector('.status-icon').textContent = '!';
-    statusText.textContent = 'Cần cảnh giác';
+    statusText.textContent = `Cảnh báo (${score}/100)`;
   } else {
     statusIndicator.className = 'status-indicator safe';
     statusIndicator.querySelector('.status-icon').textContent = '✓';
-    statusText.textContent = 'Trang an toàn';
+    statusText.textContent = `An toàn (${score}/100)`;
   }
 }
 

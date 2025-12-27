@@ -14,7 +14,7 @@ const navLinks = [
   { href: '/guide', label: 'Cẩm nang' },
   { href: '/report', label: 'Báo cáo' },
   { href: '/extension', label: 'Extension' },
-  { href: '/pricing', label: 'Bảng giá' },
+  // { href: '/pricing', label: 'Bảng giá' }, // Đã ẩn
   { href: '/about', label: 'Giới thiệu' },
 ]
 
