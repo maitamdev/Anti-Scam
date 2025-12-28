@@ -40,7 +40,6 @@ const features = [
 ]
 
 const stats = [
-  { value: '50000', label: 'Websites đã quét', suffix: '+' },
   { value: '98', label: 'Antivirus Engines' },
   { value: '100', label: 'Miễn phí', suffix: '%' },
   { value: '24', label: 'Hoạt động', suffix: '/7' },

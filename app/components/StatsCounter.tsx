@@ -43,7 +43,7 @@ export default function StatsCounter({ stats }: { stats: Stat[] }) {
   }, [stats])
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8">
+    <div className="grid grid-cols-3 gap-4 sm:gap-8">
       {stats.map((stat, index) => (
         <motion.div
           key={index}

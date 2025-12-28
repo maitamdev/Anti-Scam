@@ -1,18 +1,13 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Shield, Star, Zap, Lock } from 'lucide-react'
+import { Shield, Zap, Lock } from 'lucide-react'
 
 const trustBadges = [
   {
     icon: Shield,
     title: 'Miễn phí 100%',
     description: 'Không quảng cáo, không thu phí'
-  },
-  {
-    icon: Star,
-    title: 'AI Llama 3.3-70B',
-    description: 'Công nghệ AI tiên tiến nhất'
   },
   {
     icon: Zap,
@@ -28,7 +23,7 @@ const trustBadges = [
 
 export default function TrustBadges() {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div className="grid grid-cols-3 gap-4">
       {trustBadges.map((badge, index) => (
         <motion.div
           key={index}
