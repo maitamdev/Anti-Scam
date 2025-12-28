@@ -10,6 +10,8 @@ declare module 'next-auth' {
       avatar?: string | null
       role: Role
       tier: Tier
+      dailyScans?: number
+      totalScans?: number
     }
   }
 
@@ -20,6 +22,8 @@ declare module 'next-auth' {
     avatar?: string | null
     role: Role
     tier: Tier
+    dailyScans?: number
+    totalScans?: number
   }
 }
 
@@ -28,5 +32,7 @@ declare module 'next-auth/jwt' {
     id: string
     role: Role
     tier: Tier
+    dailyScans?: number
+    totalScans?: number
   }
 }

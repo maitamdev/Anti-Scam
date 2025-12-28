@@ -83,11 +83,30 @@ export const authOptions: NextAuthOptions = {
         token.id = user.id
         token.role = user.role
         token.tier = user.tier
+        token.dailyScans = user.dailyScans
+        token.totalScans = user.totalScans
       }
 
       // Update session
       if (trigger === 'update' && session) {
         token = { ...token, ...session.user }
+      }
+
+      // Refresh user stats from DB on each request
+      if (token.id) {
+        try {
+          const dbUser = await prisma.user.findUnique({
+            where: { id: token.id as string },
+            select: { dailyScans: true, totalScans: true, tier: true }
+          })
+          if (dbUser) {
+            token.dailyScans = dbUser.dailyScans
+            token.totalScans = dbUser.totalScans
+            token.tier = dbUser.tier
+          }
+        } catch (e) {
+          // Ignore errors
+        }
       }
 
       return token
@@ -98,6 +117,8 @@ export const authOptions: NextAuthOptions = {
         session.user.id = token.id as string
         session.user.role = token.role as Role
         session.user.tier = token.tier as Tier
+        session.user.dailyScans = token.dailyScans as number
+        session.user.totalScans = token.totalScans as number
       }
 
       return session

@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/app/lib/auth'
 import { analyzeUrl } from '@/app/lib/analyze'
 import prisma from '@/app/lib/db'
 import { getToday } from '@/app/lib/utils'
@@ -13,11 +15,16 @@ import {
   detectCategoryFromDomain,
 } from '@/app/lib/websiteAnalyzer'
 import { checkExternalSources } from '@/app/lib/externalSources'
+import { nanoid } from 'nanoid'
 
 export async function POST(request: NextRequest) {
   const headers = getSecurityHeaders()
   
   try {
+    // Get session (optional - works for both logged in and anonymous users)
+    const session = await getServerSession(authOptions)
+    const userId = session?.user?.id
+    
     // Rate limiting
     const clientIP = getClientIP(request)
     const rateLimit = checkRateLimit(clientIP, 'scan')
@@ -59,9 +66,11 @@ export async function POST(request: NextRequest) {
       result.score = Math.max(result.score, 80)
     }
 
-    // Save to database (non-blocking)
+    // Save to database
     const userAgent = request.headers.get('user-agent') || 'unknown'
+    const shareToken = nanoid(10) // Generate share token
     
+    // Save to legacy Scan table (for global stats)
     prisma.scan.create({
       data: {
         url,
@@ -74,6 +83,35 @@ export async function POST(request: NextRequest) {
         userAgent: userAgent.slice(0, 500),
       },
     }).catch((err: Error) => console.error('[DB] Save scan error:', err.message))
+
+    // Save to ScanHistory if user is logged in
+    if (userId) {
+      prisma.scanHistory.create({
+        data: {
+          userId,
+          url,
+          domain: result.domain,
+          score: result.score,
+          label: result.label,
+          reasons: result.reasons,
+          aiConfidence: result.aiConfidence,
+          heuristicScore: result.heuristicScore,
+          aiScore: result.aiScore,
+          shareToken,
+          ipAddress: clientIP,
+          userAgent: userAgent.slice(0, 500),
+        },
+      }).catch((err: Error) => console.error('[DB] Save scan history error:', err.message))
+      
+      // Update user stats
+      prisma.user.update({
+        where: { id: userId },
+        data: {
+          dailyScans: { increment: 1 },
+          totalScans: { increment: 1 },
+        },
+      }).catch((err: Error) => console.error('[DB] Update user stats error:', err.message))
+    }
 
     // Update daily stats (non-blocking)
     const today = getToday()
