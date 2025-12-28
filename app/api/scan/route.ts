@@ -86,31 +86,36 @@ export async function POST(request: NextRequest) {
 
     // Save to ScanHistory if user is logged in
     if (userId) {
-      prisma.scanHistory.create({
-        data: {
-          userId,
-          url,
-          domain: result.domain,
-          score: result.score,
-          label: result.label,
-          reasons: result.reasons,
-          aiConfidence: result.aiConfidence,
-          heuristicScore: result.heuristicScore,
-          aiScore: result.aiScore,
-          shareToken,
-          ipAddress: clientIP,
-          userAgent: userAgent.slice(0, 500),
-        },
-      }).catch((err: Error) => console.error('[DB] Save scan history error:', err.message))
-      
-      // Update user stats
-      prisma.user.update({
-        where: { id: userId },
-        data: {
-          dailyScans: { increment: 1 },
-          totalScans: { increment: 1 },
-        },
-      }).catch((err: Error) => console.error('[DB] Update user stats error:', err.message))
+      try {
+        await prisma.scanHistory.create({
+          data: {
+            userId,
+            url,
+            domain: result.domain,
+            score: result.score,
+            label: result.label,
+            reasons: result.reasons,
+            aiConfidence: result.aiConfidence,
+            heuristicScore: result.heuristicScore,
+            aiScore: result.aiScore,
+            shareToken,
+            ipAddress: clientIP,
+            userAgent: userAgent.slice(0, 500),
+          },
+        })
+        console.log('[DB] Saved scan history for user:', userId)
+        
+        // Update user stats
+        await prisma.user.update({
+          where: { id: userId },
+          data: {
+            dailyScans: { increment: 1 },
+            totalScans: { increment: 1 },
+          },
+        })
+      } catch (err) {
+        console.error('[DB] Save scan history error:', err)
+      }
     }
 
     // Update daily stats (non-blocking)
