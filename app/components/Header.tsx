@@ -2,10 +2,11 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { Menu, X, Shield, Sparkles } from 'lucide-react'
-import { useState, useEffect } from 'react'
-import { motion, AnimatePresence, LayoutGroup } from 'framer-motion'
+import { Menu, X, Shield, User, LogOut, LayoutDashboard, ChevronDown } from 'lucide-react'
+import { useState, useEffect, useRef } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { usePathname } from 'next/navigation'
+import { useSession, signOut } from 'next-auth/react'
 
 const navLinks = [
   { href: '/', label: 'Trang chủ' },
@@ -14,15 +15,16 @@ const navLinks = [
   { href: '/guide', label: 'Cẩm nang' },
   { href: '/report', label: 'Báo cáo' },
   { href: '/extension', label: 'Extension' },
-  // { href: '/pricing', label: 'Bảng giá' }, // Đã ẩn
   { href: '/about', label: 'Giới thiệu' },
 ]
 
 export default function Header() {
+  const { data: session, status } = useSession()
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-  const [hoveredLink, setHoveredLink] = useState<string | null>(null)
+  const [userMenuOpen, setUserMenuOpen] = useState(false)
   const pathname = usePathname()
+  const userMenuRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -30,6 +32,17 @@ export default function Header() {
     }
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  // Close user menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+        setUserMenuOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
   return (
@@ -73,73 +86,119 @@ export default function Header() {
           </Link>
 
           {/* Desktop nav */}
-          <LayoutGroup>
           <div className="hidden md:flex items-center gap-1 lg:gap-2">
             {navLinks.map((link) => {
               const isActive = pathname === link.href
-              const isHovered = hoveredLink === link.href
               return (
                 <Link
                   key={link.href}
                   href={link.href}
-                  onMouseEnter={() => setHoveredLink(link.href)}
-                  onMouseLeave={() => setHoveredLink(null)}
-                  className={`relative px-3 lg:px-4 py-2 text-sm font-medium transition-all duration-200 rounded-lg ${
+                  prefetch={true}
+                  className={`relative px-3 lg:px-4 py-2 text-sm font-medium transition-all duration-150 rounded-lg ${
                     isActive 
-                      ? 'text-blue-400' 
-                      : 'text-gray-400 hover:text-white'
+                      ? 'text-blue-400 bg-blue-500/10' 
+                      : 'text-gray-400 hover:text-white hover:bg-white/5'
                   }`}
                 >
-                  {/* Hover background - slides in */}
-                  {(isHovered || isActive) && (
-                    <motion.div
-                      layoutId="hoverBg"
-                      className={`absolute inset-0 rounded-lg ${
-                        isActive 
-                          ? 'bg-blue-500/10 border border-blue-500/30' 
-                          : 'bg-white/5'
-                      }`}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ type: "spring", bounce: 0.2, duration: 0.8 }}
-                    />
-                  )}
-                  
-                  {/* Text */}
-                  <span className="relative z-10">{link.label}</span>
-                  
-                  {/* Active/Hover indicator line */}
-                  {(isActive || isHovered) && (
-                    <motion.div
-                      layoutId="navLine"
-                      className={`absolute -bottom-0.5 left-1/2 -translate-x-1/2 h-0.5 rounded-full ${
-                        isActive 
-                          ? 'w-8 bg-gradient-to-r from-blue-400 to-blue-500' 
-                          : 'w-4 bg-white/50'
-                      }`}
-                      transition={{ type: "spring", bounce: 0.25, duration: 0.8 }}
-                    />
-                  )}
+                  {link.label}
                 </Link>
               )
             })}
             
-            {/* Auth Button - Đăng nhập */}
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="ml-2 lg:ml-4"
-            >
-              <Link
-                href="/auth/signin"
-                className="flex items-center gap-1.5 px-3 lg:px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 rounded-lg text-sm font-semibold text-white transition-all shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30"
+            {/* User Menu or Login Button */}
+            {status === 'loading' ? (
+              <div className="ml-2 lg:ml-4 w-8 h-8 rounded-full bg-gray-700 animate-pulse" />
+            ) : session ? (
+              <div className="relative ml-2 lg:ml-4" ref={userMenuRef}>
+                <button
+                  onClick={() => setUserMenuOpen(!userMenuOpen)}
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 transition-colors"
+                >
+                  <div className="w-7 h-7 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center text-white text-sm font-semibold">
+                    {session.user.name?.[0]?.toUpperCase() || session.user.email?.[0]?.toUpperCase() || 'U'}
+                  </div>
+                  <span className="text-sm text-gray-300 hidden lg:block max-w-[100px] truncate">
+                    {session.user.name || session.user.email?.split('@')[0]}
+                  </span>
+                  <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${userMenuOpen ? 'rotate-180' : ''}`} />
+                </button>
+                
+                {/* Dropdown Menu */}
+                <AnimatePresence>
+                  {userMenuOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute right-0 mt-2 w-56 bg-gray-800 border border-gray-700 rounded-xl shadow-xl overflow-hidden z-50"
+                    >
+                      <div className="px-4 py-3 border-b border-gray-700">
+                        <p className="text-sm font-medium text-white truncate">
+                          {session.user.name || 'User'}
+                        </p>
+                        <p className="text-xs text-gray-400 truncate">
+                          {session.user.email}
+                        </p>
+                        <span className={`inline-block mt-1 px-2 py-0.5 text-xs rounded-full ${
+                          session.user.tier === 'FREE' ? 'bg-gray-600 text-gray-300' :
+                          session.user.tier === 'PRO' ? 'bg-blue-500/20 text-blue-400' :
+                          'bg-purple-500/20 text-purple-400'
+                        }`}>
+                          {session.user.tier}
+                        </span>
+                      </div>
+                      
+                      <div className="py-1">
+                        <Link
+                          href="/dashboard"
+                          onClick={() => setUserMenuOpen(false)}
+                          className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors"
+                        >
+                          <LayoutDashboard className="w-4 h-4" />
+                          Dashboard
+                        </Link>
+                        <Link
+                          href="/dashboard/history"
+                          onClick={() => setUserMenuOpen(false)}
+                          className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors"
+                        >
+                          <Shield className="w-4 h-4" />
+                          Lịch sử quét
+                        </Link>
+                      </div>
+                      
+                      <div className="border-t border-gray-700 py-1">
+                        <button
+                          onClick={() => {
+                            setUserMenuOpen(false)
+                            signOut({ callbackUrl: '/' })
+                          }}
+                          className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-red-400 hover:bg-red-500/10 transition-colors"
+                        >
+                          <LogOut className="w-4 h-4" />
+                          Đăng xuất
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            ) : (
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="ml-2 lg:ml-4"
               >
-                <span>Đăng nhập</span>
-              </Link>
-            </motion.div>
+                <Link
+                  href="/auth/signin"
+                  className="flex items-center gap-1.5 px-3 lg:px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 rounded-lg text-sm font-semibold text-white transition-all shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30"
+                >
+                  <span>Đăng nhập</span>
+                </Link>
+              </motion.div>
+            )}
           </div>
-          </LayoutGroup>
 
           {/* Mobile menu button */}
           <motion.button
@@ -216,13 +275,36 @@ export default function Header() {
                   transition={{ delay: 0.3 }}
                   className="pt-3"
                 >
-                  <Link
-                    href="/auth/signin"
-                    className="flex items-center justify-center gap-2 mx-4 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-xl text-white font-semibold"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    Đăng nhập
-                  </Link>
+                  {session ? (
+                    <div className="mx-4 space-y-2">
+                      <Link
+                        href="/dashboard"
+                        className="flex items-center justify-center gap-2 py-3 bg-gray-800 rounded-xl text-white font-semibold"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        <LayoutDashboard className="w-5 h-5" />
+                        Dashboard
+                      </Link>
+                      <button
+                        onClick={() => {
+                          setIsOpen(false)
+                          signOut({ callbackUrl: '/' })
+                        }}
+                        className="flex items-center justify-center gap-2 w-full py-3 bg-red-500/20 rounded-xl text-red-400 font-semibold"
+                      >
+                        <LogOut className="w-5 h-5" />
+                        Đăng xuất
+                      </button>
+                    </div>
+                  ) : (
+                    <Link
+                      href="/auth/signin"
+                      className="flex items-center justify-center gap-2 mx-4 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-xl text-white font-semibold"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      Đăng nhập
+                    </Link>
+                  )}
                 </motion.div>
               </div>
             </motion.div>

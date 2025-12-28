@@ -77,6 +77,14 @@ export async function middleware(request: NextRequest) {
     'Permissions-Policy',
     'camera=(), microphone=(), geolocation=()'
   )
+  
+  // CSP header - allow unsafe-eval for development (framer-motion needs it)
+  if (process.env.NODE_ENV === 'development') {
+    response.headers.set(
+      'Content-Security-Policy',
+      "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https:;"
+    )
+  }
 
   // Block access to sensitive paths
   if (pathname.includes('/_next/') && pathname.includes('.env')) {

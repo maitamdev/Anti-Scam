@@ -1,7 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['localhost', 'anti-scam-kappa.vercel.app'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'anti-scam-kappa.vercel.app',
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+      },
+    ],
     formats: ['image/avif', 'image/webp'],
   },
   // Performance optimizations
