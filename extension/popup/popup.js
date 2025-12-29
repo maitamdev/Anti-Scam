@@ -1,5 +1,5 @@
 // Configuration
-const API_BASE_URL = 'https://anti-scam-kappa.vercel.app/api'; // Update with your actual domain
+const API_BASE_URL = 'https://antiscam.site/api';
 
 // DOM Elements
 const scanCurrentPageBtn = document.getElementById('scanCurrentPage');

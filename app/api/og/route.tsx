@@ -107,7 +107,7 @@ export async function GET() {
             color: '#64748b',
           }}
         >
-          anti-scam-kappa.vercel.app
+          antiscam.site
         </div>
       </div>
     ),

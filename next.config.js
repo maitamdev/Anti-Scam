@@ -4,7 +4,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'anti-scam-kappa.vercel.app',
+        hostname: 'antiscam.site',
       },
       {
         protocol: 'http',
