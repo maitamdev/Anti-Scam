@@ -17,7 +17,7 @@ export default function NotFound() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center max-w-md"
         >
-          {/* 404 Number */}
+          {}
           <motion.div
             initial={{ scale: 0.5 }}
             animate={{ scale: 1 }}
