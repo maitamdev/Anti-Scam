@@ -4,7 +4,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'antiscam.site',
+        hostname: 'maitamsite.site',
       },
       {
         protocol: 'http',

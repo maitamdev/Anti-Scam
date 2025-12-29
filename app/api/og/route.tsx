@@ -107,7 +107,7 @@ export async function GET() {
             color: '#64748b',
           }}
         >
-          antiscam.site
+          maitamsite.site
         </div>
       </div>
     ),

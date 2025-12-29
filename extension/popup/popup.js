@@ -1,5 +1,5 @@
 // Configuration
-const API_BASE_URL = 'https://antiscam.site/api';
+const API_BASE_URL = 'https://maitamsite.site/api';
 
 // DOM Elements
 const scanCurrentPageBtn = document.getElementById('scanCurrentPage');

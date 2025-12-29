@@ -1,7 +1,7 @@
 // Background Service Worker for ANTISCAM Extension
 
 // Configuration
-const API_BASE_URL = 'https://antiscam.site/api';
+const API_BASE_URL = 'https://maitamsite.site/api';
 const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours
 
 // Install event
