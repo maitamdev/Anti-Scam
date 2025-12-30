@@ -101,7 +101,7 @@ function formatScanResult(result: any): string {
     })
   }
   
-  message += `\n🌐 Xem chi tiết: https://anti-scam-kappa.vercel.app`
+  message += `\n🌐 Xem chi tiết: https://maitamsite.site`
   
   return message
 }
@@ -124,7 +124,7 @@ Tôi là trợ lý AI giúp bạn phát hiện lừa đảo online.
 
 <b>⚠️ Lưu ý:</b> Kết quả chỉ mang tính tham khảo. Luôn cẩn thận với các giao dịch online!
 
-🌐 Website: https://anti-scam-kappa.vercel.app`
+🌐 Website: https://maitamsite.site`
 }
 
 export async function POST(request: NextRequest) {
