@@ -956,3 +956,107 @@ model ThreatFeedLog {
   @@index([source])
   @@index([createdAt])
 }
+
+// ============================================
+// SCAM ALERTS & WARNINGS
+// ============================================
+
+// Cảnh báo lừa đảo mới nhất
+model ScamAlert {
+  id          String   @id @default(uuid())
+  title       String
+  slug        String   @unique
+  summary     String   @db.Text
+  content     String   @db.Text
+  
+  // Categorization
+  category    String   // PHISHING, INVESTMENT, ROMANCE, JOB, PRIZE, IMPERSONATION, CRYPTO, OTHER
+  severity    String   // CRITICAL, HIGH, MEDIUM, LOW
+  
+  // Affected targets
+  targetGroup String[] // elderly, students, workers, business, all
+  platform    String[] // facebook, zalo, telegram, sms, email, phone
+  
+  // Evidence
+  screenshots String[] // URLs to screenshots
+  examples    String?  @db.Text // Example messages/content
+  
+  // Stats
+  reportCount Int      @default(0)
+  totalLoss   Float?   // Estimated total loss in VND
+  
+  // Source
+  source      String   // community, police, media, internal
+  sourceUrl   String?
+  
+  // Status
+  isActive    Boolean  @default(true)
+  isPinned    Boolean  @default(false)
+  views       Int      @default(0)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([category])
+  @@index([severity])
+  @@index([isActive])
+  @@index([isPinned])
+  @@index([createdAt])
+}
+
+// Email lừa đảo được báo cáo
+model ScamEmail {
+  id          String   @id @default(uuid())
+  email       String   @unique
+  domain      String   // Domain của email
+  
+  // Details
+  senderName  String?  // Tên hiển thị của người gửi
+  subject     String?  // Tiêu đề email mẫu
+  category    String   // PHISHING, SCAM, SPAM, MALWARE
+  
+  // Stats
+  reportCount Int      @default(1)
+  
+  // Verification
+  verified    Boolean  @default(false)
+  verifiedAt  DateTime?
+  verifiedBy  String?
+  
+  // Notes
+  description String?  @db.Text
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([email])
+  @@index([domain])
+  @@index([verified])
+  @@index([category])
+}
+
+// Số điện thoại lừa đảo
+model ScamPhone {
+  id          String   @id @default(uuid())
+  phone       String   @unique
+  
+  // Details
+  carrier     String?  // Nhà mạng (Viettel, Mobi, Vina...)
+  category    String   // SCAM_CALL, SPAM, PHISHING, IMPERSONATION
+  
+  // Stats
+  reportCount Int      @default(1)
+  
+  // Verification
+  verified    Boolean  @default(false)
+  verifiedAt  DateTime?
+  
+  description String?  @db.Text
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([phone])
+  @@index([verified])
+  @@index([category])
+}
