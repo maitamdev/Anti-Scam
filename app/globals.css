@@ -14,12 +14,57 @@
 
 body {
   background-image: url('/nentrang.jpg');
-  background-size: cover;
+  background-size: 110% 110%;
   background-position: center;
   background-attachment: fixed;
   background-repeat: no-repeat;
   color: var(--text-primary);
   font-family: 'Inter', system-ui, sans-serif;
+  animation: bg-slow-zoom 10s ease-in-out infinite;
+}
+
+/* Gentle background zoom animation */
+@keyframes bg-slow-zoom {
+  0%, 100% {
+    background-size: 110% 110%;
+    background-position: center center;
+  }
+  50% {
+    background-size: 115% 115%;
+    background-position: center center;
+  }
+}
+
+/* Overlay for scan line effect - pure CSS */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.4), rgba(6, 182, 212, 0.4), transparent);
+  animation: scan-line-down 8s linear infinite;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.6;
+}
+
+@keyframes scan-line-down {
+  0% {
+    top: 0;
+    opacity: 0;
+  }
+  5% {
+    opacity: 0.6;
+  }
+  95% {
+    opacity: 0.6;
+  }
+  100% {
+    top: 100vh;
+    opacity: 0;
+  }
 }
 
 /* Custom scrollbar */

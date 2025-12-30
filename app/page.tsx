@@ -109,34 +109,35 @@ export default function Home() {
                   Công cụ miễn phí giúp bạn cẩn thận hơn khi lướt web.
                 </p>
                 
-                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                <div className="flex flex-wrap gap-3">
                   <motion.button
                     onClick={() => router.push('/scan')}
-                    className="px-6 py-3 sm:px-8 sm:py-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 rounded-xl font-semibold text-white flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25"
+                    className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-lg font-medium text-white text-sm flex items-center gap-2 shadow-lg shadow-blue-500/25"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
+                    <Search className="w-4 h-4" />
                     Kiểm tra ngay
                   </motion.button>
                   
                   <motion.button
                     onClick={() => router.push('/quiz')}
-                    className="px-6 py-3 sm:px-8 sm:py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl font-semibold text-white flex items-center justify-center gap-2"
+                    className="px-5 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg font-medium text-white text-sm flex items-center gap-2"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
-                    <Play className="w-5 h-5" />
-                    Kiểm tra kiến thức
+                    <Play className="w-4 h-4" />
+                    Làm Quiz
                   </motion.button>
                   
                   <motion.button
                     onClick={() => router.push('/report')}
-                    className="px-6 py-3 sm:px-8 sm:py-4 bg-red-600/20 hover:bg-red-600/30 border border-red-500/50 rounded-xl font-semibold text-red-400 hover:text-red-300 flex items-center justify-center gap-2"
+                    className="px-5 py-2.5 bg-red-500/10 border border-red-500/30 rounded-lg font-medium text-red-400 text-sm flex items-center gap-2 hover:bg-red-500/20"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
-                    <Shield className="w-5 h-5" />
-                    Báo cáo lừa đảo
+                    <Shield className="w-4 h-4" />
+                    Báo cáo
                   </motion.button>
                 </div>
               </motion.div>
