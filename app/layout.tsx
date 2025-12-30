@@ -72,25 +72,12 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="vi">
+    <html lang="vi" suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{
-          __html: `
-            if (typeof window !== 'undefined') {
-              const originalWarn = console.warn;
-              console.warn = (...args) => {
-                const msg = args[0]?.toString() || '';
-                if (msg.includes('Download the React DevTools') || 
-                    msg.includes('Extra attributes from the server') ||
-                    msg.includes('bis_register') ||
-                    msg.includes('__processed_')) return;
-                originalWarn.apply(console, args);
-              };
-            }
-          `
-        }} />
+        <link rel="icon" href="/logo.png" type="image/png" />
+        <link rel="shortcut icon" href="/logo.png" type="image/png" />
       </head>
-      <body className={`${inter.variable} ${montserrat.variable} ${spaceGrotesk.variable} font-sans text-white min-h-screen`}>
+      <body className={`${inter.variable} ${montserrat.variable} ${spaceGrotesk.variable} font-sans text-white min-h-screen`} suppressHydrationWarning>
         <Providers>
           {children}
         </Providers>

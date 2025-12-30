@@ -10,6 +10,11 @@
   --accent-cyan: #06b6d4;
   --text-primary: #ffffff;
   --text-secondary: #94a3b8;
+  --font-space: 'Space Grotesk', Helvetica, sans-serif;
+}
+
+html {
+  font-family: var(--font-title), var(--font-space);
 }
 
 body {
@@ -19,12 +24,8 @@ body {
   background-attachment: fixed;
   background-repeat: no-repeat;
   color: var(--text-primary);
-  font-family: var(--font-title), 'Space Grotesk', Helvetica, sans-serif !important;
+  font-family: var(--font-title), var(--font-space);
   animation: bg-slow-zoom 10s ease-in-out infinite;
-}
-
-* {
-  font-family: inherit;
 }
 
 /* Gentle background zoom animation */
