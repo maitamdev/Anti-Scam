@@ -1051,9 +1051,10 @@ const questionTemplates: QuestionTemplate[] = [
 // Import static questions from extra files
 import { ALL_EXTRA_QUESTIONS } from './quizExtraData'
 import { ALL_STATIC_QUESTIONS } from './quizStaticData'
+import { ALL_ADVANCED_QUESTIONS } from './quizAdvanced'
 
 // Combine all static questions
-const ALL_STATIC_COMBINED = [...ALL_EXTRA_QUESTIONS, ...ALL_STATIC_QUESTIONS]
+const ALL_STATIC_COMBINED = [...ALL_EXTRA_QUESTIONS, ...ALL_STATIC_QUESTIONS, ...ALL_ADVANCED_QUESTIONS]
 
 let questionCounter = 0
 
