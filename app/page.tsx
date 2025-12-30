@@ -171,9 +171,10 @@ export default function Home() {
                     className="relative w-full h-full"
                   >
                     <Image
-                      src="/hero-shield.jpg"
+                      src="/1h.png"
                       alt="ANTI-SCAM Security Shield"
                       fill
+                      sizes="(max-width: 768px) 256px, (max-width: 1024px) 320px, 480px"
                       className="object-contain relative z-10 drop-shadow-[0_0_30px_rgba(59,130,246,0.5)]"
                       priority
                     />
