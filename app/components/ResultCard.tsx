@@ -157,7 +157,7 @@ ${result.reasons.map(r => `• ${r}`).join('\n')}
     >
       {/* Main Result Card */}
       <div className={`bg-gradient-to-br ${getScoreBgColor(result.score)} rounded-2xl p-1`}>
-        <div className="bg-gray-900 rounded-2xl p-6">
+        <div className=" rounded-2xl p-6">
           {/* Header with Shield */}
           <div className="flex items-center gap-6 mb-6">
             <motion.div

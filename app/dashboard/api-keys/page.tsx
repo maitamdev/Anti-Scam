@@ -107,7 +107,7 @@ export default function ApiKeysPage() {
   if (!session || session.user.tier === 'FREE' || session.user.tier === 'PRO') return null
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-50 dark:">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="flex items-center justify-between mb-8">
           <div>
@@ -135,7 +135,7 @@ export default function ApiKeysPage() {
               {newlyCreatedKey ? (
                 <div>
                   <h3 className="text-xl font-bold mb-4 text-green-600">✅ Key đã tạo thành công!</h3>
-                  <div className="bg-gray-100 dark:bg-gray-900 p-4 rounded-lg mb-4">
+                  <div className="bg-gray-100 dark: p-4 rounded-lg mb-4">
                     <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
                       Lưu key này ngay. Bạn sẽ không thể xem lại!
                     </p>
@@ -201,7 +201,7 @@ export default function ApiKeysPage() {
           <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">
             Xem hướng dẫn chi tiết cách sử dụng API tại <a href="/docs/api" className="text-blue-600 hover:underline font-semibold">docs/api</a>
           </p>
-          <div className="bg-white dark:bg-gray-900 p-4 rounded border border-gray-200 dark:border-gray-700">
+          <div className="bg-white dark: p-4 rounded border border-gray-200 dark:border-gray-700">
             <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">Example: Scan URL</p>
             <code className="block text-xs font-mono overflow-x-auto">
               curl -X POST {process.env.NEXT_PUBLIC_APP_URL}/api/scan \<br/>
@@ -223,7 +223,7 @@ export default function ApiKeysPage() {
         ) : (
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
             <table className="w-full">
-              <thead className="bg-gray-50 dark:bg-gray-900">
+              <thead className="bg-gray-50 dark:">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Tên

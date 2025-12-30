@@ -8,7 +8,7 @@ import Footer from './components/Footer'
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen flex flex-col bg-[#0a0f1a]">
+    <div className="min-h-screen flex flex-col ">
       <Header />
       
       <main className="flex-1 flex items-center justify-center px-4">

@@ -15,7 +15,6 @@ const navLinks = [
   { href: '/guide', label: 'Cẩm nang' },
   { href: '/report', label: 'Báo cáo' },
   { href: '/extension', label: 'Extension' },
-  { href: '/about', label: 'Giới thiệu' },
 ]
 
 export default function Header() {
@@ -52,8 +51,8 @@ export default function Header() {
       transition={{ duration: 0.5, ease: "easeOut" }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled 
-          ? 'bg-[#0a0f1a]/95 backdrop-blur-xl border-b border-blue-500/20 shadow-lg shadow-blue-500/5' 
-          : 'bg-transparent'
+          ? '/95 backdrop-blur-xl border-b border-blue-500/20 shadow-lg shadow-blue-500/5' 
+          : '/70 backdrop-blur-md'
       }`}
     >
       {/* Gradient line on top */}

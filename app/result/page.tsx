@@ -186,22 +186,22 @@ export default function ResultPage() {
 
                 {/* Stats Grid */}
                 <div className="p-4 grid grid-cols-4 gap-3 border-b border-gray-700">
-                  <div className="text-center p-3 bg-gray-900 rounded-lg">
+                  <div className="text-center p-3  rounded-lg">
                     <p className={`text-2xl font-bold ${
                       selectedResult.score <= 30 ? 'text-green-400' :
                       selectedResult.score <= 60 ? 'text-yellow-400' : 'text-red-400'
                     }`}>{selectedResult.score}</p>
                     <p className="text-xs text-gray-500">Điểm rủi ro</p>
                   </div>
-                  <div className="text-center p-3 bg-gray-900 rounded-lg">
+                  <div className="text-center p-3  rounded-lg">
                     <p className="text-2xl font-bold text-blue-400">{Math.round(selectedResult.aiConfidence * 100)}%</p>
                     <p className="text-xs text-gray-500">Độ tin cậy AI</p>
                   </div>
-                  <div className="text-center p-3 bg-gray-900 rounded-lg">
+                  <div className="text-center p-3  rounded-lg">
                     <p className="text-2xl font-bold text-purple-400">{selectedResult.heuristicScore ?? '-'}</p>
                     <p className="text-xs text-gray-500">Heuristic</p>
                   </div>
-                  <div className="text-center p-3 bg-gray-900 rounded-lg">
+                  <div className="text-center p-3  rounded-lg">
                     <p className="text-2xl font-bold text-cyan-400">{selectedResult.aiScore ?? '-'}</p>
                     <p className="text-xs text-gray-500">AI Score</p>
                   </div>
@@ -211,7 +211,7 @@ export default function ResultPage() {
                 <div className="p-4 space-y-4">
                   {/* Website Info */}
                   {selectedResult.websiteInfo && (
-                    <div className="bg-gray-900 rounded-lg p-4">
+                    <div className=" rounded-lg p-4">
                       <h4 className="font-medium mb-3 flex items-center gap-2">
                         <Globe className="w-4 h-4 text-blue-400" />
                         Thông tin Website
@@ -239,7 +239,7 @@ export default function ResultPage() {
 
                   {/* Security Checks */}
                   {selectedResult.websiteInfo && (
-                    <div className="bg-gray-900 rounded-lg p-4">
+                    <div className=" rounded-lg p-4">
                       <h4 className="font-medium mb-3 flex items-center gap-2">
                         <Lock className="w-4 h-4 text-green-400" />
                         Kiểm tra bảo mật
@@ -329,7 +329,7 @@ export default function ResultPage() {
 
                   {/* Reasons */}
                   {selectedResult.reasons.length > 0 && (
-                    <div className="bg-gray-900 rounded-lg p-4">
+                    <div className=" rounded-lg p-4">
                       <h4 className="font-medium mb-3 flex items-center gap-2">
                         <Eye className="w-4 h-4 text-purple-400" />
                         Phân tích chi tiết ({selectedResult.reasons.length})
@@ -350,7 +350,7 @@ export default function ResultPage() {
 
                   {/* Technologies */}
                   {selectedResult.websiteInfo?.technologies && selectedResult.websiteInfo.technologies.length > 0 && (
-                    <div className="bg-gray-900 rounded-lg p-4">
+                    <div className=" rounded-lg p-4">
                       <h4 className="font-medium mb-3 flex items-center gap-2">
                         <Server className="w-4 h-4 text-cyan-400" />
                         Công nghệ

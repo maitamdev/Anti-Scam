@@ -8,7 +8,7 @@ import Footer from '../components/Footer'
 
 export default function ExtensionPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-[#0a0f1a]">
+    <div className="min-h-screen flex flex-col ">
       <Header />
       
       <main className="flex-1 pt-20">
@@ -94,7 +94,7 @@ export default function ExtensionPage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 + index * 0.1 }}
-                  className="bg-[#111827] rounded-xl p-6 border border-gray-800 hover:border-gray-700 transition-all group"
+                  className="bg-black/30 rounded-xl p-6 border border-gray-800 hover:border-gray-700 transition-all group"
                 >
                   <div className={`w-12 h-12 ${feature.bg} rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                     <feature.icon className={`w-6 h-6 ${feature.color}`} />
@@ -145,7 +145,7 @@ export default function ExtensionPage() {
                   </div>
                   
                   {/* Right: Download */}
-                  <div className="flex flex-col justify-center items-center bg-[#111827] rounded-xl p-8">
+                  <div className="flex flex-col justify-center items-center bg-black/30 rounded-xl p-8">
                     <Shield className="w-16 h-16 text-blue-400 mb-4" />
                     <h3 className="text-xl font-semibold mb-2">ANTISCAM Extension</h3>
                     <p className="text-gray-400 text-center mb-6">
@@ -192,7 +192,7 @@ export default function ExtensionPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
-              className="bg-[#111827] rounded-2xl p-8 border border-gray-800 mb-12"
+              className="bg-black/30 rounded-2xl p-8 border border-gray-800 mb-12"
             >
               <h2 className="text-2xl font-bold mb-6 text-center">Giao diện Extension</h2>
               <div className="grid md:grid-cols-2 gap-6">
@@ -229,7 +229,7 @@ export default function ExtensionPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
-              className="bg-[#111827] rounded-2xl p-8 border border-gray-800 mb-12"
+              className="bg-black/30 rounded-2xl p-8 border border-gray-800 mb-12"
             >
               <h2 className="text-2xl font-bold mb-6">Câu hỏi thường gặp</h2>
               <div className="space-y-4">
@@ -266,7 +266,7 @@ export default function ExtensionPage() {
               transition={{ delay: 0.7 }}
               className="text-center"
             >
-              <div className="inline-block bg-[#111827] rounded-xl p-6 border border-gray-800">
+              <div className="inline-block bg-black/30 rounded-xl p-6 border border-gray-800">
                 <Shield className="w-12 h-12 text-blue-400 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold mb-2">Mã nguồn mở</h3>
                 <p className="text-gray-400 mb-4 max-w-md">

@@ -13,7 +13,11 @@
 }
 
 body {
-  background-color: var(--bg-primary);
+  background-image: url('/nentrang.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
   color: var(--text-primary);
   font-family: 'Inter', system-ui, sans-serif;
 }

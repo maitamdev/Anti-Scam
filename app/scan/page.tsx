@@ -172,7 +172,7 @@ export default function ScanPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#0a0f1a]">
+    <div className="min-h-screen flex flex-col ">
       <Header />
       
       <main className="flex-1 pt-24 pb-12">
@@ -241,7 +241,7 @@ export default function ScanPage() {
                 exit={{ opacity: 0, x: -20 }}
                 className="mb-10"
               >
-                <div className="bg-[#111827] rounded-2xl p-6 border border-gray-800">
+                <div className="bg-black/30 rounded-2xl p-6 border border-gray-800">
                   <div className="text-center mb-4">
                     <p className="text-gray-400 text-sm">
                       Tải lên ảnh chụp màn hình tin nhắn, email, hoặc website đáng ngờ để AI phân tích
@@ -272,7 +272,7 @@ export default function ScanPage() {
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
                   placeholder="Dán URL website vào đây..."
-                  className="w-full bg-[#111827] border border-gray-700 rounded-lg sm:rounded-xl py-3 sm:py-4 pl-24 sm:pl-32 pr-4 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all text-sm sm:text-base"
+                  className="w-full bg-black/30 border border-gray-700 rounded-lg sm:rounded-xl py-3 sm:py-4 pl-24 sm:pl-32 pr-4 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all text-sm sm:text-base"
                   disabled={isLoading}
                 />
               </div>
@@ -320,7 +320,7 @@ export default function ScanPage() {
                 <h2 className="text-xl font-semibold mb-4">Kết quả phân tích</h2>
 
                 {/* Main Result Card with Mascot */}
-                <div className={`bg-[#111827] rounded-2xl p-6 border ${config.borderColor} mb-4`}>
+                <div className={`bg-black/30 rounded-2xl p-6 border ${config.borderColor} mb-4`}>
                   <div className="flex flex-col sm:flex-row items-center gap-5">
                     {/* Mascot */}
                     <div className="flex-shrink-0">
@@ -340,7 +340,7 @@ export default function ScanPage() {
                 {/* Expandable Sections */}
                 <div className="space-y-3">
                   {/* Chi tiết phân tích */}
-                  <div className="bg-[#111827] rounded-xl border border-gray-800 overflow-hidden">
+                  <div className="bg-black/30 rounded-xl border border-gray-800 overflow-hidden">
                     <button
                       onClick={() => toggleSection('details')}
                       className="w-full p-4 flex items-center justify-between text-left hover:bg-[#1a2332] transition-colors"
@@ -364,22 +364,22 @@ export default function ScanPage() {
                             <div className="space-y-4 text-sm">
                               {/* Basic Info */}
                               <div className="grid grid-cols-2 gap-3">
-                                <div className="bg-[#0d1320] rounded-lg p-3">
+                                <div className=" rounded-lg p-3">
                                   <p className="text-gray-500 text-xs mb-1">Domain</p>
                                   <p className="text-gray-200 font-medium truncate">{result.domain}</p>
                                 </div>
-                                <div className="bg-[#0d1320] rounded-lg p-3">
+                                <div className=" rounded-lg p-3">
                                   <p className="text-gray-500 text-xs mb-1">Điểm rủi ro</p>
                                   <p className={`font-bold text-lg ${
                                     result.score <= 30 ? 'text-green-400' :
                                     result.score <= 60 ? 'text-yellow-400' : 'text-red-400'
                                   }`}>{result.score}/100</p>
                                 </div>
-                                <div className="bg-[#0d1320] rounded-lg p-3">
+                                <div className=" rounded-lg p-3">
                                   <p className="text-gray-500 text-xs mb-1">Độ tin cậy AI</p>
                                   <p className="text-gray-200 font-medium">{Math.round(result.aiConfidence * 100)}%</p>
                                 </div>
-                                <div className="bg-[#0d1320] rounded-lg p-3">
+                                <div className=" rounded-lg p-3">
                                   <p className="text-gray-500 text-xs mb-1">Phân loại</p>
                                   <p className="text-gray-200 font-medium">
                                     {typeof result.categoryGuess === 'object' 
@@ -391,7 +391,7 @@ export default function ScanPage() {
 
                               {/* SSL & Security */}
                               {result.websiteInfo && (
-                                <div className="bg-[#0d1320] rounded-lg p-3">
+                                <div className=" rounded-lg p-3">
                                   <p className="text-gray-400 text-xs mb-2 font-medium">Kiểm tra bảo mật</p>
                                   <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                                     <div className="flex items-center gap-2">
@@ -506,7 +506,7 @@ export default function ScanPage() {
 
                               {/* Website Info */}
                               {result.websiteInfo?.title && (
-                                <div className="bg-[#0d1320] rounded-lg p-3">
+                                <div className=" rounded-lg p-3">
                                   <p className="text-gray-400 text-xs mb-1">Tiêu đề website</p>
                                   <p className="text-gray-200">{result.websiteInfo.title}</p>
                                   {result.websiteInfo.description && (
@@ -545,7 +545,7 @@ export default function ScanPage() {
 
                               {/* Analysis Reasons */}
                               {result.reasons.length > 0 && (
-                                <div className="bg-[#0d1320] rounded-lg p-4">
+                                <div className=" rounded-lg p-4">
                                   <h4 className="text-white text-sm font-semibold mb-3 border-b border-gray-700 pb-2">Chi tiết phân tích</h4>
                                   <div className="space-y-2">
                                     {result.reasons.map((reason, i) => {
@@ -580,7 +580,7 @@ export default function ScanPage() {
 
                               {/* External Sources */}
                               {result.externalSources && result.externalSources.length > 0 && (
-                                <div className="bg-[#0d1320] rounded-lg p-3">
+                                <div className=" rounded-lg p-3">
                                   <p className="text-gray-400 text-xs mb-2 font-medium">Nguồn kiểm tra bên ngoài</p>
                                   <ul className="space-y-1">
                                     {result.externalSources.map((source, i) => (
@@ -592,7 +592,7 @@ export default function ScanPage() {
 
                               {/* Technologies */}
                               {result.websiteInfo?.technologies && result.websiteInfo.technologies.length > 0 && (
-                                <div className="bg-[#0d1320] rounded-lg p-3">
+                                <div className=" rounded-lg p-3">
                                   <p className="text-gray-400 text-xs mb-2 font-medium">Công nghệ phát hiện</p>
                                   <div className="flex flex-wrap gap-1">
                                     {result.websiteInfo.technologies.map((tech, i) => (
@@ -615,7 +615,7 @@ export default function ScanPage() {
                   </div>
 
                   {/* Tại sao kết quả này quan trọng */}
-                  <div className="bg-[#111827] rounded-xl border border-gray-800 overflow-hidden">
+                  <div className="bg-black/30 rounded-xl border border-gray-800 overflow-hidden">
                     <button
                       onClick={() => toggleSection('why')}
                       className="w-full p-4 flex items-center justify-between text-left hover:bg-[#1a2332] transition-colors"
@@ -650,7 +650,7 @@ export default function ScanPage() {
                   </div>
 
                   {/* Tôi nên làm gì tiếp theo */}
-                  <div className="bg-[#111827] rounded-xl border border-gray-800 overflow-hidden">
+                  <div className="bg-black/30 rounded-xl border border-gray-800 overflow-hidden">
                     <button
                       onClick={() => toggleSection('next')}
                       className="w-full p-4 flex items-center justify-between text-left hover:bg-[#1a2332] transition-colors"

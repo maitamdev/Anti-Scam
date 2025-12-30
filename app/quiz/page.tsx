@@ -153,7 +153,7 @@ export default function QuizPage() {
   // Mode selection screen
   if (!gameState) {
     return (
-      <div className="min-h-screen flex flex-col bg-[#0a0f1a]">
+      <div className="min-h-screen flex flex-col ">
         <Header />
         <main className="flex-1 pt-24 pb-12">
           <div className="max-w-7xl mx-auto px-4">
@@ -330,7 +330,7 @@ export default function QuizPage() {
     const timeTaken = gameState.endTime ? Math.round((gameState.endTime - gameState.startTime) / 1000) : 0
     
     return (
-      <div className="min-h-screen flex flex-col bg-[#0a0f1a]">
+      <div className="min-h-screen flex flex-col ">
         <Header />
         <main className="flex-1 pt-24 pb-12">
           <div className="max-w-7xl mx-auto px-4">
@@ -401,7 +401,7 @@ export default function QuizPage() {
 
   // Game screen
   return (
-    <div className="min-h-screen flex flex-col bg-[#0a0f1a]">
+    <div className="min-h-screen flex flex-col ">
       <Header />
       <main className="flex-1 pt-24 pb-12">
         <div className="max-w-7xl mx-auto px-4">

@@ -145,7 +145,7 @@ export default function PricingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-4">
+    <div className="min-h-screen bg-gray-50 dark: py-12 px-4">
       <div className="max-w-7xl mx-auto">
         {/* Back Button */}
         <Link 

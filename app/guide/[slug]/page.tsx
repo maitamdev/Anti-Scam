@@ -52,7 +52,7 @@ export default function GuideDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col bg-[#0a0f1a]">
+      <div className="min-h-screen flex flex-col">
         <Header />
         <main className="flex-1 pt-20 flex items-center justify-center">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
@@ -64,7 +64,7 @@ export default function GuideDetailPage() {
 
   if (error || !guide) {
     return (
-      <div className="min-h-screen flex flex-col bg-[#0a0f1a]">
+      <div className="min-h-screen flex flex-col">
         <Header />
         <main className="flex-1 pt-24 flex items-center justify-center">
           <div className="text-center">
@@ -133,7 +133,7 @@ export default function GuideDetailPage() {
   const sections = parseContent(guide.content)
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#0a0f1a]">
+    <div className="min-h-screen flex flex-col">
       <Header />
 
       <main className="flex-1 pt-24 pb-12">

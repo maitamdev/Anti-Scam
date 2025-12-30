@@ -117,7 +117,7 @@ export default function ImageUpload() {
             {!isLoading && (
               <button
                 onClick={clearAll}
-                className="absolute top-2 right-2 p-2 bg-gray-900/80 rounded-full hover:bg-gray-800"
+                className="absolute top-2 right-2 p-2 /80 rounded-full hover:bg-gray-800"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -153,7 +153,7 @@ export default function ImageUpload() {
               <img src={image} alt="Analyzed" className="w-full max-h-48 object-contain" />
               <button
                 onClick={clearAll}
-                className="absolute top-2 right-2 p-2 bg-gray-900/80 rounded-full hover:bg-gray-800"
+                className="absolute top-2 right-2 p-2 /80 rounded-full hover:bg-gray-800"
               >
                 <X className="w-5 h-5" />
               </button>

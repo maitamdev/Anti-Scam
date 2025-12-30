@@ -61,7 +61,7 @@ export default function OrganizationDashboard() {
   if (!session || session.user.tier === 'FREE' || session.user.tier === 'PRO') return null
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-50 dark:">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="flex items-center justify-between mb-8">
           <div>

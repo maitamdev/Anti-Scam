@@ -66,7 +66,7 @@ export default function BillingPage() {
   const isFree = session.user.tier === 'FREE'
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-50 dark:">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 flex items-center gap-3">
           <CreditCard size={32} />

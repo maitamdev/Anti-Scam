@@ -166,7 +166,7 @@ function ResultContent() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#0a0f1a]">
+    <div className="min-h-screen flex flex-col ">
       <Header />
 
       <main className="flex-1 pt-24 pb-12">
@@ -196,7 +196,7 @@ function ResultContent() {
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="md:col-span-2 bg-[#111827] rounded-2xl p-6 border border-gray-800 flex flex-col items-center justify-center"
+              className="md:col-span-2 bg-black/30 rounded-2xl p-6 border border-gray-800 flex flex-col items-center justify-center"
             >
               <div className="relative w-40 h-40 mb-4">
                 <svg className="w-full h-full transform -rotate-90">
@@ -234,7 +234,7 @@ function ResultContent() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="bg-[#111827] rounded-2xl p-5 border border-gray-800"
+                className="bg-black/30 rounded-2xl p-5 border border-gray-800"
               >
                 <p className="text-gray-400 text-sm mb-1">Lỗ hổng nghiêm trọng</p>
                 <p className="text-3xl font-bold text-red-400">{highCount}</p>
@@ -245,7 +245,7 @@ function ResultContent() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="bg-[#111827] rounded-2xl p-5 border border-gray-800"
+                className="bg-black/30 rounded-2xl p-5 border border-gray-800"
               >
                 <p className="text-gray-400 text-sm mb-1">Cảnh báo trung bình</p>
                 <p className="text-3xl font-bold text-yellow-400">{mediumCount}</p>
@@ -256,7 +256,7 @@ function ResultContent() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
-                className="bg-[#111827] rounded-2xl p-5 border border-gray-800"
+                className="bg-black/30 rounded-2xl p-5 border border-gray-800"
               >
                 <p className="text-gray-400 text-sm mb-1">Rủi ro thấp</p>
                 <p className="text-3xl font-bold text-blue-400">{lowCount}</p>
@@ -267,7 +267,7 @@ function ResultContent() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
-                className="bg-[#111827] rounded-2xl p-5 border border-gray-800"
+                className="bg-black/30 rounded-2xl p-5 border border-gray-800"
               >
                 <p className="text-gray-400 text-sm mb-1">Đã khắc phục</p>
                 <p className="text-3xl font-bold text-green-400">{fixedCount}</p>
@@ -296,7 +296,7 @@ function ResultContent() {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.6 + index * 0.1 }}
-                    className={`bg-[#111827] rounded-2xl border overflow-hidden ${
+                    className={`bg-black/30 rounded-2xl border overflow-hidden ${
                       vuln.severity === 'high' ? 'border-red-500/30' :
                       vuln.severity === 'medium' ? 'border-yellow-500/30' :
                       'border-gray-700'
@@ -341,7 +341,7 @@ function ResultContent() {
                           exit={{ height: 0, opacity: 0 }}
                           className="border-t border-gray-800"
                         >
-                          <div className="p-5 bg-[#0d1320]">
+                          <div className="p-5 ">
                             <p className="text-gray-300 mb-4 leading-relaxed">{vuln.recommendation}</p>
                             <div className="flex gap-3">
                               {vuln.guideLink && (
@@ -365,7 +365,7 @@ function ResultContent() {
                 ))}
               </div>
             ) : (
-              <div className="bg-[#111827] rounded-2xl p-8 border border-green-500/30 text-center">
+              <div className="bg-black/30 rounded-2xl p-8 border border-green-500/30 text-center">
                 <ShieldCheck className="w-16 h-16 text-green-400 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold mb-2">Tuyệt vời!</h3>
                 <p className="text-gray-400">Không phát hiện lỗ hổng bảo mật nghiêm trọng nào. Hãy tiếp tục duy trì thói quen bảo mật tốt!</p>
@@ -404,7 +404,7 @@ function ResultContent() {
 export default function ResultPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-[#0a0f1a] flex items-center justify-center">
+      <div className="min-h-screen  flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
       </div>
     }>

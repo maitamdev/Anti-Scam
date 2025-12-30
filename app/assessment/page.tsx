@@ -166,7 +166,7 @@ export default function AssessmentPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#0a0f1a]">
+    <div className="min-h-screen flex flex-col ">
       <Header />
 
       <main className="flex-1 pt-24 pb-12">
@@ -208,7 +208,7 @@ export default function AssessmentPage() {
               transition={{ duration: 0.3 }}
               className="grid lg:grid-cols-3 gap-6"
             >
-              <div className="lg:col-span-2 bg-[#111827] rounded-2xl p-8 border border-gray-800">
+              <div className="lg:col-span-2 bg-black/30 rounded-2xl p-8 border border-gray-800">
                 <p className="text-blue-400 text-sm font-medium mb-3">
                   Phần {Math.ceil((currentQuestion + 1) / 2)}: {question.category}
                 </p>
@@ -236,7 +236,7 @@ export default function AssessmentPage() {
                 </div>
               </div>
 
-              <div className="bg-[#111827] rounded-2xl p-6 border border-gray-800 h-fit">
+              <div className="bg-black/30 rounded-2xl p-6 border border-gray-800 h-fit">
                 <div className="flex items-center gap-2 text-blue-400 mb-3">
                   <Info className="w-5 h-5" />
                   <span className="font-medium">{question.explanation.title}</span>

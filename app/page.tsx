@@ -67,15 +67,12 @@ export default function Home() {
   const router = useRouter()
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#0a0f1a]">
+    <div className="min-h-screen flex flex-col ">
       <Header />
       
       <main className="flex-1">
         {/* Hero Section */}
         <section className="pt-20 sm:pt-28 pb-12 sm:pb-20 px-4 relative overflow-hidden">
-          {/* Static background gradient - no animations to prevent lag */}
-          <div className="absolute inset-0 bg-gradient-to-br from-[#0a0f1a] via-[#0d1320] to-[#0a0f1a] pointer-events-none" />
-          
           <div className="max-w-7xl mx-auto relative z-10">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               {/* Left content */}
@@ -189,14 +186,14 @@ export default function Home() {
         </section>
 
         {/* Stats Section */}
-        <section className="py-8 sm:py-12 px-4 border-y border-gray-800/50 bg-[#0d1320]/50">
+        <section className="py-8 sm:py-12 px-4 border-y border-gray-800/50 bg-black/20">
           <div className="max-w-7xl mx-auto">
             <StatsCounter stats={stats} />
           </div>
         </section>
 
         {/* Trust Badges */}
-        <section className="py-12 px-4 bg-gradient-to-b from-[#0d1320]/50 to-transparent">
+        <section className="py-12 px-4">
           <div className="max-w-7xl mx-auto">
             <TrustBadges />
           </div>
@@ -232,7 +229,7 @@ export default function Home() {
                 >
                   {/* Icon */}
                   <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-lg sm:rounded-xl bg-gradient-to-r ${feature.color} p-0.5 mb-4 sm:mb-6`}>
-                    <div className="w-full h-full bg-[#111827] rounded-lg sm:rounded-xl flex items-center justify-center">
+                    <div className="w-full h-full bg-black/30 rounded-lg sm:rounded-xl flex items-center justify-center">
                       <feature.icon className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
                     </div>
                   </div>
@@ -249,7 +246,7 @@ export default function Home() {
         </section>
 
         {/* How it Works Section */}
-        <section className="py-12 sm:py-20 px-4 bg-[#0d1320]">
+        <section className="py-12 sm:py-20 px-4 bg-black/20">
           <div className="max-w-7xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -280,7 +277,7 @@ export default function Home() {
                     <div className="hidden md:block absolute top-12 left-full w-full h-0.5 bg-gradient-to-r from-blue-500/50 to-transparent -translate-x-1/2" />
                   )}
                   
-                  <div className="bg-[#111827] rounded-xl sm:rounded-2xl p-5 sm:p-8 border border-gray-800 h-full">
+                  <div className="bg-black/30 rounded-xl sm:rounded-2xl p-5 sm:p-8 border border-gray-800 h-full">
                     <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 flex items-center justify-center mb-4 sm:mb-6">
                       <span className="text-white font-bold text-sm sm:text-base">{item.step}</span>
                     </div>
@@ -365,7 +362,7 @@ export default function Home() {
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
                     transition={{ delay: index * 0.1 }}
-                    className="bg-[#111827] rounded-lg sm:rounded-xl p-4 sm:p-6 border border-gray-800 hover:border-blue-500/30 transition-colors"
+                    className="bg-black/30 rounded-lg sm:rounded-xl p-4 sm:p-6 border border-gray-800 hover:border-blue-500/30 transition-colors"
                   >
                     <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-blue-500/20 flex items-center justify-center mb-3 sm:mb-4">
                       <item.icon className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" />
@@ -380,7 +377,7 @@ export default function Home() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-12 sm:py-20 px-4 bg-gradient-to-b from-[#0d1320] to-[#0a0f1a]">
+        <section className="py-12 sm:py-20 px-4 bg-black/20">
           <div className="max-w-4xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 20 }}

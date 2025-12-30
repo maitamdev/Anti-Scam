@@ -84,7 +84,7 @@ export default function RootLayout({
           `
         }} />
       </head>
-      <body className={`${inter.variable} ${montserrat.variable} font-sans bg-gray-900 text-white min-h-screen`}>
+      <body className={`${inter.variable} ${montserrat.variable} font-sans text-white min-h-screen`}>
         <Providers>
           {children}
         </Providers>
