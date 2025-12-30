@@ -135,7 +135,7 @@ export default function GuidePage() {
             {/* Sidebar */}
             <div className="lg:col-span-1">
               {/* Categories */}
-              <div className="bg-black/30 rounded-2xl p-6 border border-gray-800 mb-6">
+              <div className="bg-blue-900/10 rounded-2xl p-6 border border-gray-800 mb-6">
                 <h2 className="font-semibold mb-4">Danh mục</h2>
                 <div className="space-y-1">
                   <button
@@ -195,7 +195,7 @@ export default function GuidePage() {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Tìm kiếm bài viết, hướng dẫn..."
-                    className="w-full bg-black/30 border border-gray-800 rounded-xl py-3 pl-12 pr-4 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-colors"
+                    className="w-full bg-blue-900/10 border border-gray-800 rounded-xl py-3 pl-12 pr-4 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-colors"
                   />
                 </div>
               </form>
@@ -216,7 +216,7 @@ export default function GuidePage() {
                         transition={{ delay: index * 0.1 }}
                       >
                         <Link href={`/guide/${guide.slug}`}>
-                          <div className="bg-black/30 rounded-2xl border border-gray-800 overflow-hidden hover:border-gray-700 transition-colors group">
+                          <div className="bg-blue-900/10 rounded-2xl border border-gray-800 overflow-hidden hover:border-gray-700 transition-colors group">
                             {/* Thumbnail */}
                             <div className="aspect-video bg-gray-800 relative overflow-hidden">
                               <img
@@ -251,7 +251,7 @@ export default function GuidePage() {
                       <button
                         onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                         disabled={currentPage === 1}
-                        className="p-2 rounded-lg bg-black/30 border border-gray-800 disabled:opacity-50 disabled:cursor-not-allowed hover:border-gray-700 transition-colors"
+                        className="p-2 rounded-lg bg-blue-900/10 border border-gray-800 disabled:opacity-50 disabled:cursor-not-allowed hover:border-gray-700 transition-colors"
                       >
                         <ChevronLeft className="w-5 h-5" />
                       </button>
@@ -273,7 +273,7 @@ export default function GuidePage() {
                             className={`w-10 h-10 rounded-lg transition-colors ${
                               currentPage === pageNum
                                 ? 'bg-blue-600 text-white'
-                                : 'bg-black/30 border border-gray-800 hover:border-gray-700'
+                                : 'bg-blue-900/10 border border-gray-800 hover:border-gray-700'
                             }`}
                           >
                             {pageNum}
@@ -286,7 +286,7 @@ export default function GuidePage() {
                           <span className="text-gray-500">...</span>
                           <button
                             onClick={() => setCurrentPage(pagination.totalPages)}
-                            className="w-10 h-10 rounded-lg bg-black/30 border border-gray-800 hover:border-gray-700 transition-colors"
+                            className="w-10 h-10 rounded-lg bg-blue-900/10 border border-gray-800 hover:border-gray-700 transition-colors"
                           >
                             {pagination.totalPages}
                           </button>
@@ -296,7 +296,7 @@ export default function GuidePage() {
                       <button
                         onClick={() => setCurrentPage((p) => Math.min(pagination.totalPages, p + 1))}
                         disabled={currentPage === pagination.totalPages}
-                        className="p-2 rounded-lg bg-black/30 border border-gray-800 disabled:opacity-50 disabled:cursor-not-allowed hover:border-gray-700 transition-colors"
+                        className="p-2 rounded-lg bg-blue-900/10 border border-gray-800 disabled:opacity-50 disabled:cursor-not-allowed hover:border-gray-700 transition-colors"
                       >
                         <ChevronRight className="w-5 h-5" />
                       </button>

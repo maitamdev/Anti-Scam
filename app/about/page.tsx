@@ -107,7 +107,7 @@ export default function AboutPage() {
                 className="grid grid-cols-3 gap-4"
               >
                 {stats.map((stat, index) => (
-                  <div key={index} className="bg-black/30 rounded-xl p-6 text-center border border-gray-800">
+                  <div key={index} className="bg-blue-900/10 rounded-xl p-6 text-center border border-gray-800">
                     <p className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
                       {stat.value}
                     </p>
@@ -140,7 +140,7 @@ export default function AboutPage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
-                  className="bg-black/30 rounded-xl p-6 border border-gray-800"
+                  className="bg-blue-900/10 rounded-xl p-6 border border-gray-800"
                 >
                   <div className="w-12 h-12 rounded-lg bg-blue-500/20 flex items-center justify-center mb-4">
                     <feature.icon className="w-6 h-6 text-blue-400" />

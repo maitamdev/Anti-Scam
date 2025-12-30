@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Send, Loader2, CheckCircle, Upload } from 'lucide-react'
+import { Send, Loader2, CheckCircle } from 'lucide-react'
 
 export default function ReportForm() {
   const [url, setUrl] = useState('')
@@ -98,7 +98,7 @@ export default function ReportForm() {
           value={url}
           onChange={(e) => setUrl(e.target.value)}
           placeholder="https://example.com"
-          className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg focus:outline-none focus:border-blue-500"
+          className="w-full px-4 py-3 bg-blue-500/10 border border-blue-500/30 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/50 placeholder:text-gray-500"
           required
         />
       </div>
@@ -110,17 +110,17 @@ export default function ReportForm() {
         <select
           value={reason}
           onChange={(e) => setReason(e.target.value)}
-          className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg focus:outline-none focus:border-blue-500"
+          className="w-full px-4 py-3 bg-blue-500/10 border border-blue-500/30 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/50"
           required
         >
-          <option value="">Chọn loại</option>
-          <option value="phishing">Giả mạo đăng nhập (Phishing)</option>
-          <option value="scam">Lừa đảo tài chính</option>
-          <option value="fake_shop">Cửa hàng giả mạo</option>
-          <option value="malware">Phát tán mã độc</option>
-          <option value="fake_prize">Trúng thưởng giả</option>
-          <option value="investment">Đầu tư lừa đảo</option>
-          <option value="other">Khác</option>
+          <option value="" className="bg-[#0a0f1a]">Chọn loại</option>
+          <option value="phishing" className="bg-[#0a0f1a]">Giả mạo đăng nhập (Phishing)</option>
+          <option value="scam" className="bg-[#0a0f1a]">Lừa đảo tài chính</option>
+          <option value="fake_shop" className="bg-[#0a0f1a]">Cửa hàng giả mạo</option>
+          <option value="malware" className="bg-[#0a0f1a]">Phát tán mã độc</option>
+          <option value="fake_prize" className="bg-[#0a0f1a]">Trúng thưởng giả</option>
+          <option value="investment" className="bg-[#0a0f1a]">Đầu tư lừa đảo</option>
+          <option value="other" className="bg-[#0a0f1a]">Khác</option>
         </select>
       </div>
 
@@ -133,7 +133,7 @@ export default function ReportForm() {
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Mô tả cách thức lừa đảo, nội dung đáng ngờ..."
           rows={4}
-          className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg focus:outline-none focus:border-blue-500 resize-none"
+          className="w-full px-4 py-3 bg-blue-500/10 border border-blue-500/30 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/50 resize-none placeholder:text-gray-500"
         />
       </div>
 
@@ -144,7 +144,7 @@ export default function ReportForm() {
       <button
         type="submit"
         disabled={isSubmitting || !url.trim() || !reason}
-        className="w-full py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+        className="w-full py-3 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg font-medium transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20"
       >
         {isSubmitting ? (
           <>

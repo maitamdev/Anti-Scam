@@ -241,7 +241,7 @@ export default function ScanPage() {
                 exit={{ opacity: 0, x: -20 }}
                 className="mb-10"
               >
-                <div className="bg-black/30 rounded-2xl p-6 border border-gray-800">
+                <div className="bg-blue-900/10 rounded-2xl p-6 border border-gray-800">
                   <div className="text-center mb-4">
                     <p className="text-gray-400 text-sm">
                       Tải lên ảnh chụp màn hình tin nhắn, email, hoặc website đáng ngờ để AI phân tích
@@ -272,7 +272,7 @@ export default function ScanPage() {
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
                   placeholder="Dán URL website vào đây..."
-                  className="w-full bg-black/30 border border-gray-700 rounded-lg sm:rounded-xl py-3 sm:py-4 pl-24 sm:pl-32 pr-4 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all text-sm sm:text-base"
+                  className="w-full bg-blue-900/10 border border-gray-700 rounded-lg sm:rounded-xl py-3 sm:py-4 pl-24 sm:pl-32 pr-4 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all text-sm sm:text-base"
                   disabled={isLoading}
                 />
               </div>
@@ -320,7 +320,7 @@ export default function ScanPage() {
                 <h2 className="text-xl font-semibold mb-4">Kết quả phân tích</h2>
 
                 {/* Main Result Card with Mascot */}
-                <div className={`bg-black/30 rounded-2xl p-6 border ${config.borderColor} mb-4`}>
+                <div className={`bg-blue-900/10 rounded-2xl p-6 border ${config.borderColor} mb-4`}>
                   <div className="flex flex-col sm:flex-row items-center gap-5">
                     {/* Mascot */}
                     <div className="flex-shrink-0">
@@ -340,7 +340,7 @@ export default function ScanPage() {
                 {/* Expandable Sections */}
                 <div className="space-y-3">
                   {/* Chi tiết phân tích */}
-                  <div className="bg-black/30 rounded-xl border border-gray-800 overflow-hidden">
+                  <div className="bg-blue-900/10 rounded-xl border border-gray-800 overflow-hidden">
                     <button
                       onClick={() => toggleSection('details')}
                       className="w-full p-4 flex items-center justify-between text-left hover:bg-[#1a2332] transition-colors"
@@ -458,25 +458,25 @@ export default function ScanPage() {
                                   </div>
                                   
                                   <div className="grid grid-cols-4 gap-2 mb-3">
-                                    <div className="bg-gray-800/50 rounded p-2 text-center">
+                                    <div className="bg-blue-500/10 rounded p-2 text-center">
                                       <div className="text-lg font-bold text-red-400">
                                         {result.virusTotal.stats.malicious}
                                       </div>
                                       <div className="text-[10px] text-gray-400">Độc hại</div>
                                     </div>
-                                    <div className="bg-gray-800/50 rounded p-2 text-center">
+                                    <div className="bg-blue-500/10 rounded p-2 text-center">
                                       <div className="text-lg font-bold text-yellow-400">
                                         {result.virusTotal.stats.suspicious}
                                       </div>
                                       <div className="text-[10px] text-gray-400">Đáng ngờ</div>
                                     </div>
-                                    <div className="bg-gray-800/50 rounded p-2 text-center">
+                                    <div className="bg-blue-500/10 rounded p-2 text-center">
                                       <div className="text-lg font-bold text-green-400">
                                         {result.virusTotal.stats.harmless}
                                       </div>
                                       <div className="text-[10px] text-gray-400">An toàn</div>
                                     </div>
-                                    <div className="bg-gray-800/50 rounded p-2 text-center">
+                                    <div className="bg-blue-500/10 rounded p-2 text-center">
                                       <div className="text-lg font-bold text-gray-400">
                                         {result.virusTotal.stats.undetected}
                                       </div>
@@ -615,7 +615,7 @@ export default function ScanPage() {
                   </div>
 
                   {/* Tại sao kết quả này quan trọng */}
-                  <div className="bg-black/30 rounded-xl border border-gray-800 overflow-hidden">
+                  <div className="bg-blue-900/10 rounded-xl border border-gray-800 overflow-hidden">
                     <button
                       onClick={() => toggleSection('why')}
                       className="w-full p-4 flex items-center justify-between text-left hover:bg-[#1a2332] transition-colors"
@@ -650,7 +650,7 @@ export default function ScanPage() {
                   </div>
 
                   {/* Tôi nên làm gì tiếp theo */}
-                  <div className="bg-black/30 rounded-xl border border-gray-800 overflow-hidden">
+                  <div className="bg-blue-900/10 rounded-xl border border-gray-800 overflow-hidden">
                     <button
                       onClick={() => toggleSection('next')}
                       className="w-full p-4 flex items-center justify-between text-left hover:bg-[#1a2332] transition-colors"

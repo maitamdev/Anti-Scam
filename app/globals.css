@@ -19,8 +19,12 @@ body {
   background-attachment: fixed;
   background-repeat: no-repeat;
   color: var(--text-primary);
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: var(--font-title), 'Space Grotesk', Helvetica, sans-serif !important;
   animation: bg-slow-zoom 10s ease-in-out infinite;
+}
+
+* {
+  font-family: inherit;
 }
 
 /* Gentle background zoom animation */
@@ -98,6 +102,16 @@ body::before {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+/* Bold title style - like "BẢO VỆ BẢN THÂN" */
+.title-bold {
+  font-family: var(--font-title), 'Space Grotesk', Helvetica, sans-serif;
+  font-weight: 700;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5), 0 0 20px rgba(59, 130, 246, 0.3);
 }
 
 /* Glass effect */

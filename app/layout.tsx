@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter, Montserrat } from 'next/font/google'
+import { Inter, Montserrat, Space_Grotesk } from 'next/font/google'
 import './globals.css'
 import { Providers } from './components/Providers'
 
@@ -12,6 +12,12 @@ const montserrat = Montserrat({
   subsets: ['latin', 'vietnamese'],
   weight: ['400', '500', '600', '700', '800', '900'],
   variable: '--font-display',
+})
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ['latin', 'vietnamese'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-title',
 })
 
 export const metadata: Metadata = {
@@ -84,7 +90,7 @@ export default function RootLayout({
           `
         }} />
       </head>
-      <body className={`${inter.variable} ${montserrat.variable} font-sans text-white min-h-screen`}>
+      <body className={`${inter.variable} ${montserrat.variable} ${spaceGrotesk.variable} font-sans text-white min-h-screen`}>
         <Providers>
           {children}
         </Providers>

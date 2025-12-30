@@ -81,7 +81,7 @@ export default function DashboardPage() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-black/30 rounded-2xl p-6 border border-gray-800"
+              className="bg-blue-900/10 rounded-2xl p-6 border border-gray-800"
             >
               <Shield className="w-8 h-8 text-blue-500 mb-3" />
               <p className="text-3xl font-bold">{stats?.totalScans.toLocaleString() || 0}</p>
@@ -92,7 +92,7 @@ export default function DashboardPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="bg-black/30 rounded-2xl p-6 border border-gray-800"
+              className="bg-blue-900/10 rounded-2xl p-6 border border-gray-800"
             >
               <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center mb-3">
                 <span className="text-lg">✓</span>
@@ -105,7 +105,7 @@ export default function DashboardPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="bg-black/30 rounded-2xl p-6 border border-gray-800"
+              className="bg-blue-900/10 rounded-2xl p-6 border border-gray-800"
             >
               <AlertTriangle className="w-8 h-8 text-red-500 mb-3" />
               <p className="text-3xl font-bold text-red-400">{stats?.dangerousCount.toLocaleString() || 0}</p>
@@ -116,7 +116,7 @@ export default function DashboardPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="bg-black/30 rounded-2xl p-6 border border-gray-800"
+              className="bg-blue-900/10 rounded-2xl p-6 border border-gray-800"
             >
               <Users className="w-8 h-8 text-purple-500 mb-3" />
               <p className="text-3xl font-bold">{stats?.reportsCount.toLocaleString() || 0}</p>
@@ -129,7 +129,7 @@ export default function DashboardPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="bg-black/30 rounded-2xl p-6 border border-gray-800"
+            className="bg-blue-900/10 rounded-2xl p-6 border border-gray-800"
           >
             <h2 className="text-lg font-semibold mb-6">Tỷ lệ phân loại</h2>
             

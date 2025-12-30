@@ -12,8 +12,9 @@ const config: Config = {
         'xs': '475px',
       },
       fontFamily: {
-        sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
+        sans: ['var(--font-title)', 'Space Grotesk', 'Helvetica', 'sans-serif'],
         display: ['var(--font-display)', 'system-ui', 'sans-serif'],
+        title: ['var(--font-title)', 'Space Grotesk', 'Helvetica', 'sans-serif'],
       },
       colors: {
         safe: '#22c55e',

@@ -40,7 +40,7 @@ export default function ReportPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="bg-gray-800 rounded-2xl p-6 border border-gray-700"
+              className="bg-blue-500/10 backdrop-blur-sm rounded-2xl p-6 border border-blue-500/30"
             >
               <ReportForm />
             </motion.div>

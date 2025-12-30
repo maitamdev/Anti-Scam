@@ -98,14 +98,14 @@ export default function Home() {
                   <br />
                   <span className="whitespace-nowrap">
                     <span className="text-white drop-shadow-lg">lướt mạng </span>
-                    <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent relative z-30" style={{ textShadow: '0 0 30px rgba(59, 130, 246, 0.5)', letterSpacing: '0.08em' }}>
+                    <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent">
                       an toàn?
                     </span>
                   </span>
                 </h1>
                 
-                <p className="text-base sm:text-lg text-gray-400 mb-8 leading-relaxed max-w-xl">
-                  Kiểm tra URL và hình ảnh để <span className="text-white font-medium">phát hiện dấu hiệu lừa đảo</span>. 
+                <p className="text-base sm:text-lg text-gray-200 mb-8 leading-relaxed max-w-xl">
+                  Kiểm tra URL và hình ảnh để <span className="text-white font-semibold">phát hiện dấu hiệu lừa đảo</span>. 
                   Công cụ miễn phí giúp bạn cẩn thận hơn khi lướt web.
                 </p>
                 
@@ -187,7 +187,7 @@ export default function Home() {
         </section>
 
         {/* Stats Section */}
-        <section className="py-8 sm:py-12 px-4 border-y border-gray-800/50 bg-black/20">
+        <section className="py-8 sm:py-12 px-4 border-y border-gray-800/50 bg-blue-900/5">
           <div className="max-w-7xl mx-auto">
             <StatsCounter stats={stats} />
           </div>
@@ -230,7 +230,7 @@ export default function Home() {
                 >
                   {/* Icon */}
                   <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-lg sm:rounded-xl bg-gradient-to-r ${feature.color} p-0.5 mb-4 sm:mb-6`}>
-                    <div className="w-full h-full bg-black/30 rounded-lg sm:rounded-xl flex items-center justify-center">
+                    <div className="w-full h-full bg-blue-900/10 rounded-lg sm:rounded-xl flex items-center justify-center">
                       <feature.icon className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
                     </div>
                   </div>
@@ -247,7 +247,7 @@ export default function Home() {
         </section>
 
         {/* How it Works Section */}
-        <section className="py-12 sm:py-20 px-4 bg-black/20">
+        <section className="py-12 sm:py-20 px-4 bg-blue-900/5">
           <div className="max-w-7xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -278,7 +278,7 @@ export default function Home() {
                     <div className="hidden md:block absolute top-12 left-full w-full h-0.5 bg-gradient-to-r from-blue-500/50 to-transparent -translate-x-1/2" />
                   )}
                   
-                  <div className="bg-black/30 rounded-xl sm:rounded-2xl p-5 sm:p-8 border border-gray-800 h-full">
+                  <div className="bg-blue-900/10 rounded-xl sm:rounded-2xl p-5 sm:p-8 border border-gray-800 h-full">
                     <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 flex items-center justify-center mb-4 sm:mb-6">
                       <span className="text-white font-bold text-sm sm:text-base">{item.step}</span>
                     </div>
@@ -363,7 +363,7 @@ export default function Home() {
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
                     transition={{ delay: index * 0.1 }}
-                    className="bg-black/30 rounded-lg sm:rounded-xl p-4 sm:p-6 border border-gray-800 hover:border-blue-500/30 transition-colors"
+                    className="bg-blue-900/10 rounded-lg sm:rounded-xl p-4 sm:p-6 border border-gray-800 hover:border-blue-500/30 transition-colors"
                   >
                     <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-blue-500/20 flex items-center justify-center mb-3 sm:mb-4">
                       <item.icon className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" />
@@ -378,7 +378,7 @@ export default function Home() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-12 sm:py-20 px-4 bg-black/20">
+        <section className="py-12 sm:py-20 px-4 bg-blue-900/5">
           <div className="max-w-4xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
