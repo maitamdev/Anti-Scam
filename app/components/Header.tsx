@@ -78,10 +78,11 @@ export default function Header() {
               />
             </motion.div>
             <div className="flex flex-col">
-              <span className="text-lg sm:text-xl font-bold bg-gradient-to-r from-white via-blue-100 to-cyan-200 bg-clip-text text-transparent">
-                ANTI-SCAM
+              <span className="text-lg sm:text-xl font-bold tracking-wide">
+                <span className="text-white">ANTI</span>
+                <span className="text-blue-500">-</span>
+                <span className="text-cyan-400">SCAM</span>
               </span>
-              
             </div>
           </Link>
 
