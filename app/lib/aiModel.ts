@@ -70,12 +70,17 @@ async function fetchContent(url: string): Promise<WebContent | null> {
       .trim()
       .slice(0, 6000)
 
+    // Improved login form detection - check for password input OR login-related keywords in links/text
+    const hasPasswordInput = /<input[^>]*type=["']password["']/i.test(html)
+    const hasLoginKeywords = /login|signin|sign.in|dang.nhap|đăng.nhập|auth|account/i.test(html)
+    const hasLoginLinks = links.some(l => /login|signin|auth|account/i.test(l))
+    
     return {
       title,
       description,
       bodyText,
-      hasLoginForm: /<input[^>]*type=["']password["']/i.test(html),
-      hasPaymentForm: /credit.?card|cvv|card.?number|expir/i.test(html),
+      hasLoginForm: hasPasswordInput || (hasLoginKeywords && hasLoginLinks),
+      hasPaymentForm: /credit.?card|cvv|card.?number|expir|thanh.?toan|payment/i.test(html),
       links,
       scripts,
     }

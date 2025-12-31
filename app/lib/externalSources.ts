@@ -219,16 +219,15 @@ export async function checkExternalSources(domain: string, fullUrl?: string): Pr
     }
   }
 
-  // Check VirusTotal (PRO version only - deep analysis)
+  // Check VirusTotal (works with free API key too)
   let virusTotalData
   const vtApiKey = process.env.VIRUSTOTAL_API_KEY_PRO || process.env.VIRUSTOTAL_API_KEY
   
-  if (vtApiKey && vtApiKey.length > 64) {
-    // Only use VirusTotal if PRO key is configured (64+ chars)
+  if (vtApiKey && vtApiKey.length >= 64 && !vtApiKey.includes('xxx') && !vtApiKey.includes('your_')) {
     try {
-      console.log('[VirusTotal PRO] Deep analysis:', domain)
+      console.log('[VirusTotal] Checking:', domain)
       const vtResult = await checkVirusTotal(`https://${domain}`)
-      console.log('[VirusTotal PRO] Result:', vtResult)
+      console.log('[VirusTotal] Result:', vtResult)
       if (vtResult.notFound) {
         virusTotalData = {
           detected: false,
@@ -243,12 +242,12 @@ export async function checkExternalSources(domain: string, fullUrl?: string): Pr
         }
         if (vtResult.detected) {
           sources.push(
-            `VirusTotal PRO: ${vtResult.stats.malicious} engines phát hiện nguy hiểm`
+            `VirusTotal: ${vtResult.stats.malicious} engines phát hiện nguy hiểm`
           )
         }
       }
     } catch (error) {
-      console.error('[VirusTotal PRO] Error:', error)
+      console.error('[VirusTotal] Error:', error)
     }
   }
   

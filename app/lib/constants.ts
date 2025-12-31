@@ -113,11 +113,14 @@ export const SOCIAL_DOMAINS = [
 ]
 
 // Suspicious TLDs - expanded list
+// Note: .info, .io, .co, .app are legitimate TLDs used by many real businesses - NOT included
 export const SUSPICIOUS_TLDS = [
-  '.xyz', '.top', '.club', '.work', '.click',
-  '.link', '.info', '.online', '.site', '.website',
-  '.space', '.fun', '.icu', '.buzz', '.monster',
+  // High risk - commonly abused for scams
   '.tk', '.ml', '.ga', '.cf', '.gq', '.pw',
+  '.click', '.link', '.buzz', '.icu', '.monster',
+  // Medium risk
+  '.xyz', '.top', '.club', '.work', '.online', 
+  '.site', '.website', '.space', '.fun',
   '.loan', '.win', '.bid', '.trade', '.date',
   '.review', '.stream', '.download', '.racing',
   '.accountant', '.cricket', '.science', '.party',

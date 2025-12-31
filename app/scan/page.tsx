@@ -793,37 +793,49 @@ export default function ScanPage() {
                                 </div>
                               )}
 
-                              {/* VirusTotal Results */}
-                              {result.virusTotal && result.virusTotal.stats && (result.virusTotal.stats.malicious > 0 || result.virusTotal.stats.suspicious > 0) && (
-                                <div className="bg-gradient-to-r from-blue-500/10 to-blue-600/10 border border-blue-500/20 rounded-lg p-3">
+                              {/* VirusTotal Results - Always show when available */}
+                              {result.virusTotal && result.virusTotal.stats && (
+                                <div className={`bg-gradient-to-r ${
+                                  result.virusTotal.stats.malicious > 0 
+                                    ? 'from-red-500/10 to-red-600/10 border-red-500/20' 
+                                    : result.virusTotal.stats.suspicious > 0
+                                    ? 'from-yellow-500/10 to-yellow-600/10 border-yellow-500/20'
+                                    : 'from-green-500/10 to-green-600/10 border-green-500/20'
+                                } border rounded-lg p-3`}>
                                   <div className="flex items-center gap-2 mb-3">
-                                    <Database className="w-4 h-4 text-blue-400" />
+                                    <Database className={`w-4 h-4 ${
+                                      result.virusTotal.stats.malicious > 0 ? 'text-red-400' :
+                                      result.virusTotal.stats.suspicious > 0 ? 'text-yellow-400' : 'text-green-400'
+                                    }`} />
                                     <p className="text-gray-200 text-xs font-medium">VirusTotal Security Scan</p>
-                                    <span className="ml-auto text-xs bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded">
+                                    <span className={`ml-auto text-xs px-2 py-0.5 rounded ${
+                                      result.virusTotal.stats.malicious > 0 ? 'bg-red-500/20 text-red-400' :
+                                      result.virusTotal.stats.suspicious > 0 ? 'bg-yellow-500/20 text-yellow-400' : 'bg-green-500/20 text-green-400'
+                                    }`}>
                                       {result.virusTotal.stats.total} engines
                                     </span>
                                   </div>
                                   
                                   <div className="grid grid-cols-4 gap-2 mb-3">
-                                    <div className="bg-blue-500/10 rounded p-2 text-center">
+                                    <div className="bg-black/20 rounded p-2 text-center">
                                       <div className="text-lg font-bold text-red-400">
                                         {result.virusTotal.stats.malicious}
                                       </div>
                                       <div className="text-[10px] text-gray-400">Độc hại</div>
                                     </div>
-                                    <div className="bg-blue-500/10 rounded p-2 text-center">
+                                    <div className="bg-black/20 rounded p-2 text-center">
                                       <div className="text-lg font-bold text-yellow-400">
                                         {result.virusTotal.stats.suspicious}
                                       </div>
                                       <div className="text-[10px] text-gray-400">Đáng ngờ</div>
                                     </div>
-                                    <div className="bg-blue-500/10 rounded p-2 text-center">
+                                    <div className="bg-black/20 rounded p-2 text-center">
                                       <div className="text-lg font-bold text-green-400">
                                         {result.virusTotal.stats.harmless}
                                       </div>
                                       <div className="text-[10px] text-gray-400">An toàn</div>
                                     </div>
-                                    <div className="bg-blue-500/10 rounded p-2 text-center">
+                                    <div className="bg-black/20 rounded p-2 text-center">
                                       <div className="text-lg font-bold text-gray-400">
                                         {result.virusTotal.stats.undetected}
                                       </div>
@@ -846,7 +858,14 @@ export default function ScanPage() {
                                           ⚠️ {result.virusTotal.stats.suspicious} antivirus đánh dấu đáng ngờ
                                         </span>
                                       </>
-                                    ) : null}
+                                    ) : (
+                                      <>
+                                        <CheckCircle className="w-4 h-4 text-green-400" />
+                                        <span className="text-green-400 font-medium">
+                                          ✓ Không phát hiện mối đe dọa từ {result.virusTotal.stats.total} antivirus
+                                        </span>
+                                      </>
+                                    )}
                                   </div>
                                 </div>
                               )}
