@@ -21,7 +21,10 @@ import {
   Mail,
   Phone,
   Building2,
-  Info
+  Info,
+  Globe,
+  Zap,
+  FileText
 } from 'lucide-react'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
@@ -887,40 +890,230 @@ export default function ScanPage() {
                                 </div>
                               )}
 
-                              {/* Analysis Reasons */}
-                              {result.reasons.length > 0 && (
-                                <div className=" rounded-lg p-4">
-                                  <h4 className="text-white text-sm font-semibold mb-3 border-b border-gray-700 pb-2">Chi tiết phân tích</h4>
-                                  <div className="space-y-2">
-                                    {result.reasons.map((reason, i) => {
-                                      // Remove ALL emoji icons from reason text - ES5 compatible
-                                      const cleanReason = reason.replace(/[\uD800-\uDFFF]./g, '').replace(/[\u2600-\u27BF]/g, '').trim()
-                                      
-                                      // Determine reason type based on content
-                                      const isWarning = cleanReason.includes('Domain:') || cleanReason.includes('không phải là domain') || cleanReason.includes('có thể được xem là đáng ngờ')
-                                      const isInfo = cleanReason.includes('Website') || cleanReason.includes('Mục đích:')
-                                      const isDanger = cleanReason.includes('vi phạm bản quyền') || cleanReason.includes('không rõ ràng')
-                                      
-                                      return (
-                                        <div key={i} className={`p-3 rounded-lg border ${
-                                          isDanger ? 'bg-red-500/5 border-red-500/20' :
-                                          isWarning ? 'bg-yellow-500/5 border-yellow-500/20' :
-                                          'bg-blue-500/5 border-blue-500/20'
-                                        }`}>
-                                          <div className="flex items-start gap-3">
-                                            <div className={`w-1.5 h-1.5 rounded-full mt-2 flex-shrink-0 ${
-                                              isDanger ? 'bg-red-400' :
-                                              isWarning ? 'bg-yellow-400' :
-                                              'bg-blue-400'
-                                            }`} />
-                                            <p className="text-gray-200 text-sm leading-relaxed flex-1">{cleanReason}</p>
+                              {/* Analysis Reasons - Enhanced UI */}
+                              {result.reasons.length > 0 && (() => {
+                                // Parse reasons into categories
+                                const parseReasons = (reasons: string[]) => {
+                                  const categories: {
+                                    loaiWebsite: string | null;
+                                    chucNang: string | null;
+                                    phanTichDomain: string | null;
+                                    baoMat: string | null;
+                                    ketLuan: string | null;
+                                    other: string[];
+                                  } = {
+                                    loaiWebsite: null,
+                                    chucNang: null,
+                                    phanTichDomain: null,
+                                    baoMat: null,
+                                    ketLuan: null,
+                                    other: []
+                                  };
+                                  
+                                  reasons.forEach(reason => {
+                                    const cleanReason = reason.replace(/[\uD800-\uDFFF]./g, '').replace(/[\u2600-\u27BF]/g, '').trim();
+                                    
+                                    if (cleanReason.toLowerCase().startsWith('loại website:') || cleanReason.toLowerCase().startsWith('loai website:')) {
+                                      categories.loaiWebsite = cleanReason.replace(/^loại website:|^loai website:/i, '').trim();
+                                    } else if (cleanReason.toLowerCase().startsWith('chức năng:') || cleanReason.toLowerCase().startsWith('chuc nang:')) {
+                                      categories.chucNang = cleanReason.replace(/^chức năng:|^chuc nang:/i, '').trim();
+                                    } else if (cleanReason.toLowerCase().startsWith('phân tích domain:') || cleanReason.toLowerCase().startsWith('phan tich domain:')) {
+                                      categories.phanTichDomain = cleanReason.replace(/^phân tích domain:|^phan tich domain:/i, '').trim();
+                                    } else if (cleanReason.toLowerCase().startsWith('bảo mật:') || cleanReason.toLowerCase().startsWith('bao mat:')) {
+                                      categories.baoMat = cleanReason.replace(/^bảo mật:|^bao mat:/i, '').trim();
+                                    } else if (cleanReason.toLowerCase().startsWith('kết luận:') || cleanReason.toLowerCase().startsWith('ket luan:')) {
+                                      categories.ketLuan = cleanReason.replace(/^kết luận:|^ket luan:/i, '').trim();
+                                    } else if (cleanReason.trim()) {
+                                      categories.other.push(cleanReason);
+                                    }
+                                  });
+                                  
+                                  return categories;
+                                };
+                                
+                                const parsed = parseReasons(result.reasons);
+                                const hasStructuredData = parsed.loaiWebsite || parsed.chucNang || parsed.phanTichDomain || parsed.baoMat || parsed.ketLuan;
+                                
+                                return (
+                                  <div className="rounded-xl p-4 bg-gradient-to-br from-gray-800/50 to-gray-900/50 border border-gray-700/50">
+                                    <h4 className="text-white text-sm font-semibold mb-4 flex items-center gap-2">
+                                      <FileText className="w-4 h-4 text-cyan-400" />
+                                      Chi tiết phân tích AI
+                                    </h4>
+                                    
+                                    {hasStructuredData ? (
+                                      <div className="space-y-3">
+                                        {/* Loại Website */}
+                                        {parsed.loaiWebsite && (
+                                          <div className="bg-gradient-to-r from-purple-500/10 to-purple-600/5 border border-purple-500/20 rounded-lg p-3">
+                                            <div className="flex items-start gap-3">
+                                              <div className="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center flex-shrink-0">
+                                                <Globe className="w-4 h-4 text-purple-400" />
+                                              </div>
+                                              <div className="flex-1 min-w-0">
+                                                <p className="text-purple-400 text-xs font-medium mb-1">Loại website</p>
+                                                <p className="text-gray-200 text-sm leading-relaxed">{parsed.loaiWebsite}</p>
+                                              </div>
+                                            </div>
                                           </div>
-                                        </div>
-                                      )
-                                    })}
+                                        )}
+                                        
+                                        {/* Chức năng */}
+                                        {parsed.chucNang && (
+                                          <div className="bg-gradient-to-r from-blue-500/10 to-blue-600/5 border border-blue-500/20 rounded-lg p-3">
+                                            <div className="flex items-start gap-3">
+                                              <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center flex-shrink-0">
+                                                <Zap className="w-4 h-4 text-blue-400" />
+                                              </div>
+                                              <div className="flex-1 min-w-0">
+                                                <p className="text-blue-400 text-xs font-medium mb-1">Chức năng</p>
+                                                <p className="text-gray-200 text-sm leading-relaxed">{parsed.chucNang}</p>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        )}
+                                        
+                                        {/* Phân tích Domain */}
+                                        {parsed.phanTichDomain && (
+                                          <div className="bg-gradient-to-r from-cyan-500/10 to-cyan-600/5 border border-cyan-500/20 rounded-lg p-3">
+                                            <div className="flex items-start gap-3">
+                                              <div className="w-8 h-8 rounded-lg bg-cyan-500/20 flex items-center justify-center flex-shrink-0">
+                                                <Link2 className="w-4 h-4 text-cyan-400" />
+                                              </div>
+                                              <div className="flex-1 min-w-0">
+                                                <p className="text-cyan-400 text-xs font-medium mb-1">Phân tích domain</p>
+                                                <p className="text-gray-200 text-sm leading-relaxed">{parsed.phanTichDomain}</p>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        )}
+                                        
+                                        {/* Bảo mật */}
+                                        {parsed.baoMat && (
+                                          <div className={`bg-gradient-to-r ${
+                                            parsed.baoMat.toLowerCase().includes('an toàn') || parsed.baoMat.toLowerCase().includes('an toan')
+                                              ? 'from-green-500/10 to-green-600/5 border-green-500/20'
+                                              : parsed.baoMat.toLowerCase().includes('rủi ro') || parsed.baoMat.toLowerCase().includes('nguy hiểm')
+                                              ? 'from-red-500/10 to-red-600/5 border-red-500/20'
+                                              : 'from-yellow-500/10 to-yellow-600/5 border-yellow-500/20'
+                                          } border rounded-lg p-3`}>
+                                            <div className="flex items-start gap-3">
+                                              <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                                                parsed.baoMat.toLowerCase().includes('an toàn') || parsed.baoMat.toLowerCase().includes('an toan')
+                                                  ? 'bg-green-500/20'
+                                                  : parsed.baoMat.toLowerCase().includes('rủi ro') || parsed.baoMat.toLowerCase().includes('nguy hiểm')
+                                                  ? 'bg-red-500/20'
+                                                  : 'bg-yellow-500/20'
+                                              }`}>
+                                                <Shield className={`w-4 h-4 ${
+                                                  parsed.baoMat.toLowerCase().includes('an toàn') || parsed.baoMat.toLowerCase().includes('an toan')
+                                                    ? 'text-green-400'
+                                                    : parsed.baoMat.toLowerCase().includes('rủi ro') || parsed.baoMat.toLowerCase().includes('nguy hiểm')
+                                                    ? 'text-red-400'
+                                                    : 'text-yellow-400'
+                                                }`} />
+                                              </div>
+                                              <div className="flex-1 min-w-0">
+                                                <p className={`text-xs font-medium mb-1 ${
+                                                  parsed.baoMat.toLowerCase().includes('an toàn') || parsed.baoMat.toLowerCase().includes('an toan')
+                                                    ? 'text-green-400'
+                                                    : parsed.baoMat.toLowerCase().includes('rủi ro') || parsed.baoMat.toLowerCase().includes('nguy hiểm')
+                                                    ? 'text-red-400'
+                                                    : 'text-yellow-400'
+                                                }`}>Bảo mật</p>
+                                                <p className="text-gray-200 text-sm leading-relaxed">{parsed.baoMat}</p>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        )}
+                                        
+                                        {/* Kết luận */}
+                                        {parsed.ketLuan && (
+                                          <div className={`bg-gradient-to-r ${
+                                            result.score <= 30
+                                              ? 'from-green-500/15 to-green-600/5 border-green-500/30'
+                                              : result.score <= 60
+                                              ? 'from-yellow-500/15 to-yellow-600/5 border-yellow-500/30'
+                                              : 'from-red-500/15 to-red-600/5 border-red-500/30'
+                                          } border rounded-lg p-4`}>
+                                            <div className="flex items-start gap-3">
+                                              <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
+                                                result.score <= 30
+                                                  ? 'bg-green-500/20'
+                                                  : result.score <= 60
+                                                  ? 'bg-yellow-500/20'
+                                                  : 'bg-red-500/20'
+                                              }`}>
+                                                {result.score <= 30 ? (
+                                                  <CheckCircle className="w-5 h-5 text-green-400" />
+                                                ) : result.score <= 60 ? (
+                                                  <AlertTriangle className="w-5 h-5 text-yellow-400" />
+                                                ) : (
+                                                  <XCircle className="w-5 h-5 text-red-400" />
+                                                )}
+                                              </div>
+                                              <div className="flex-1 min-w-0">
+                                                <p className={`text-xs font-semibold mb-1 ${
+                                                  result.score <= 30
+                                                    ? 'text-green-400'
+                                                    : result.score <= 60
+                                                    ? 'text-yellow-400'
+                                                    : 'text-red-400'
+                                                }`}>Kết luận</p>
+                                                <p className="text-gray-100 text-sm leading-relaxed font-medium">{parsed.ketLuan}</p>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        )}
+                                        
+                                        {/* Other reasons */}
+                                        {parsed.other.length > 0 && (
+                                          <div className="bg-gray-800/30 border border-gray-700/30 rounded-lg p-3">
+                                            <p className="text-gray-400 text-xs font-medium mb-2">Thông tin khác</p>
+                                            <div className="space-y-2">
+                                              {parsed.other.map((reason, i) => (
+                                                <div key={i} className="flex items-start gap-2">
+                                                  <div className="w-1.5 h-1.5 rounded-full bg-gray-500 mt-2 flex-shrink-0" />
+                                                  <p className="text-gray-300 text-sm leading-relaxed">{reason}</p>
+                                                </div>
+                                              ))}
+                                            </div>
+                                          </div>
+                                        )}
+                                      </div>
+                                    ) : (
+                                      /* Fallback for unstructured reasons */
+                                      <div className="space-y-2">
+                                        {result.reasons.map((reason, i) => {
+                                          const cleanReason = reason.replace(/[\uD800-\uDFFF]./g, '').replace(/[\u2600-\u27BF]/g, '').trim();
+                                          const isDanger = cleanReason.toLowerCase().includes('lừa đảo') || cleanReason.toLowerCase().includes('nguy hiểm') || cleanReason.toLowerCase().includes('rủi ro cao');
+                                          const isWarning = cleanReason.toLowerCase().includes('đáng ngờ') || cleanReason.toLowerCase().includes('cẩn thận');
+                                          const isSafe = cleanReason.toLowerCase().includes('an toàn') || cleanReason.toLowerCase().includes('tin cậy');
+                                          
+                                          return (
+                                            <div key={i} className={`p-3 rounded-lg border ${
+                                              isDanger ? 'bg-red-500/10 border-red-500/20' :
+                                              isWarning ? 'bg-yellow-500/10 border-yellow-500/20' :
+                                              isSafe ? 'bg-green-500/10 border-green-500/20' :
+                                              'bg-blue-500/10 border-blue-500/20'
+                                            }`}>
+                                              <div className="flex items-start gap-3">
+                                                <div className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${
+                                                  isDanger ? 'bg-red-400' :
+                                                  isWarning ? 'bg-yellow-400' :
+                                                  isSafe ? 'bg-green-400' :
+                                                  'bg-blue-400'
+                                                }`} />
+                                                <p className="text-gray-200 text-sm leading-relaxed flex-1">{cleanReason}</p>
+                                              </div>
+                                            </div>
+                                          );
+                                        })}
+                                      </div>
+                                    )}
                                   </div>
-                                </div>
-                              )}
+                                );
+                              })()}
 
                               {/* External Sources */}
                               {result.externalSources && result.externalSources.length > 0 && (
