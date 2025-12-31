@@ -16,7 +16,12 @@ import {
   Image as ImageIcon,
   Database,
   ShieldAlert,
-  ShieldX
+  ShieldX,
+  CreditCard,
+  Mail,
+  Phone,
+  Building2,
+  Info
 } from 'lucide-react'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
@@ -73,13 +78,50 @@ interface ScanResult {
   virusTotal?: VirusTotalResult | null
 }
 
+type CheckType = 'bank' | 'email' | 'phone'
+
+interface CheckResult {
+  success: boolean
+  found: boolean
+  matchType?: string
+  data: {
+    riskLevel: string
+    reportCount?: number
+    verified?: boolean
+    bankName?: string
+    ownerName?: string
+    totalLoss?: number
+    carrier?: string
+    category?: string
+    description?: string
+    firstReported?: string
+    relatedScamEmails?: number
+  }
+  message: string
+}
+
+const banks = [
+  'Vietcombank', 'BIDV', 'Agribank', 'Techcombank', 'VPBank', 'MB Bank',
+  'ACB', 'Sacombank', 'TPBank', 'VIB', 'SHB', 'HDBank', 'OCB', 'MSB',
+  'SeABank', 'LienVietPostBank', 'Eximbank', 'NCB', 'ABBank', 'BacABank',
+  'VietABank', 'PGBank', 'VietBank', 'KienLongBank', 'NamABank', 'Khác'
+]
+
 export default function ScanPage() {
-  const [activeTab, setActiveTab] = useState<'url' | 'image'>('url')
+  const [activeTab, setActiveTab] = useState<'url' | 'image' | 'check'>('url')
   const [url, setUrl] = useState('')
   const [result, setResult] = useState<ScanResult | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const [expandedSection, setExpandedSection] = useState<string | null>('details')
+  
+  // Check states
+  const [checkType, setCheckType] = useState<CheckType>('bank')
+  const [checkInput, setCheckInput] = useState('')
+  const [bankName, setBankName] = useState('')
+  const [checkLoading, setCheckLoading] = useState(false)
+  const [checkResult, setCheckResult] = useState<CheckResult | null>(null)
+  const [checkError, setCheckError] = useState('')
 
   const handleScan = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -123,6 +165,83 @@ export default function ScanPage() {
     setUrl('')
     setResult(null)
     setError('')
+  }
+
+  // Check functions
+  const handleCheck = async () => {
+    if (!checkInput.trim()) {
+      setCheckError('Vui lòng nhập thông tin cần kiểm tra')
+      return
+    }
+
+    setCheckLoading(true)
+    setCheckError('')
+    setCheckResult(null)
+
+    try {
+      let endpoint = ''
+      let body: Record<string, string> = {}
+
+      switch (checkType) {
+        case 'bank':
+          endpoint = '/api/check/bank-account'
+          body = { accountNumber: checkInput, bankName }
+          break
+        case 'email':
+          endpoint = '/api/check/email'
+          body = { email: checkInput }
+          break
+        case 'phone':
+          endpoint = '/api/check/phone'
+          body = { phone: checkInput }
+          break
+      }
+
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      })
+
+      const data = await res.json()
+      if (data.success) {
+        setCheckResult(data)
+      } else {
+        setCheckError(data.error || 'Có lỗi xảy ra')
+      }
+    } catch (err) {
+      setCheckError('Không thể kết nối đến server')
+    } finally {
+      setCheckLoading(false)
+    }
+  }
+
+  const getRiskColor = (level: string) => {
+    switch (level) {
+      case 'DANGEROUS': return 'text-red-400 bg-red-500/20 border-red-500/30'
+      case 'SUSPICIOUS': return 'text-orange-400 bg-orange-500/20 border-orange-500/30'
+      case 'CAUTION': return 'text-yellow-400 bg-yellow-500/20 border-yellow-500/30'
+      case 'UNKNOWN': return 'text-green-400 bg-green-500/20 border-green-500/30'
+      default: return 'text-gray-400 bg-gray-500/20 border-gray-500/30'
+    }
+  }
+
+  const getRiskIcon = (level: string) => {
+    switch (level) {
+      case 'DANGEROUS': return <XCircle className="w-6 h-6 text-red-400" />
+      case 'SUSPICIOUS': return <AlertTriangle className="w-6 h-6 text-orange-400" />
+      case 'CAUTION': return <AlertTriangle className="w-6 h-6 text-yellow-400" />
+      case 'UNKNOWN': return <CheckCircle className="w-6 h-6 text-green-400" />
+      default: return <Info className="w-6 h-6 text-gray-400" />
+    }
+  }
+
+  const getCheckPlaceholder = () => {
+    switch (checkType) {
+      case 'bank': return 'Nhập số tài khoản ngân hàng...'
+      case 'email': return 'Nhập địa chỉ email...'
+      case 'phone': return 'Nhập số điện thoại...'
+    }
   }
 
   const getResultConfig = () => {
@@ -205,10 +324,10 @@ export default function ScanPage() {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex justify-center gap-2 mb-6 sm:mb-8"
+            className="flex justify-center gap-2 mb-6 sm:mb-8 flex-wrap"
           >
             <button
-              onClick={() => { setActiveTab('url'); setResult(null); setError(''); }}
+              onClick={() => { setActiveTab('url'); setResult(null); setError(''); setCheckResult(null); }}
               className={`flex items-center gap-1.5 sm:gap-2 px-4 py-2.5 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl font-medium transition-all text-sm sm:text-base ${
                 activeTab === 'url'
                   ? 'bg-blue-600 text-white'
@@ -219,7 +338,7 @@ export default function ScanPage() {
               <span className="hidden xs:inline">Kiểm tra</span> URL
             </button>
             <button
-              onClick={() => { setActiveTab('image'); setResult(null); setError(''); }}
+              onClick={() => { setActiveTab('image'); setResult(null); setError(''); setCheckResult(null); }}
               className={`flex items-center gap-1.5 sm:gap-2 px-4 py-2.5 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl font-medium transition-all text-sm sm:text-base ${
                 activeTab === 'image'
                   ? 'bg-blue-600 text-white'
@@ -228,6 +347,17 @@ export default function ScanPage() {
             >
               <ImageIcon className="w-4 h-4 sm:w-5 sm:h-5" />
               <span className="hidden xs:inline">Kiểm tra</span> Hình ảnh
+            </button>
+            <button
+              onClick={() => { setActiveTab('check'); setResult(null); setError(''); setCheckResult(null); setCheckInput(''); }}
+              className={`flex items-center gap-1.5 sm:gap-2 px-4 py-2.5 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl font-medium transition-all text-sm sm:text-base ${
+                activeTab === 'check'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+              }`}
+            >
+              <CreditCard className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="hidden xs:inline">Tra cứu</span> Lừa đảo
             </button>
           </motion.div>
 
@@ -248,6 +378,220 @@ export default function ScanPage() {
                     </p>
                   </div>
                   <ImageUpload />
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Check Tab - Kiểm tra tài khoản/email/phone */}
+          <AnimatePresence mode="wait">
+            {activeTab === 'check' && (
+              <motion.div
+                key="check-tab"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                className="mb-10"
+              >
+                <div className="bg-blue-900/10 rounded-2xl p-6 border border-gray-800">
+                  {/* Check Type Tabs */}
+                  <div className="flex justify-center gap-2 mb-6">
+                    <button
+                      onClick={() => { setCheckType('bank'); setCheckResult(null); setCheckInput(''); setCheckError(''); }}
+                      className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all text-sm ${
+                        checkType === 'bank'
+                          ? 'bg-cyan-600 text-white'
+                          : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
+                      }`}
+                    >
+                      <CreditCard className="w-4 h-4" />
+                      Tài khoản
+                    </button>
+                    <button
+                      onClick={() => { setCheckType('email'); setCheckResult(null); setCheckInput(''); setCheckError(''); }}
+                      className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all text-sm ${
+                        checkType === 'email'
+                          ? 'bg-cyan-600 text-white'
+                          : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
+                      }`}
+                    >
+                      <Mail className="w-4 h-4" />
+                      Email
+                    </button>
+                    <button
+                      onClick={() => { setCheckType('phone'); setCheckResult(null); setCheckInput(''); setCheckError(''); }}
+                      className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all text-sm ${
+                        checkType === 'phone'
+                          ? 'bg-cyan-600 text-white'
+                          : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
+                      }`}
+                    >
+                      <Phone className="w-4 h-4" />
+                      Điện thoại
+                    </button>
+                  </div>
+
+                  {/* Bank selector */}
+                  {checkType === 'bank' && (
+                    <div className="mb-4">
+                      <label className="block text-sm text-gray-400 mb-2">Ngân hàng (tùy chọn)</label>
+                      <div className="relative">
+                        <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                        <select
+                          value={bankName}
+                          onChange={(e) => setBankName(e.target.value)}
+                          className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white appearance-none cursor-pointer focus:outline-none focus:border-blue-500/50"
+                        >
+                          <option value="">Chọn ngân hàng...</option>
+                          {banks.map(bank => (
+                            <option key={bank} value={bank}>{bank}</option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Main input */}
+                  <div className="mb-4">
+                    <div className="relative">
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                      <input
+                        type={checkType === 'email' ? 'email' : 'text'}
+                        value={checkInput}
+                        onChange={(e) => setCheckInput(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && handleCheck()}
+                        placeholder={getCheckPlaceholder()}
+                        className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Error */}
+                  {checkError && (
+                    <p className="text-red-400 text-sm mb-4">{checkError}</p>
+                  )}
+
+                  {/* Submit button */}
+                  <button
+                    onClick={handleCheck}
+                    disabled={checkLoading}
+                    className="w-full py-3 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-xl text-white font-semibold hover:from-blue-700 hover:to-cyan-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  >
+                    {checkLoading ? (
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        Đang kiểm tra...
+                      </>
+                    ) : (
+                      <>
+                        <Search className="w-5 h-5" />
+                        Kiểm tra ngay
+                      </>
+                    )}
+                  </button>
+
+                  {/* Check Result */}
+                  <AnimatePresence mode="wait">
+                    {checkResult && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        className={`mt-6 border rounded-xl p-4 ${getRiskColor(checkResult.data.riskLevel)}`}
+                      >
+                        <div className="flex items-start gap-4">
+                          {getRiskIcon(checkResult.data.riskLevel)}
+                          <div className="flex-1">
+                            <h3 className="text-lg font-semibold text-white mb-2">
+                              {checkResult.message}
+                            </h3>
+                            
+                            {checkResult.found && checkResult.data && (
+                              <div className="space-y-2 mt-4">
+                                {checkResult.data.reportCount && (
+                                  <p className="text-sm text-gray-300">
+                                    📊 Số lần bị báo cáo: <span className="font-semibold text-white">{checkResult.data.reportCount}</span>
+                                  </p>
+                                )}
+                                {checkResult.data.bankName && (
+                                  <p className="text-sm text-gray-300">
+                                    🏦 Ngân hàng: <span className="font-semibold text-white">{checkResult.data.bankName}</span>
+                                  </p>
+                                )}
+                                {checkResult.data.ownerName && (
+                                  <p className="text-sm text-gray-300">
+                                    👤 Chủ tài khoản: <span className="font-semibold text-white">{checkResult.data.ownerName}</span>
+                                  </p>
+                                )}
+                                {checkResult.data.totalLoss && (
+                                  <p className="text-sm text-gray-300">
+                                    💰 Tổng thiệt hại: <span className="font-semibold text-red-400">
+                                      {checkResult.data.totalLoss.toLocaleString('vi-VN')} VNĐ
+                                    </span>
+                                  </p>
+                                )}
+                                {checkResult.data.carrier && (
+                                  <p className="text-sm text-gray-300">
+                                    📱 Nhà mạng: <span className="font-semibold text-white">{checkResult.data.carrier}</span>
+                                  </p>
+                                )}
+                                {checkResult.data.category && (
+                                  <p className="text-sm text-gray-300">
+                                    🏷️ Loại: <span className="font-semibold text-white">{checkResult.data.category}</span>
+                                  </p>
+                                )}
+                                {checkResult.data.description && (
+                                  <p className="text-sm text-gray-300">
+                                    📝 Mô tả: <span className="text-white">{checkResult.data.description}</span>
+                                  </p>
+                                )}
+                                {checkResult.data.verified && (
+                                  <p className="text-sm text-red-400 font-semibold">
+                                    ✓ Đã được xác minh bởi hệ thống
+                                  </p>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Tips */}
+                  <div className="mt-6 grid md:grid-cols-3 gap-3">
+                    <div className="bg-blue-500/5 border border-blue-500/20 rounded-lg p-3">
+                      <CreditCard className="w-6 h-6 text-blue-400 mb-2" />
+                      <h4 className="font-medium text-white text-sm mb-1">Kiểm tra tài khoản</h4>
+                      <p className="text-xs text-gray-400">
+                        Tra cứu số tài khoản trước khi chuyển tiền
+                      </p>
+                    </div>
+                    <div className="bg-cyan-500/5 border border-cyan-500/20 rounded-lg p-3">
+                      <Mail className="w-6 h-6 text-cyan-400 mb-2" />
+                      <h4 className="font-medium text-white text-sm mb-1">Kiểm tra email</h4>
+                      <p className="text-xs text-gray-400">
+                        Xác minh email có phải lừa đảo không
+                      </p>
+                    </div>
+                    <div className="bg-purple-500/5 border border-purple-500/20 rounded-lg p-3">
+                      <Phone className="w-6 h-6 text-purple-400 mb-2" />
+                      <h4 className="font-medium text-white text-sm mb-1">Kiểm tra SĐT</h4>
+                      <p className="text-xs text-gray-400">
+                        Tra cứu số điện thoại lạ gọi đến
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Warning */}
+                  <div className="mt-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3">
+                    <div className="flex items-start gap-2">
+                      <AlertTriangle className="w-4 h-4 text-yellow-400 flex-shrink-0 mt-0.5" />
+                      <p className="text-xs text-gray-300">
+                        Kết quả chỉ mang tính tham khảo. Không tìm thấy không đảm bảo 100% an toàn.
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </motion.div>
             )}

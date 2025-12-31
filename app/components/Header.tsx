@@ -11,7 +11,6 @@ import { useSession, signOut } from 'next-auth/react'
 const navLinks = [
   { href: '/', label: 'Trang chủ' },
   { href: '/scan', label: 'Phân tích' },
-  { href: '/check', label: 'Kiểm tra' },
   { href: '/alerts', label: 'Cảnh báo' },
   { href: '/quiz', label: 'Trắc nghiệm' },
   { href: '/guide', label: 'Cẩm nang' },
