@@ -242,55 +242,62 @@ function analyzeSecurityFactors(url: string, domain: string, content: WebContent
   
   // SSL check
   if (!url.startsWith('https://')) {
-    factors.push('Khong co SSL/HTTPS - Ket noi khong duoc ma hoa')
+    factors.push('Không có SSL/HTTPS - Kết nối không được mã hóa')
     riskScore += 15
   }
   
-  // Suspicious TLDs
-  const suspiciousTLDs = ['.tk', '.ml', '.ga', '.cf', '.gq', '.xyz', '.top', '.club', '.work', '.click', '.link', '.info', '.online', '.site', '.website', '.space', '.fun', '.icu', '.buzz']
-  if (suspiciousTLDs.some(tld => domain.endsWith(tld))) {
-    factors.push(`TLD dang ngo: ${domain.split('.').pop()} - Thuong bi lam dung cho lua dao`)
+  // Very suspicious TLDs (commonly abused for scams)
+  const highRiskTLDs = ['.tk', '.ml', '.ga', '.cf', '.gq', '.click', '.link', '.buzz', '.icu']
+  const mediumRiskTLDs = ['.xyz', '.top', '.club', '.work', '.online', '.site', '.website', '.space', '.fun']
+  // Note: .info, .io, .co are legitimate TLDs used by many real businesses
+  
+  const tld = '.' + domain.split('.').pop()
+  if (highRiskTLDs.includes(tld)) {
+    factors.push(`TLD rủi ro cao: ${tld} - Thường bị lạm dụng cho lừa đảo`)
     riskScore += 25
+  } else if (mediumRiskTLDs.includes(tld)) {
+    factors.push(`TLD đáng ngờ: ${tld}`)
+    riskScore += 10
   }
   
   // Domain analysis
-  if (domain.length > 30) {
-    factors.push('Domain qua dai - Co the la domain gia mao')
+  if (domain.length > 35) {
+    factors.push('Domain quá dài - Có thể là domain giả mạo')
     riskScore += 10
   }
   
   const hyphens = (domain.match(/-/g) || []).length
-  if (hyphens > 2) {
-    factors.push(`Domain co ${hyphens} dau gach ngang - Dau hieu gia mao`)
+  if (hyphens > 3) {
+    factors.push(`Domain có ${hyphens} dấu gạch ngang - Dấu hiệu giả mạo`)
     riskScore += 15
   }
   
-  if (/\d{4,}/.test(domain)) {
-    factors.push('Domain chua nhieu so - Thuong la domain spam')
+  if (/\d{5,}/.test(domain)) {
+    factors.push('Domain chứa nhiều số liên tiếp - Thường là domain spam')
     riskScore += 10
   }
   
   // IP as domain
   if (/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/.test(domain)) {
-    factors.push('Su dung IP thay vi domain - Rat dang ngo')
+    factors.push('Sử dụng IP thay vì domain - Rất đáng ngờ')
     riskScore += 30
   }
   
   // Punycode (IDN homograph)
   if (domain.startsWith('xn--')) {
-    factors.push('Domain Punycode - Co the la tan cong homograph')
+    factors.push('Domain Punycode - Có thể là tấn công homograph')
     riskScore += 25
   }
   
   // Content analysis
   if (content) {
     if (content.hasLoginForm && !url.startsWith('https://')) {
-      factors.push('Form dang nhap khong bao mat - Nguy hiem')
+      factors.push('Form đăng nhập không bảo mật - Nguy hiểm')
       riskScore += 30
     }
     
     if (content.hasPaymentForm) {
-      factors.push('Co form thanh toan - Can xac minh ky')
+      factors.push('Có form thanh toán - Cần xác minh kỹ')
       riskScore += 10
     }
     
@@ -299,14 +306,14 @@ function analyzeSecurityFactors(url: string, domain: string, content: WebContent
     const gamblingKeywords = ['casino', 'slot', 'poker', 'baccarat', 'xo so', 'lo de', 'ca cuoc', 'nha cai', 'no hu', 'tai xiu']
     const gamblingHits = gamblingKeywords.filter(k => bodyLower.includes(k))
     if (gamblingHits.length >= 2) {
-      factors.push(`Noi dung co bac: ${gamblingHits.join(', ')}`)
+      factors.push(`Nội dung cờ bạc: ${gamblingHits.join(', ')}`)
       riskScore += 50
     }
     
     const scamKeywords = ['trung thuong', 'nhan qua', 'mien phi', 'kiem tien', 'lam giau', 'dau tu', 'loi nhuan', 'x100', 'airdrop']
     const scamHits = scamKeywords.filter(k => bodyLower.includes(k))
     if (scamHits.length >= 2) {
-      factors.push(`Noi dung dang ngo: ${scamHits.join(', ')}`)
+      factors.push(`Nội dung đáng ngờ: ${scamHits.join(', ')}`)
       riskScore += 30
     }
   }
@@ -359,17 +366,26 @@ KIẾN THỨC CHUYÊN MÔN:
    - Việc nhẹ lương cao, không cần kinh nghiệm
    - Yêu cầu đặt cọc, mua hàng trước
 
+5. WEBSITE HỢP PHÁP:
+   - Công cụ/tiện ích: form builder, automation, productivity tools
+   - SaaS, startup công nghệ
+   - Blog, tin tức, giáo dục
+   - Thương mại điện tử có thương hiệu rõ ràng
+
 QUY TẮC CHẤM ĐIỂM:
-- 0-30: AN TOÀN - Website hợp pháp, đáng tin cậy
-- 31-60: CẨN THẬN - Có một số dấu hiệu đáng ngờ
+- 0-20: RẤT AN TOÀN - Website uy tín, thương hiệu lớn
+- 21-40: AN TOÀN - Website hợp pháp, có thể tin cậy
+- 41-60: CẨN THẬN - Có một số điểm cần lưu ý nhưng không nguy hiểm
 - 61-80: NGUY HIỂM - Nhiều dấu hiệu lừa đảo
 - 81-100: RẤT NGUY HIỂM - Chắc chắn là lừa đảo/cờ bạc
 
-TRƯỜNG HỢP ĐẶC BIỆT:
+NGUYÊN TẮC ĐÁNH GIÁ:
+- Website công cụ/tiện ích hợp pháp: score 15-35
+- Website startup/SaaS mới: score 25-45
+- Website thiếu thông tin nhưng không có dấu hiệu lừa đảo: score 35-50
+- Website có dấu hiệu đáng ngờ nhẹ: score 45-60
 - Website cờ bạc: score >= 90
-- Giả mạo ngân hàng: score >= 95
-- Giả mạo thương hiệu lớn: score >= 85
-- Website không truy cập được + domain đáng ngờ: score >= 70`
+- Giả mạo ngân hàng/thương hiệu: score >= 85`
 
   const userPrompt = `PHÂN TÍCH WEBSITE:
 
@@ -381,27 +397,27 @@ ${securityInfo}
 NỘI DUNG WEBSITE:
 ${contentInfo}
 
-YÊU CẦU OUTPUT (JSON) - PHẢI VIẾT TIẾNG VIỆT CÓ DẤU:
+YÊU CẦU OUTPUT (JSON) - PHẢI VIẾT TIẾNG VIỆT CÓ DẤU ĐẦY ĐỦ:
 {
   "score": <số từ 0-100>,
   "category": "<safe|suspicious|phishing|scam|gambling>",
   "reasons": [
-    "Loại website: [Tên/Loại website cụ thể] - [Lĩnh vực hoạt động]",
-    "Chức năng: [Mô tả CHI TIẾT website làm gì, cung cấp dịch vụ gì, cho ai]",
-    "Phân tích domain: [Đánh giá tên miền ${domain}] - [TLD có hợp lệ không, có giả mạo không, lý do]",
-    "Bảo mật: [Đánh giá SSL, form, rủi ro bảo mật cụ thể]",
-    "Kết luận: [Tổng kết và khuyến nghị cho người dùng Việt Nam]"
+    "Loại website: [Xác định CỤ THỂ loại website: công cụ, SaaS, blog, TMĐT, cờ bạc, lừa đảo...] - [Lĩnh vực]",
+    "Chức năng: [Mô tả RÕ RÀNG website làm gì, phục vụ ai, giải quyết vấn đề gì]",
+    "Phân tích domain: [Đánh giá tên miền] - [TLD .info/.io/.co là hợp lệ, chỉ cảnh báo nếu TLD thực sự đáng ngờ như .tk/.ml/.ga]",
+    "Bảo mật: [Đánh giá cụ thể: SSL có/không, form nguy hiểm có/không, rủi ro thực tế]",
+    "Kết luận: [Đưa ra KHUYẾN NGHỊ CỤ THỂ: an toàn sử dụng / cần cẩn thận / không nên truy cập]"
   ],
   "confidence": <số từ 0.0-1.0>
 }
 
 LƯU Ý QUAN TRỌNG:
-1. KHÔNG dùng emoji trong response
-2. Mỗi reason phải CỤ THỂ, CHI TIẾT, không chung chung
-3. PHẢI viết TIẾNG VIỆT CÓ DẤU đầy đủ (ví dụ: "Trang web", không phải "Trang web")
-3. Neu la co bac/casino: score >= 90, category = "gambling"
-4. Neu gia mao ngan hang/thuong hieu: score >= 85, category = "phishing"
-5. Neu website khong truy cap duoc + domain dang ngo: score >= 70`
+1. KHÔNG dùng emoji
+2. PHẢI viết TIẾNG VIỆT CÓ DẤU đầy đủ (ví dụ: "Trang web an toàn", KHÔNG PHẢI "Trang web an toan")
+3. Đánh giá CÔNG BẰNG - không đánh giá quá khắt khe với website hợp pháp
+4. TLD .info, .io, .co, .app là TLD hợp lệ, KHÔNG tự động coi là đáng ngờ
+5. Website công cụ/tiện ích thiếu thông tin liên hệ là BÌNH THƯỜNG, không phải dấu hiệu lừa đảo
+6. Chỉ đánh giá NGUY HIỂM khi có BẰNG CHỨNG RÕ RÀNG về lừa đảo/cờ bạc/phishing`
 
   try {
     const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
