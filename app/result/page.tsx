@@ -6,12 +6,14 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { 
   ArrowLeft, History, Trash2, Shield, ShieldAlert, ShieldX,
   Globe, Lock, Unlock, Server, CheckCircle, XCircle, AlertTriangle,
-  Brain, Eye, ChevronDown, ChevronUp, ExternalLink
+  Brain, Eye, ChevronDown, ChevronUp, ExternalLink, Sparkles, Search, Home
 } from 'lucide-react'
 import Link from 'next/link'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import RiskBadge from '../components/RiskBadge'
+import GlowingCard from '../components/GlowingCard'
+import SecurityScore from '../components/SecurityScore'
 import { safeStorage } from '../lib/safeStorage'
 
 interface WebsiteInfo {
@@ -108,104 +110,131 @@ export default function ResultPage() {
       <main className="flex-1 pt-20">
         <section className="py-8 px-4">
           <div className="max-w-7xl mx-auto">
-            <div className="flex items-center justify-between mb-8">
+            {/* Premium Header */}
+            <motion.div 
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4"
+            >
               <div className="flex items-center gap-4">
-                <Link href="/" className="p-2 hover:bg-gray-700 rounded-lg transition-colors">
+                <Link href="/" className="p-2 hover:bg-white/5 rounded-lg transition-colors border border-white/10">
                   <ArrowLeft className="w-5 h-5" />
                 </Link>
                 <div>
-                  <h1 className="text-2xl font-bold flex items-center gap-2">
-                    <History className="w-6 h-6 text-blue-500" />
-                    Lịch sử kiểm tra
-                  </h1>
-                  <p className="text-gray-400 text-sm">
+                  <div className="flex items-center gap-2 mb-1">
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: 'spring', stiffness: 200 }}
+                      className="p-2 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 rounded-lg"
+                    >
+                      <History className="w-5 h-5 text-blue-400" />
+                    </motion.div>
+                    <h1 className="text-2xl font-bold text-white">
+                      Lịch sử kiểm tra
+                    </h1>
+                  </div>
+                  <p className="text-gray-400 text-sm flex items-center gap-2">
+                    <Sparkles className="w-3 h-3 text-cyan-400" />
                     {history.length} kết quả được lưu trên thiết bị này
                   </p>
                 </div>
               </div>
               
               {history.length > 0 && (
-                <button
+                <motion.button
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
                   onClick={clearHistory}
-                  className="px-4 py-2 bg-red-500/20 text-red-400 hover:bg-red-500/30 rounded-lg flex items-center gap-2 transition-colors"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="px-4 py-2 bg-red-500/10 text-red-400 hover:bg-red-500/20 rounded-lg flex items-center gap-2 transition-colors border border-red-500/20"
                 >
                   <Trash2 className="w-4 h-4" />
                   Xóa tất cả
-                </button>
+                </motion.button>
               )}
-            </div>
+            </motion.div>
 
             {selectedResult && (
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="mb-8 bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden"
+                className="mb-8"
               >
-                {/* Header */}
-                <div className={`p-6 ${
-                  selectedResult.label === 'SAFE' ? 'bg-green-500/10' :
-                  selectedResult.label === 'CAUTION' ? 'bg-yellow-500/10' : 'bg-red-500/10'
-                }`}>
-                  <div className="flex items-center gap-4">
-                    {selectedResult.label === 'SAFE' ? (
-                      <Shield className="w-12 h-12 text-green-400" />
-                    ) : selectedResult.label === 'CAUTION' ? (
-                      <ShieldAlert className="w-12 h-12 text-yellow-400" />
-                    ) : (
-                      <ShieldX className="w-12 h-12 text-red-400" />
-                    )}
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-1">
-                        <h3 className={`text-xl font-bold ${
-                          selectedResult.label === 'SAFE' ? 'text-green-400' :
-                          selectedResult.label === 'CAUTION' ? 'text-yellow-400' : 'text-red-400'
-                        }`}>
-                          {selectedResult.label === 'SAFE' ? 'Website An Toàn' :
-                           selectedResult.label === 'CAUTION' ? 'Cần Thận Trọng' : 'Nguy Hiểm!'}
-                        </h3>
-                        <RiskBadge label={selectedResult.label} size="sm" />
+                <GlowingCard glowColor={
+                  selectedResult.label === 'SAFE' ? 'rgba(34, 197, 94, 0.3)' :
+                  selectedResult.label === 'CAUTION' ? 'rgba(234, 179, 8, 0.3)' : 'rgba(239, 68, 68, 0.3)'
+                }>
+                  <div className="bg-gray-800/50 rounded-2xl border border-gray-700 overflow-hidden">
+                    {/* Header with SecurityScore */}
+                    <div className={`p-6 ${
+                      selectedResult.label === 'SAFE' ? 'bg-gradient-to-r from-green-500/10 to-emerald-500/10' :
+                      selectedResult.label === 'CAUTION' ? 'bg-gradient-to-r from-yellow-500/10 to-orange-500/10' : 'bg-gradient-to-r from-red-500/10 to-rose-500/10'
+                    }`}>
+                      <div className="flex flex-col md:flex-row items-center gap-6">
+                        {/* Security Score */}
+                        <SecurityScore score={selectedResult.score} size="md" language="vi" />
+                        
+                        <div className="flex-1 text-center md:text-left">
+                          <div className="flex items-center justify-center md:justify-start gap-3 mb-2">
+                            {selectedResult.label === 'SAFE' ? (
+                              <Shield className="w-8 h-8 text-green-400" />
+                            ) : selectedResult.label === 'CAUTION' ? (
+                              <ShieldAlert className="w-8 h-8 text-yellow-400" />
+                            ) : (
+                              <ShieldX className="w-8 h-8 text-red-400" />
+                            )}
+                            <h3 className={`text-xl font-bold ${
+                              selectedResult.label === 'SAFE' ? 'text-green-400' :
+                              selectedResult.label === 'CAUTION' ? 'text-yellow-400' : 'text-red-400'
+                            }`}>
+                              {selectedResult.label === 'SAFE' ? 'Website An Toàn' :
+                               selectedResult.label === 'CAUTION' ? 'Cần Thận Trọng' : 'Nguy Hiểm!'}
+                            </h3>
+                            <RiskBadge label={selectedResult.label} size="sm" />
+                          </div>
+                          <a 
+                            href={selectedResult.url} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-blue-400 hover:underline flex items-center justify-center md:justify-start gap-1 text-sm"
+                          >
+                            {selectedResult.url}
+                            <ExternalLink className="w-3 h-3" />
+                          </a>
+                        </div>
+                        <button
+                          onClick={() => setSelectedResult(null)}
+                          className="p-2 hover:bg-gray-700 rounded-lg absolute top-4 right-4 md:relative md:top-0 md:right-0"
+                        >
+                          <XCircle className="w-5 h-5 text-gray-400" />
+                        </button>
                       </div>
-                      <a 
-                        href={selectedResult.url} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="text-blue-400 hover:underline flex items-center gap-1 text-sm"
-                      >
-                        {selectedResult.url}
-                        <ExternalLink className="w-3 h-3" />
-                      </a>
                     </div>
-                    <button
-                      onClick={() => setSelectedResult(null)}
-                      className="p-2 hover:bg-gray-700 rounded-lg"
-                    >
-                      <XCircle className="w-5 h-5 text-gray-400" />
-                    </button>
-                  </div>
-                </div>
 
-                {/* Stats Grid */}
-                <div className="p-4 grid grid-cols-4 gap-3 border-b border-gray-700">
-                  <div className="text-center p-3  rounded-lg">
-                    <p className={`text-2xl font-bold ${
-                      selectedResult.score <= 30 ? 'text-green-400' :
-                      selectedResult.score <= 60 ? 'text-yellow-400' : 'text-red-400'
-                    }`}>{selectedResult.score}</p>
-                    <p className="text-xs text-gray-500">Điểm rủi ro</p>
-                  </div>
-                  <div className="text-center p-3  rounded-lg">
-                    <p className="text-2xl font-bold text-blue-400">{Math.round(selectedResult.aiConfidence * 100)}%</p>
-                    <p className="text-xs text-gray-500">Độ tin cậy AI</p>
-                  </div>
-                  <div className="text-center p-3  rounded-lg">
-                    <p className="text-2xl font-bold text-purple-400">{selectedResult.heuristicScore ?? '-'}</p>
-                    <p className="text-xs text-gray-500">Heuristic</p>
-                  </div>
-                  <div className="text-center p-3  rounded-lg">
-                    <p className="text-2xl font-bold text-cyan-400">{selectedResult.aiScore ?? '-'}</p>
-                    <p className="text-xs text-gray-500">AI Score</p>
-                  </div>
-                </div>
+                    {/* Stats Grid */}
+                    <div className="p-4 grid grid-cols-4 gap-3 border-b border-gray-700">
+                      <div className="text-center p-3 bg-white/5 rounded-lg">
+                        <p className={`text-2xl font-bold ${
+                          selectedResult.score <= 30 ? 'text-green-400' :
+                          selectedResult.score <= 60 ? 'text-yellow-400' : 'text-red-400'
+                        }`}>{selectedResult.score}</p>
+                        <p className="text-xs text-gray-500">Điểm rủi ro</p>
+                      </div>
+                      <div className="text-center p-3 bg-white/5 rounded-lg">
+                        <p className="text-2xl font-bold text-blue-400">{Math.round(selectedResult.aiConfidence * 100)}%</p>
+                        <p className="text-xs text-gray-500">Độ tin cậy AI</p>
+                      </div>
+                      <div className="text-center p-3 bg-white/5 rounded-lg">
+                        <p className="text-2xl font-bold text-purple-400">{selectedResult.heuristicScore ?? '-'}</p>
+                        <p className="text-xs text-gray-500">Heuristic</p>
+                      </div>
+                      <div className="text-center p-3 bg-white/5 rounded-lg">
+                        <p className="text-2xl font-bold text-cyan-400">{selectedResult.aiScore ?? '-'}</p>
+                        <p className="text-xs text-gray-500">AI Score</p>
+                      </div>
+                    </div>
 
                 {/* Details */}
                 <div className="p-4 space-y-4">
@@ -381,23 +410,36 @@ export default function ResultPage() {
                     </div>
                   )}
                 </div>
+                  </div>
+                </GlowingCard>
               </motion.div>
             )}
 
             {history.length === 0 ? (
               <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
                 className="text-center py-16"
               >
-                <History className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                <p className="text-gray-400">Chưa có lịch sử kiểm tra</p>
-                <Link
-                  href="/"
-                  className="inline-block mt-4 px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
-                >
-                  Kiểm tra ngay
-                </Link>
+                <GlowingCard glowColor="rgba(107, 114, 128, 0.2)">
+                  <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-2xl p-12 border border-gray-700">
+                    <motion.div
+                      animate={{ y: [0, -10, 0] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    >
+                      <History className="w-20 h-20 text-gray-600 mx-auto mb-4" />
+                    </motion.div>
+                    <p className="text-gray-400 text-lg mb-2">Chưa có lịch sử kiểm tra</p>
+                    <p className="text-gray-500 text-sm mb-6">Bắt đầu kiểm tra URL để xem kết quả ở đây</p>
+                    <Link
+                      href="/scan"
+                      className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 rounded-xl transition-all shadow-lg shadow-blue-500/25"
+                    >
+                      <Search className="w-5 h-5" />
+                      Kiểm tra ngay
+                    </Link>
+                  </div>
+                </GlowingCard>
               </motion.div>
             ) : (
               <div className="space-y-3">
@@ -407,68 +449,92 @@ export default function ResultPage() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.05 }}
-                    className={`bg-gray-800 rounded-xl p-4 border cursor-pointer transition-colors ${
-                      selectedResult === item 
-                        ? 'border-blue-500' 
-                        : 'border-gray-700 hover:border-gray-600'
-                    }`}
-                    onClick={() => setSelectedResult(item)}
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <p className="font-medium truncate">{item.domain}</p>
-                          {item.websiteInfo?.hasSSL ? (
-                            <Lock className="w-3 h-3 text-green-400" />
-                          ) : (
-                            <Unlock className="w-3 h-3 text-red-400" />
-                          )}
-                        </div>
-                        <p className="text-sm text-gray-400 truncate">{item.url}</p>
-                        <div className="flex items-center gap-3 mt-1">
-                          <p className="text-xs text-gray-500">
-                            {new Date(item.timestamp).toLocaleString('vi-VN')}
-                          </p>
-                          {item.websiteInfo?.category && (
-                            <span className="text-xs px-2 py-0.5 bg-gray-700 rounded text-gray-400">
-                              {item.websiteInfo.category}
-                            </span>
-                          )}
-                          {item.reasons.length > 0 && (
-                            <span className="text-xs text-gray-500">
-                              {item.reasons.length} dấu hiệu
-                            </span>
-                          )}
+                    <GlowingCard glowColor={
+                      item.label === 'SAFE' ? 'rgba(34, 197, 94, 0.2)' :
+                      item.label === 'CAUTION' ? 'rgba(234, 179, 8, 0.2)' : 'rgba(239, 68, 68, 0.2)'
+                    }>
+                      <div 
+                        className={`bg-gray-800/50 rounded-xl p-4 border cursor-pointer transition-all ${
+                          selectedResult === item 
+                            ? 'border-blue-500 shadow-lg shadow-blue-500/10' 
+                            : 'border-gray-700 hover:border-gray-600'
+                        }`}
+                        onClick={() => setSelectedResult(item)}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-1">
+                              <p className="font-medium truncate text-white">{item.domain}</p>
+                              {item.websiteInfo?.hasSSL ? (
+                                <Lock className="w-3 h-3 text-green-400" />
+                              ) : (
+                                <Unlock className="w-3 h-3 text-red-400" />
+                              )}
+                            </div>
+                            <p className="text-sm text-gray-400 truncate">{item.url}</p>
+                            <div className="flex items-center gap-3 mt-1">
+                              <p className="text-xs text-gray-500">
+                                {new Date(item.timestamp).toLocaleString('vi-VN')}
+                              </p>
+                              {item.websiteInfo?.category && (
+                                <span className="text-xs px-2 py-0.5 bg-gray-700 rounded text-gray-400">
+                                  {item.websiteInfo.category}
+                                </span>
+                              )}
+                              {item.reasons.length > 0 && (
+                                <span className="text-xs text-gray-500">
+                                  {item.reasons.length} dấu hiệu
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-3 ml-4">
+                            <div className="text-right">
+                              <p className={`font-bold ${
+                                item.score <= 30 ? 'text-green-400' :
+                                item.score <= 60 ? 'text-yellow-400' : 'text-red-400'
+                              }`}>
+                                {item.score}/100
+                              </p>
+                              <p className="text-xs text-gray-500">
+                                AI: {Math.round(item.aiConfidence * 100)}%
+                              </p>
+                            </div>
+                            <RiskBadge label={item.label} size="sm" />
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                removeItem(index)
+                              }}
+                              className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
+                            >
+                              <Trash2 className="w-4 h-4 text-gray-400" />
+                            </button>
+                          </div>
                         </div>
                       </div>
-                      <div className="flex items-center gap-3 ml-4">
-                        <div className="text-right">
-                          <p className={`font-bold ${
-                            item.score <= 30 ? 'text-green-400' :
-                            item.score <= 60 ? 'text-yellow-400' : 'text-red-400'
-                          }`}>
-                            {item.score}/100
-                          </p>
-                          <p className="text-xs text-gray-500">
-                            AI: {Math.round(item.aiConfidence * 100)}%
-                          </p>
-                        </div>
-                        <RiskBadge label={item.label} size="sm" />
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            removeItem(index)
-                          }}
-                          className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
-                        >
-                          <Trash2 className="w-4 h-4 text-gray-400" />
-                        </button>
-                      </div>
-                    </div>
+                    </GlowingCard>
                   </motion.div>
                 ))}
               </div>
             )}
+
+            {/* Back to Home CTA */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="mt-8 text-center"
+            >
+              <Link
+                href="/"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-colors"
+              >
+                <Home className="w-5 h-5 text-cyan-400" />
+                <span className="text-gray-300">Về trang chủ</span>
+              </Link>
+            </motion.div>
           </div>
         </section>
       </main>

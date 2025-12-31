@@ -2,10 +2,11 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Search, ChevronLeft, ChevronRight, Shield, Lock, Mail, Wifi, Smartphone, RefreshCw, ArrowLeft } from 'lucide-react'
+import { Search, ChevronLeft, ChevronRight, Shield, Lock, Mail, Wifi, Smartphone, RefreshCw, ArrowLeft, BookOpen, Eye, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
+import GlowingCard from '../components/GlowingCard'
 import { useTranslation } from '../lib/i18n/LanguageContext'
 
 interface Category {
@@ -55,7 +56,7 @@ const placeholderImages = [
 ]
 
 export default function GuidePage() {
-  const { t } = useTranslation()
+  const { t, language } = useTranslation()
   const [categories, setCategories] = useState<Category[]>([])
   const [guides, setGuides] = useState<Guide[]>([])
   const [pagination, setPagination] = useState<Pagination | null>(null)
@@ -105,7 +106,7 @@ export default function GuidePage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col ">
+    <div className="min-h-screen flex flex-col">
       <Header />
 
       <main className="flex-1 pt-24 pb-12">
@@ -123,12 +124,20 @@ export default function GuidePage() {
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-8"
+            className="mb-8 text-center"
           >
-            <h1 className="text-3xl md:text-4xl font-bold mb-3">
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: 'spring', stiffness: 200 }}
+              className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl mb-4 shadow-lg shadow-blue-500/25"
+            >
+              <BookOpen className="w-8 h-8 text-white" />
+            </motion.div>
+            <h1 className="text-3xl md:text-4xl font-bold mb-3 bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
               {t.guidePage.title}
             </h1>
-            <p className="text-gray-400">
+            <p className="text-gray-400 max-w-xl mx-auto">
               {t.guidePage.subtitle}
             </p>
           </motion.div>
@@ -137,19 +146,26 @@ export default function GuidePage() {
             {/* Sidebar */}
             <div className="lg:col-span-1">
               {/* Categories */}
-              <div className="bg-blue-900/10 rounded-2xl p-6 border border-gray-800 mb-6">
-                <h2 className="font-semibold mb-4">{t.guidePage.categories}</h2>
+              <motion.div 
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50 mb-6"
+              >
+                <h2 className="font-semibold mb-4 flex items-center gap-2">
+                  <Shield className="w-4 h-4 text-blue-400" />
+                  {t.guidePage.categories}
+                </h2>
                 <div className="space-y-1">
                   <button
                     onClick={() => handleCategoryChange('all')}
                     className={`w-full flex items-center justify-between px-3 py-2 rounded-lg transition-colors ${
                       selectedCategory === 'all'
                         ? 'bg-blue-600/20 text-blue-400'
-                        : 'text-gray-400 hover:bg-gray-800'
+                        : 'text-gray-400 hover:bg-gray-700/50'
                     }`}
                   >
                     <span>{t.guidePage.all}</span>
-                    <span className="text-sm">{categories.reduce((sum, c) => sum + c.count, 0)}</span>
+                    <span className="text-sm bg-gray-700/50 px-2 py-0.5 rounded-full">{categories.reduce((sum, c) => sum + c.count, 0)}</span>
                   </button>
                   {categories.map((cat) => {
                     const IconComponent = iconMap[cat.icon || 'Shield'] || Shield
@@ -160,30 +176,41 @@ export default function GuidePage() {
                         className={`w-full flex items-center justify-between px-3 py-2 rounded-lg transition-colors ${
                           selectedCategory === cat.slug
                             ? 'bg-blue-600/20 text-blue-400'
-                            : 'text-gray-400 hover:bg-gray-800'
+                            : 'text-gray-400 hover:bg-gray-700/50'
                         }`}
                       >
-                        <span>{cat.name}</span>
-                        <span className="text-sm">{cat.count}</span>
+                        <span className="flex items-center gap-2">
+                          <IconComponent className="w-4 h-4" />
+                          {cat.name}
+                        </span>
+                        <span className="text-sm bg-gray-700/50 px-2 py-0.5 rounded-full">{cat.count}</span>
                       </button>
                     )
                   })}
                 </div>
-              </div>
+              </motion.div>
 
               {/* CTA Card */}
-              <div className="bg-gradient-to-br from-blue-600/20 to-cyan-600/10 rounded-2xl p-6 border border-blue-500/20">
-                <h3 className="font-semibold mb-2">{t.guidePage.assessmentCta.title}</h3>
+              <motion.div 
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.1 }}
+                className="bg-gradient-to-br from-blue-600/20 to-cyan-600/10 rounded-2xl p-6 border border-blue-500/20"
+              >
+                <div className="flex items-center gap-2 mb-3">
+                  <Sparkles className="w-5 h-5 text-blue-400" />
+                  <h3 className="font-semibold">{t.guidePage.assessmentCta.title}</h3>
+                </div>
                 <p className="text-gray-400 text-sm mb-4">
                   {t.guidePage.assessmentCta.desc}
                 </p>
                 <Link
                   href="/assessment"
-                  className="block w-full bg-blue-600 hover:bg-blue-700 text-white text-center py-2 rounded-lg transition-colors"
+                  className="block w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white text-center py-2.5 rounded-xl transition-all font-medium shadow-lg shadow-blue-500/25"
                 >
                   {t.guidePage.assessmentCta.button}
                 </Link>
-              </div>
+              </motion.div>
             </div>
 
             {/* Main Content */}

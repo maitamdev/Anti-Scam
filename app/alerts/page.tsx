@@ -2,11 +2,13 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { AlertTriangle, Shield, Clock, Eye, ChevronRight, Filter, Search, Bell, TrendingUp, Home, ExternalLink, Newspaper } from 'lucide-react'
+import { AlertTriangle, Shield, Clock, Eye, ChevronRight, Filter, Search, Bell, TrendingUp, Home, ExternalLink, Newspaper, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 import { useTranslation } from '../lib/i18n/LanguageContext'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
+import GlowingCard from '../components/GlowingCard'
+import AnimatedCounter from '../components/AnimatedCounter'
 
 interface ScamAlert {
   id: string
@@ -197,13 +199,18 @@ export default function AlertsPage() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-12"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-red-500/10 border border-red-500/20 rounded-full mb-6">
-            <Bell className="w-4 h-4 text-red-400" />
+          <motion.div 
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: 'spring', stiffness: 200, delay: 0.2 }}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-red-500/20 to-orange-500/20 border border-red-500/30 rounded-full mb-6"
+          >
+            <Bell className="w-4 h-4 text-red-400 animate-pulse" />
             <span className="text-red-400 text-sm font-medium">{language === 'vi' ? 'Cập nhật liên tục' : 'Continuously updating'}</span>
-          </div>
+          </motion.div>
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             <span className="text-white">{language === 'vi' ? 'Cảnh báo ' : 'Scam '}</span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-orange-400">{language === 'vi' ? 'Lừa đảo' : 'Alerts'}</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-orange-400 to-yellow-400">{language === 'vi' ? 'Lừa đảo' : 'Alerts'}</span>
           </h1>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
             {language === 'vi' 
@@ -219,32 +226,42 @@ export default function AlertsPage() {
           transition={{ delay: 0.1 }}
           className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8"
         >
-          <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-4 text-center">
-            <AlertTriangle className="w-6 h-6 text-blue-400 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-white">{alerts.length}</div>
-            <div className="text-sm text-gray-400">{language === 'vi' ? 'Cảnh báo' : 'Alerts'}</div>
-          </div>
-          <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 text-center">
-            <Shield className="w-6 h-6 text-red-400 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-white">
-              {alerts.filter(a => a.severity === 'CRITICAL').length}
+          <GlowingCard glowColor="rgba(59, 130, 246, 0.3)">
+            <div className="bg-gradient-to-br from-blue-900/30 to-blue-800/20 border border-blue-500/20 rounded-xl p-4 text-center">
+              <AlertTriangle className="w-6 h-6 text-blue-400 mx-auto mb-2" />
+              <div className="text-2xl font-bold text-white">
+                <AnimatedCounter end={alerts.length} />
+              </div>
+              <div className="text-sm text-gray-400">{language === 'vi' ? 'Cảnh báo' : 'Alerts'}</div>
             </div>
-            <div className="text-sm text-gray-400">{language === 'vi' ? 'Nghiêm trọng' : 'Critical'}</div>
-          </div>
-          <div className="bg-orange-500/10 border border-orange-500/20 rounded-xl p-4 text-center">
-            <TrendingUp className="w-6 h-6 text-orange-400 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-white">
-              {alerts.reduce((sum, a) => sum + a.reportCount, 0)}
+          </GlowingCard>
+          <GlowingCard glowColor="rgba(239, 68, 68, 0.3)">
+            <div className="bg-gradient-to-br from-red-900/30 to-red-800/20 border border-red-500/20 rounded-xl p-4 text-center">
+              <Shield className="w-6 h-6 text-red-400 mx-auto mb-2" />
+              <div className="text-2xl font-bold text-white">
+                <AnimatedCounter end={alerts.filter(a => a.severity === 'CRITICAL').length} />
+              </div>
+              <div className="text-sm text-gray-400">{language === 'vi' ? 'Nghiêm trọng' : 'Critical'}</div>
             </div>
-            <div className="text-sm text-gray-400">{language === 'vi' ? 'Báo cáo' : 'Reports'}</div>
-          </div>
-          <div className="bg-purple-500/10 border border-purple-500/20 rounded-xl p-4 text-center">
-            <Eye className="w-6 h-6 text-purple-400 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-white">
-              {alerts.reduce((sum, a) => sum + a.views, 0).toLocaleString()}
+          </GlowingCard>
+          <GlowingCard glowColor="rgba(249, 115, 22, 0.3)">
+            <div className="bg-gradient-to-br from-orange-900/30 to-orange-800/20 border border-orange-500/20 rounded-xl p-4 text-center">
+              <TrendingUp className="w-6 h-6 text-orange-400 mx-auto mb-2" />
+              <div className="text-2xl font-bold text-white">
+                <AnimatedCounter end={alerts.reduce((sum, a) => sum + a.reportCount, 0)} />
+              </div>
+              <div className="text-sm text-gray-400">{language === 'vi' ? 'Báo cáo' : 'Reports'}</div>
             </div>
-            <div className="text-sm text-gray-400">{language === 'vi' ? 'Lượt xem' : 'Views'}</div>
-          </div>
+          </GlowingCard>
+          <GlowingCard glowColor="rgba(168, 85, 247, 0.3)">
+            <div className="bg-gradient-to-br from-purple-900/30 to-purple-800/20 border border-purple-500/20 rounded-xl p-4 text-center">
+              <Eye className="w-6 h-6 text-purple-400 mx-auto mb-2" />
+              <div className="text-2xl font-bold text-white">
+                <AnimatedCounter end={alerts.reduce((sum, a) => sum + a.views, 0)} />
+              </div>
+              <div className="text-sm text-gray-400">{language === 'vi' ? 'Lượt xem' : 'Views'}</div>
+            </div>
+          </GlowingCard>
         </motion.div>
 
         {/* Filters */}
@@ -252,48 +269,52 @@ export default function AlertsPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-blue-500/5 border border-blue-500/20 rounded-xl p-4 mb-8"
+          className="mb-8"
         >
-          <div className="flex flex-col md:flex-row gap-4">
-            {/* Search */}
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <input
-                type="text"
-                placeholder={language === 'vi' ? 'Tìm kiếm cảnh báo...' : 'Search alerts...'}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50"
-              />
-            </div>
+          <GlowingCard glowColor="rgba(59, 130, 246, 0.2)">
+            <div className="bg-gradient-to-br from-blue-900/20 to-cyan-900/20 border border-blue-500/20 rounded-xl p-4">
+              <div className="flex flex-col md:flex-row gap-4">
+                {/* Search */}
+                <div className="flex-1 relative group">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-blue-400 transition-colors" />
+                  <input
+                    type="text"
+                    placeholder={language === 'vi' ? 'Tìm kiếm cảnh báo...' : 'Search alerts...'}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all"
+                  />
+                </div>
 
-            {/* Category Filter */}
-            <div className="relative">
-              <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="pl-10 pr-8 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white appearance-none cursor-pointer focus:outline-none focus:border-blue-500/50"
-              >
-                <option value="">{language === 'vi' ? 'Tất cả loại' : 'All types'}</option>
-                {Object.entries(categoryLabels).map(([key, label]) => (
-                  <option key={key} value={key}>{label}</option>
-                ))}
-              </select>
-            </div>
+                {/* Category Filter */}
+                <div className="relative">
+                  <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <select
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                    className="pl-10 pr-8 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white appearance-none cursor-pointer focus:outline-none focus:border-blue-500/50"
+                  >
+                    <option value="">{language === 'vi' ? 'Tất cả loại' : 'All types'}</option>
+                    {Object.entries(categoryLabels).map(([key, label]) => (
+                      <option key={key} value={key}>{label}</option>
+                    ))}
+                  </select>
+                </div>
 
-            {/* Severity Filter */}
-            <select
-              value={selectedSeverity}
-              onChange={(e) => setSelectedSeverity(e.target.value)}
-              className="px-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white appearance-none cursor-pointer focus:outline-none focus:border-blue-500/50"
-            >
-              <option value="">{language === 'vi' ? 'Tất cả mức độ' : 'All levels'}</option>
-              {Object.entries(severityLabels).map(([key, label]) => (
-                <option key={key} value={key}>{label}</option>
-              ))}
-            </select>
-          </div>
+                {/* Severity Filter */}
+                <select
+                  value={selectedSeverity}
+                  onChange={(e) => setSelectedSeverity(e.target.value)}
+                  className="px-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white appearance-none cursor-pointer focus:outline-none focus:border-blue-500/50"
+                >
+                  <option value="">{language === 'vi' ? 'Tất cả mức độ' : 'All levels'}</option>
+                  {Object.entries(severityLabels).map(([key, label]) => (
+                    <option key={key} value={key}>{label}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </GlowingCard>
         </motion.div>
 
         {/* Trusted News from Official Sources */}

@@ -63,27 +63,47 @@ export default function Header() {
       
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 sm:h-18">
-          {/* Logo */}
+          {/* Logo - Premium */}
           <Link href="/" className="flex items-center gap-2 sm:gap-3 group">
             <motion.div
-              whileHover={{ rotate: [0, -10, 10, 0] }}
-              transition={{ duration: 0.5 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               className="relative"
             >
-              <div className="absolute inset-0 bg-blue-500/30 rounded-xl blur-lg group-hover:bg-blue-400/40 transition-colors" />
-              <Image 
-                src="/logo.png" 
-                alt="ANTI-SCAM Logo" 
-                width={36} 
-                height={36}
-                className="rounded-xl relative z-10 sm:w-10 sm:h-10"
+              {/* Outer glow ring */}
+              <div className="absolute -inset-1.5 bg-gradient-to-r from-blue-600 via-cyan-500 to-blue-600 rounded-xl opacity-0 group-hover:opacity-60 blur-lg transition-all duration-500" />
+              
+              {/* Inner glow */}
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/30 to-cyan-500/30 rounded-lg blur-md group-hover:blur-lg transition-all" />
+              
+              {/* Logo container */}
+              <div className="relative bg-[#0d1525] rounded-lg p-1 border border-blue-500/30 group-hover:border-cyan-400/50 transition-colors">
+                <Image 
+                  src="/logo.png" 
+                  alt="ANTI-SCAM Logo" 
+                  width={32} 
+                  height={32}
+                  className="rounded-md relative z-10 w-8 h-8 sm:w-9 sm:h-9 drop-shadow-[0_0_6px_rgba(59,130,246,0.5)]"
+                />
+              </div>
+              
+              {/* Sparkle effect */}
+              <motion.div
+                animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-cyan-400 rounded-full hidden sm:block"
               />
             </motion.div>
+            
+            {/* Text Logo */}
             <div className="flex flex-col">
-              <span className="text-lg sm:text-xl font-bold tracking-wide">
+              <span className="text-lg sm:text-xl font-bold tracking-wide relative">
                 <span className="text-white">ANTI</span>
-                <span className="text-blue-500">-</span>
-                <span className="text-cyan-400">SCAM</span>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">-</span>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">SCAM</span>
+              </span>
+              <span className="text-[9px] sm:text-[10px] text-gray-500 group-hover:text-cyan-400/70 tracking-widest uppercase transition-colors duration-300 hidden sm:block">
+                {language === 'vi' ? 'Bảo vệ bạn' : 'Protect You'}
               </span>
             </div>
           </Link>
@@ -195,7 +215,7 @@ export default function Header() {
               >
                 <Link
                   href="/auth/signin"
-                  className="flex items-center gap-1.5 px-3 lg:px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 rounded-lg text-sm font-semibold text-white transition-all shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30"
+                  className="flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 rounded-lg text-sm font-semibold text-white transition-all shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30"
                 >
                   <span>{t.common.login}</span>
                 </Link>
@@ -250,7 +270,7 @@ export default function Header() {
               transition={{ duration: 0.3 }}
               className="md:hidden overflow-hidden"
             >
-              <div className="py-4 space-y-1 border-t border-gray-800/50">
+              <div className="py-3 space-y-1 border-t border-gray-800/50">
                 {navLinks.map((link, index) => {
                   const isActive = pathname === link.href
                   return (
@@ -262,32 +282,42 @@ export default function Header() {
                     >
                       <Link
                         href={link.href}
-                        className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
+                        className={`flex items-center gap-3 px-4 py-3.5 rounded-xl text-base transition-all ${
                           isActive 
-                            ? 'bg-blue-600/20 text-blue-400 border-l-2 border-blue-500' 
-                            : 'text-gray-400 hover:text-white hover:bg-white/5'
+                            ? 'bg-blue-600/20 text-blue-400 border-l-4 border-blue-500' 
+                            : 'text-gray-300 hover:text-white hover:bg-white/5'
                         }`}
                         onClick={() => setIsOpen(false)}
                       >
-                        {isActive && <Shield className="w-4 h-4" />}
-                        <span>{link.label}</span>
+                        {isActive && <Shield className="w-5 h-5" />}
+                        <span className="font-medium">{link.label}</span>
                       </Link>
                     </motion.div>
                   )
                 })}
+                
+                {/* Language Switcher Mobile */}
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.25 }}
+                  className="px-4 py-2"
+                >
+                  <LanguageSwitcher />
+                </motion.div>
                 
                 {/* Mobile CTA */}
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
-                  className="pt-3"
+                  className="pt-3 px-3"
                 >
                   {session ? (
-                    <div className="mx-4 space-y-2">
+                    <div className="space-y-2">
                       <Link
                         href="/dashboard"
-                        className="flex items-center justify-center gap-2 py-3 bg-gray-800 rounded-xl text-white font-semibold"
+                        className="flex items-center justify-center gap-2 py-3.5 bg-gray-800 rounded-xl text-white font-semibold text-base"
                         onClick={() => setIsOpen(false)}
                       >
                         <LayoutDashboard className="w-5 h-5" />
@@ -298,19 +328,19 @@ export default function Header() {
                           setIsOpen(false)
                           signOut({ callbackUrl: '/' })
                         }}
-                        className="flex items-center justify-center gap-2 w-full py-3 bg-red-500/20 rounded-xl text-red-400 font-semibold"
+                        className="flex items-center justify-center gap-2 w-full py-3.5 bg-red-500/20 rounded-xl text-red-400 font-semibold text-base"
                       >
                         <LogOut className="w-5 h-5" />
-                        Đăng xuất
+                        {language === 'vi' ? 'Đăng xuất' : 'Sign Out'}
                       </button>
                     </div>
                   ) : (
                     <Link
                       href="/auth/signin"
-                      className="flex items-center justify-center gap-2 mx-4 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-xl text-white font-semibold"
+                      className="flex items-center justify-center gap-2 py-3.5 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-xl text-white font-semibold text-base"
                       onClick={() => setIsOpen(false)}
                     >
-                      Đăng nhập
+                      {language === 'vi' ? 'Đăng nhập' : 'Sign In'}
                     </Link>
                   )}
                 </motion.div>

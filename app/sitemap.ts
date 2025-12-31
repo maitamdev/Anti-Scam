@@ -14,6 +14,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/report',
     '/about',
     '/tools',
+    '/tools/wallet-checker',
+    '/tools/blockchain-verify',
     '/tools/qr-scanner',
     '/tools/bank-hotlines',
     '/tools/email-analyzer',

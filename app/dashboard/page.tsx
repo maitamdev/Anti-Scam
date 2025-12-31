@@ -37,6 +37,8 @@ import {
 import { motion } from 'framer-motion'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
+import AchievementBadges from '../components/AchievementBadges'
+import GlowingCard from '../components/GlowingCard'
 
 interface UserStats {
   totalScans: number
@@ -569,27 +571,46 @@ export default function DashboardPage() {
             <h2 className="text-xl font-semibold text-white mb-4">Tính năng</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {menuItems.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="bg-gray-800/50 backdrop-blur p-6 rounded-xl border border-gray-700 hover:border-gray-600 transition-all group hover:scale-[1.02]"
-                >
-                  <div className="flex items-start gap-4">
-                    <div className={`p-3 rounded-xl bg-gradient-to-r ${item.color}`}>
-                      <item.icon className="w-6 h-6 text-white" />
+                <GlowingCard key={item.href} className="h-full">
+                  <Link
+                    href={item.href}
+                    className="block bg-gray-800/50 backdrop-blur p-6 rounded-xl border border-gray-700 hover:border-gray-600 transition-all group h-full"
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className={`p-3 rounded-xl bg-gradient-to-r ${item.color}`}>
+                        <item.icon className="w-6 h-6 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-white mb-1 group-hover:text-blue-400 transition-colors">
+                          {item.title}
+                        </h3>
+                        <p className="text-sm text-gray-400">
+                          {item.description}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="font-semibold text-white mb-1 group-hover:text-blue-400 transition-colors">
-                        {item.title}
-                      </h3>
-                      <p className="text-sm text-gray-400">
-                        {item.description}
-                      </p>
-                    </div>
-                  </div>
-                </Link>
+                  </Link>
+                </GlowingCard>
               ))}
             </div>
+          </motion.div>
+
+          {/* Achievement Badges Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            className="mt-8"
+          >
+            <AchievementBadges 
+              language="vi"
+              userStats={{
+                totalScans: stats?.totalScans || 0,
+                quizScore: 0,
+                reportsSubmitted: 0,
+                daysActive: 1
+              }}
+            />
           </motion.div>
         </div>
       </main>

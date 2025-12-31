@@ -24,13 +24,18 @@ import {
   Info,
   Globe,
   Zap,
-  FileText
+  FileText,
+  Sparkles,
+  Eye,
+  TrendingUp
 } from 'lucide-react'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import ImageUpload from '../components/ImageUpload'
 import AnimatedEye from '../components/AnimatedEye'
 import ScanMascot from '../components/ScanMascot'
+import GlowingCard from '../components/GlowingCard'
+import SecurityScore from '../components/SecurityScore'
 import { safeStorage } from '../lib/safeStorage'
 import { useTranslation } from '../lib/i18n/LanguageContext'
 

@@ -9,13 +9,21 @@ import {
   Lock,
   Play,
   CheckCircle,
-  ArrowRight
+  ArrowRight,
+  Sparkles
 } from 'lucide-react'
 import Image from 'next/image'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import StatsCounter from './components/StatsCounter'
 import TrustBadges from './components/TrustBadges'
+import ScamTrendWidget from './components/ScamTrendWidget'
+import QuickCheckWidget from './components/QuickCheckWidget'
+import ExtensionBanner from './components/ExtensionBanner'
+import FeatureShowcase from './components/FeatureShowcase'
+import TestimonialCarousel from './components/TestimonialCarousel'
+import ScamTypeCards from './components/ScamTypeCards'
+import TypewriterText from './components/TypewriterText'
 import { useRouter } from 'next/navigation'
 import { useTranslation } from './lib/i18n/LanguageContext'
 
@@ -51,7 +59,7 @@ const howItWorks = [
 
 export default function Home() {
   const router = useRouter()
-  const { t, language } = useTranslation()
+  const { language } = useTranslation()
   
   const features = [
     {
@@ -86,37 +94,37 @@ export default function Home() {
       
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="pt-20 sm:pt-28 pb-12 sm:pb-20 px-4 relative overflow-hidden">
+        <section className="pt-24 sm:pt-32 pb-8 sm:pb-16 px-3 sm:px-4 relative overflow-hidden">
           <div className="max-w-7xl mx-auto relative z-10">
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
               {/* Left content */}
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
-                className="relative z-20"
+                className="relative z-20 text-center lg:text-left"
               >
                 {/* Badge */}
                 <motion.div 
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border border-blue-500/20 rounded-full mb-6"
+                  className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border border-blue-500/20 rounded-full mb-4 sm:mb-6"
                 >
                   <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                  <span className="text-sm text-gray-300 font-medium">
+                  <span className="text-xs sm:text-sm text-gray-300 font-medium">
                     {language === 'vi' ? 'Công cụ hỗ trợ phát hiện lừa đảo' : 'Scam detection support tool'}
                   </span>
                 </motion.div>
                 
-                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black leading-[1.1] mb-4 sm:mb-6 uppercase tracking-wider italic relative z-30" style={{ letterSpacing: '0.05em' }}>
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-black leading-[1.1] mb-3 sm:mb-6 uppercase tracking-wider italic relative z-30" style={{ letterSpacing: '0.05em' }}>
                   {language === 'vi' ? (
                     <>
                       <span className="text-white drop-shadow-lg">Bạn có đang</span>
                       <br />
                       <span className="whitespace-nowrap">
                         <span className="text-white drop-shadow-lg">lướt mạng </span>
-                        <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent">
+                        <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent text-gradient-animated">
                           an toàn?
                         </span>
                       </span>
@@ -127,15 +135,26 @@ export default function Home() {
                       <br />
                       <span className="whitespace-nowrap">
                         <span className="text-white drop-shadow-lg">browsing </span>
-                        <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent">
+                        <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent text-gradient-animated">
                           safely?
                         </span>
                       </span>
                     </>
                   )}
                 </h1>
+
+                {/* Typewriter subtitle */}
+                <div className="text-sm sm:text-base lg:text-lg text-cyan-400 mb-3 sm:mb-4 h-6 sm:h-7">
+                  <TypewriterText 
+                    texts={language === 'vi' 
+                      ? ['Phát hiện website lừa đảo', 'Kiểm tra tin nhắn giả mạo', 'Bảo vệ thông tin cá nhân', 'Quiz 5000+ câu hỏi']
+                      : ['Detect scam websites', 'Check fake messages', 'Protect personal info', 'Quiz 5000+ questions']
+                    }
+                    className="font-medium"
+                  />
+                </div>
                 
-                <p className="text-base sm:text-lg text-gray-200 mb-8 leading-relaxed max-w-xl">
+                <p className="text-sm sm:text-base lg:text-lg text-gray-200 mb-6 sm:mb-8 leading-relaxed max-w-xl mx-auto lg:mx-0">
                   {language === 'vi' ? (
                     <>Kiểm tra URL và hình ảnh để <span className="text-white font-semibold">phát hiện dấu hiệu lừa đảo</span>. Công cụ miễn phí giúp bạn cẩn thận hơn khi lướt web.</>
                   ) : (
@@ -143,34 +162,34 @@ export default function Home() {
                   )}
                 </p>
                 
-                <div className="flex flex-wrap gap-3">
+                <div className="flex flex-wrap justify-center lg:justify-start gap-2 sm:gap-3">
                   <motion.button
                     onClick={() => router.push('/scan')}
-                    className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-lg font-medium text-white text-sm flex items-center gap-2 shadow-lg shadow-blue-500/25"
+                    className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-xl font-semibold text-white text-sm sm:text-base flex items-center gap-2 shadow-lg shadow-blue-500/25"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
-                    <Search className="w-4 h-4" />
+                    <Search className="w-4 h-4 sm:w-5 sm:h-5" />
                     {language === 'vi' ? 'Kiểm tra ngay' : 'Check Now'}
                   </motion.button>
                   
                   <motion.button
                     onClick={() => router.push('/quiz')}
-                    className="px-5 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg font-medium text-white text-sm flex items-center gap-2"
+                    className="px-4 sm:px-5 py-2.5 sm:py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl font-medium text-white text-sm sm:text-base flex items-center gap-2"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
-                    <Play className="w-4 h-4" />
+                    <Play className="w-4 h-4 sm:w-5 sm:h-5" />
                     {language === 'vi' ? 'Làm Quiz' : 'Take Quiz'}
                   </motion.button>
                   
                   <motion.button
                     onClick={() => router.push('/report')}
-                    className="px-5 py-2.5 bg-red-500/10 border border-red-500/30 rounded-lg font-medium text-red-400 text-sm flex items-center gap-2 hover:bg-red-500/20"
+                    className="px-4 sm:px-5 py-2.5 sm:py-3 bg-red-500/10 border border-red-500/30 rounded-xl font-medium text-red-400 text-sm sm:text-base flex items-center gap-2 hover:bg-red-500/20"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
-                    <Shield className="w-4 h-4" />
+                    <Shield className="w-4 h-4 sm:w-5 sm:h-5" />
                     {language === 'vi' ? 'Báo cáo' : 'Report'}
                   </motion.button>
                 </div>
@@ -183,7 +202,7 @@ export default function Home() {
                 transition={{ duration: 0.8, delay: 0.2 }}
                 className="flex justify-center lg:justify-end order-first lg:order-last"
               >
-                <div className="relative w-64 h-64 sm:w-80 sm:h-80 md:w-[480px] md:h-[400px]">
+                <div className="relative w-56 h-56 sm:w-72 sm:h-72 md:w-[480px] md:h-[400px] lg:w-[540px] lg:h-[460px]">
                   {/* Animated glow rings */}
                   <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/30 to-blue-500/30 blur-3xl animate-pulse" />
                   <div className="absolute inset-8 bg-gradient-to-r from-purple-500/20 to-pink-500/20 blur-2xl animate-pulse" style={{ animationDelay: '0.5s' }} />
@@ -206,7 +225,7 @@ export default function Home() {
                       src="/1h.png"
                       alt="ANTI-SCAM Security Shield"
                       fill
-                      sizes="(max-width: 768px) 256px, (max-width: 1024px) 320px, 480px"
+                      sizes="(max-width: 768px) 256px, (max-width: 1024px) 320px, 540px"
                       className="object-contain relative z-10 drop-shadow-[0_0_30px_rgba(59,130,246,0.5)]"
                       priority
                     />
@@ -234,6 +253,22 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Quick Check & Scam Stats Section */}
+        <section className="py-12 px-4 bg-gradient-to-b from-transparent to-blue-900/5">
+          <div className="max-w-7xl mx-auto">
+            <div className="grid lg:grid-cols-2 gap-6">
+              {/* Quick Check Widget */}
+              <div className="lg:col-span-1">
+                <QuickCheckWidget language={language} />
+              </div>
+              
+              {/* Scam Trend Widget */}
+              <div className="lg:col-span-1">
+                <ScamTrendWidget language={language} />
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* Features Section */}
         <section className="py-12 sm:py-20 px-4">
@@ -483,6 +518,88 @@ export default function Home() {
                 </div>
               </div>
             </motion.div>
+          </div>
+        </section>
+
+        {/* Scam Types Section - NEW */}
+        <section className="py-12 sm:py-20 px-4">
+          <div className="max-w-7xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center mb-8 sm:mb-12"
+            >
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-red-500/10 border border-red-500/20 rounded-full mb-4">
+                <Sparkles className="w-4 h-4 text-red-400" />
+                <span className="text-sm text-red-400 font-medium">
+                  {language === 'vi' ? 'Nhận biết các loại lừa đảo' : 'Recognize scam types'}
+                </span>
+              </div>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
+                {language === 'vi' ? 'Các hình thức Lừa đảo phổ biến' : 'Common Scam Types'}
+              </h2>
+              <p className="text-gray-400 max-w-2xl mx-auto">
+                {language === 'vi' 
+                  ? 'Tìm hiểu các chiêu trò lừa đảo đang hoành hành để tự bảo vệ mình'
+                  : 'Learn about scam tactics to protect yourself'}
+              </p>
+            </motion.div>
+
+            <ScamTypeCards language={language} />
+          </div>
+        </section>
+
+        {/* Feature Showcase Section - NEW */}
+        <section className="py-12 sm:py-20 px-4 bg-gradient-to-b from-blue-900/5 to-transparent">
+          <div className="max-w-6xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center mb-8 sm:mb-12"
+            >
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
+                {language === 'vi' ? 'Khám phá Tính năng' : 'Explore Features'}
+              </h2>
+              <p className="text-gray-400 max-w-2xl mx-auto">
+                {language === 'vi' 
+                  ? 'Bộ công cụ toàn diện giúp bạn an toàn trên không gian mạng'
+                  : 'Comprehensive toolkit to keep you safe online'}
+              </p>
+            </motion.div>
+
+            <FeatureShowcase language={language} />
+          </div>
+        </section>
+
+        {/* Testimonials Section - NEW */}
+        <section className="py-12 sm:py-20 px-4">
+          <div className="max-w-7xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center mb-8 sm:mb-12"
+            >
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
+                {language === 'vi' ? 'Người dùng nói gì?' : 'What Users Say'}
+              </h2>
+              <p className="text-gray-400 max-w-2xl mx-auto">
+                {language === 'vi' 
+                  ? 'Phản hồi từ cộng đồng người dùng ANTI-SCAM'
+                  : 'Feedback from the ANTI-SCAM user community'}
+              </p>
+            </motion.div>
+
+            <TestimonialCarousel language={language} />
+          </div>
+        </section>
+
+        {/* Extension Banner Section - NEW */}
+        <section className="py-12 px-4">
+          <div className="max-w-5xl mx-auto">
+            <ExtensionBanner language={language} />
           </div>
         </section>
       </main>

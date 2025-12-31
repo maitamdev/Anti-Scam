@@ -2,10 +2,12 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Search, CreditCard, Mail, Phone, AlertTriangle, CheckCircle, XCircle, Loader2, Shield, Building2, Info } from 'lucide-react'
+import { Search, CreditCard, Mail, Phone, AlertTriangle, CheckCircle, XCircle, Loader2, Shield, Building2, Info, Sparkles, Database, TrendingUp, Users } from 'lucide-react'
 import { useTranslation } from '../lib/i18n/LanguageContext'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
+import GlowingCard from '../components/GlowingCard'
+import AnimatedCounter from '../components/AnimatedCounter'
 
 type CheckType = 'bank' | 'email' | 'phone'
 
@@ -37,7 +39,7 @@ const banks = [
 ]
 
 export default function CheckPage() {
-  const { t } = useTranslation()
+  const { t, language } = useTranslation()
   const [checkType, setCheckType] = useState<CheckType>('bank')
   const [inputValue, setInputValue] = useState('')
   const [bankName, setBankName] = useState('')
@@ -334,27 +336,27 @@ export default function CheckPage() {
           transition={{ delay: 0.3 }}
           className="mt-12 grid md:grid-cols-3 gap-4"
         >
-          <div className="bg-blue-500/5 border border-blue-500/20 rounded-xl p-4">
-            <CreditCard className="w-8 h-8 text-blue-400 mb-3" />
-            <h4 className="font-semibold text-white mb-2">{t.checkPage.tips.account.title}</h4>
-            <p className="text-sm text-gray-400">
-              {t.checkPage.tips.account.desc}
-            </p>
-          </div>
-          <div className="bg-cyan-500/5 border border-cyan-500/20 rounded-xl p-4">
-            <Mail className="w-8 h-8 text-cyan-400 mb-3" />
-            <h4 className="font-semibold text-white mb-2">{t.checkPage.tips.email.title}</h4>
-            <p className="text-sm text-gray-400">
-              {t.checkPage.tips.email.desc}
-            </p>
-          </div>
-          <div className="bg-purple-500/5 border border-purple-500/20 rounded-xl p-4">
-            <Phone className="w-8 h-8 text-purple-400 mb-3" />
-            <h4 className="font-semibold text-white mb-2">{t.checkPage.tips.phone.title}</h4>
-            <p className="text-sm text-gray-400">
-              {t.checkPage.tips.phone.desc}
-            </p>
-          </div>
+          <GlowingCard glowColor="rgba(59, 130, 246, 0.3)">
+            <div className="bg-blue-500/5 border border-blue-500/20 rounded-xl p-4 h-full">
+              <CreditCard className="w-8 h-8 text-blue-400 mb-3" />
+              <h4 className="font-semibold text-white mb-2">{t.checkPage.tips.account.title}</h4>
+              <p className="text-sm text-gray-400">{t.checkPage.tips.account.desc}</p>
+            </div>
+          </GlowingCard>
+          <GlowingCard glowColor="rgba(6, 182, 212, 0.3)">
+            <div className="bg-cyan-500/5 border border-cyan-500/20 rounded-xl p-4 h-full">
+              <Mail className="w-8 h-8 text-cyan-400 mb-3" />
+              <h4 className="font-semibold text-white mb-2">{t.checkPage.tips.email.title}</h4>
+              <p className="text-sm text-gray-400">{t.checkPage.tips.email.desc}</p>
+            </div>
+          </GlowingCard>
+          <GlowingCard glowColor="rgba(168, 85, 247, 0.3)">
+            <div className="bg-purple-500/5 border border-purple-500/20 rounded-xl p-4 h-full">
+              <Phone className="w-8 h-8 text-purple-400 mb-3" />
+              <h4 className="font-semibold text-white mb-2">{t.checkPage.tips.phone.title}</h4>
+              <p className="text-sm text-gray-400">{t.checkPage.tips.phone.desc}</p>
+            </div>
+          </GlowingCard>
         </motion.div>
 
         {/* Warning */}
@@ -362,17 +364,21 @@ export default function CheckPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="mt-8 bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-4"
+          className="mt-8"
         >
-          <div className="flex items-start gap-3">
-            <AlertTriangle className="w-5 h-5 text-yellow-400 flex-shrink-0 mt-0.5" />
-            <div>
-              <h4 className="font-semibold text-yellow-400 mb-1">{t.checkPage.warning.title}</h4>
-              <p className="text-sm text-gray-300">
-                {t.checkPage.warning.content}
-              </p>
+          <GlowingCard glowColor="rgba(234, 179, 8, 0.2)">
+            <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-4">
+              <div className="flex items-start gap-3">
+                <AlertTriangle className="w-5 h-5 text-yellow-400 flex-shrink-0 mt-0.5" />
+                <div>
+                  <h4 className="font-semibold text-yellow-400 mb-1">{t.checkPage.warning.title}</h4>
+                  <p className="text-sm text-gray-300">
+                    {t.checkPage.warning.content}
+                  </p>
+                </div>
+              </div>
             </div>
-          </div>
+          </GlowingCard>
         </motion.div>
       </div>
     </main>
