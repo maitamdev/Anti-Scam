@@ -61,7 +61,7 @@ export default function StatsCounter({ stats }: { stats: Stat[] }) {
             className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent"
             whileHover={{ scale: 1.1 }}
           >
-            {counts[index].toLocaleString()}{stat.suffix || '+'}
+            {counts[index].toLocaleString()}{stat.suffix !== undefined ? stat.suffix : '+'}
           </motion.p>
           <p className="text-gray-400 text-sm sm:text-base mt-2 font-medium">{stat.label}</p>
         </motion.div>

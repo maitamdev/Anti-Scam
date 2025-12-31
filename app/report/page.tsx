@@ -6,8 +6,11 @@ import Link from 'next/link'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import ReportForm from '../components/ReportForm'
+import { useTranslation } from '../lib/i18n/LanguageContext'
 
 export default function ReportPage() {
+  const { t } = useTranslation()
+  
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -21,7 +24,7 @@ export default function ReportPage() {
               className="inline-flex items-center gap-2 text-gray-400 hover:text-blue-400 mb-8 transition-colors"
             >
               <ArrowLeft size={20} />
-              <span>Quay lại trang chủ</span>
+              <span>{t.reportPage.backToHome}</span>
             </Link>
 
             <motion.div
@@ -30,9 +33,9 @@ export default function ReportPage() {
               className="text-center mb-8"
             >
               <Flag className="w-16 h-16 text-red-500 mx-auto mb-4" />
-              <h1 className="text-3xl font-bold mb-2">Báo cáo Website Lừa đảo</h1>
+              <h1 className="text-3xl font-bold mb-2">{t.reportPage.title}</h1>
               <p className="text-gray-400">
-                Giúp cộng đồng bằng cách báo cáo các website đáng ngờ
+                {t.reportPage.subtitle}
               </p>
             </motion.div>
 
@@ -54,9 +57,9 @@ export default function ReportPage() {
                 className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4"
               >
                 <Shield className="w-8 h-8 text-blue-400 mb-2" />
-                <h3 className="font-semibold mb-1">Bảo vệ cộng đồng</h3>
+                <h3 className="font-semibold mb-1">{t.reportPage.protectCommunity.title}</h3>
                 <p className="text-sm text-gray-400">
-                  Mỗi báo cáo của bạn giúp AI học hỏi và bảo vệ hàng nghìn người khác
+                  {t.reportPage.protectCommunity.desc}
                 </p>
               </motion.div>
 
@@ -67,9 +70,9 @@ export default function ReportPage() {
                 className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-4"
               >
                 <AlertTriangle className="w-8 h-8 text-yellow-400 mb-2" />
-                <h3 className="font-semibold mb-1">Xác minh nhanh chóng</h3>
+                <h3 className="font-semibold mb-1">{t.reportPage.quickVerify.title}</h3>
                 <p className="text-sm text-gray-400">
-                  Đội ngũ admin sẽ xác minh báo cáo trong vòng 24 giờ
+                  {t.reportPage.quickVerify.desc}
                 </p>
               </motion.div>
             </div>

@@ -33,6 +33,7 @@ import ScamTips from '../components/ScamTips'
 import AnimatedEye from '../components/AnimatedEye'
 import ScanMascot from '../components/ScanMascot'
 import { safeStorage } from '../lib/safeStorage'
+import { useTranslation } from '../lib/i18n/LanguageContext'
 
 interface WebsiteInfo {
   title?: string
@@ -111,6 +112,7 @@ const banks = [
 ]
 
 export default function ScanPage() {
+  const { t, language } = useTranslation()
   const [activeTab, setActiveTab] = useState<'url' | 'image' | 'check'>('url')
   const [url, setUrl] = useState('')
   const [result, setResult] = useState<ScanResult | null>(null)
@@ -144,7 +146,7 @@ export default function ScanPage() {
       const data = await res.json()
 
       if (!data.success) {
-        throw new Error(data.error || 'Có lỗi xảy ra')
+        throw new Error(data.error || (language === 'vi' ? 'Có lỗi xảy ra' : 'An error occurred'))
       }
 
       setResult(data.data)
@@ -158,7 +160,7 @@ export default function ScanPage() {
         safeStorage.setItem('scanHistory', JSON.stringify(history.slice(0, 20)))
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Có lỗi xảy ra')
+      setError(err instanceof Error ? err.message : (language === 'vi' ? 'Có lỗi xảy ra' : 'An error occurred'))
     } finally {
       setIsLoading(false)
     }
@@ -173,7 +175,7 @@ export default function ScanPage() {
   // Check functions
   const handleCheck = async () => {
     if (!checkInput.trim()) {
-      setCheckError('Vui lòng nhập thông tin cần kiểm tra')
+      setCheckError(language === 'vi' ? 'Vui lòng nhập thông tin cần kiểm tra' : 'Please enter information to check')
       return
     }
 
@@ -241,9 +243,9 @@ export default function ScanPage() {
 
   const getCheckPlaceholder = () => {
     switch (checkType) {
-      case 'bank': return 'Nhập số tài khoản ngân hàng...'
-      case 'email': return 'Nhập địa chỉ email...'
-      case 'phone': return 'Nhập số điện thoại...'
+      case 'bank': return language === 'vi' ? 'Nhập số tài khoản ngân hàng...' : 'Enter bank account number...'
+      case 'email': return language === 'vi' ? 'Nhập địa chỉ email...' : 'Enter email address...'
+      case 'phone': return language === 'vi' ? 'Nhập số điện thoại...' : 'Enter phone number...'
     }
   }
 
@@ -257,10 +259,12 @@ export default function ScanPage() {
           iconBg: 'bg-green-500/20',
           iconColor: 'text-green-400',
           borderColor: 'border-green-500/30',
-          label: 'WEBSITE AN TOÀN',
+          label: language === 'vi' ? 'WEBSITE AN TOÀN' : 'SAFE WEBSITE',
           labelColor: 'text-green-400',
-          title: 'Website này an toàn để truy cập.',
-          description: 'Chúng tôi đã phân tích các yếu tố bảo mật và không tìm thấy dấu hiệu đáng ngờ nào. Bạn có thể yên tâm truy cập.'
+          title: language === 'vi' ? 'Website này an toàn để truy cập.' : 'This website is safe to visit.',
+          description: language === 'vi' 
+            ? 'Chúng tôi đã phân tích các yếu tố bảo mật và không tìm thấy dấu hiệu đáng ngờ nào. Bạn có thể yên tâm truy cập.'
+            : 'We analyzed security factors and found no suspicious signs. You can safely visit.'
         }
       case 'CAUTION':
         return {
@@ -268,10 +272,12 @@ export default function ScanPage() {
           iconBg: 'bg-yellow-500/20',
           iconColor: 'text-yellow-400',
           borderColor: 'border-yellow-500/30',
-          label: 'CẦN CẨN THẬN',
+          label: language === 'vi' ? 'CẦN CẨN THẬN' : 'BE CAREFUL',
           labelColor: 'text-yellow-400',
-          title: 'Website này có một số dấu hiệu đáng ngờ.',
-          description: 'Chúng tôi phát hiện một số yếu tố cần lưu ý. Hãy cẩn thận khi nhập thông tin cá nhân hoặc tài chính.'
+          title: language === 'vi' ? 'Website này có một số dấu hiệu đáng ngờ.' : 'This website has some suspicious signs.',
+          description: language === 'vi'
+            ? 'Chúng tôi phát hiện một số yếu tố cần lưu ý. Hãy cẩn thận khi nhập thông tin cá nhân hoặc tài chính.'
+            : 'We detected some factors to note. Be careful when entering personal or financial information.'
         }
       case 'DANGEROUS':
         return {
@@ -279,10 +285,12 @@ export default function ScanPage() {
           iconBg: 'bg-red-500/20',
           iconColor: 'text-red-400',
           borderColor: 'border-red-500/30',
-          label: 'WEBSITE NGUY HIỂM',
+          label: language === 'vi' ? 'WEBSITE NGUY HIỂM' : 'DANGEROUS WEBSITE',
           labelColor: 'text-red-400',
-          title: 'Website này có nguy cơ lừa đảo cao!',
-          description: 'Chúng tôi phát hiện nhiều dấu hiệu lừa đảo. KHÔNG nên truy cập hoặc cung cấp bất kỳ thông tin nào.'
+          title: language === 'vi' ? 'Website này có nguy cơ lừa đảo cao!' : 'This website has high scam risk!',
+          description: language === 'vi'
+            ? 'Chúng tôi phát hiện nhiều dấu hiệu lừa đảo. KHÔNG nên truy cập hoặc cung cấp bất kỳ thông tin nào.'
+            : 'We detected many scam signs. DO NOT visit or provide any information.'
         }
     }
   }
@@ -306,10 +314,12 @@ export default function ScanPage() {
             className="text-center mb-6 sm:mb-8"
           >
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">
-              Kiểm tra URL & Tin nhắn
+              {language === 'vi' ? 'Kiểm tra URL & Tin nhắn' : 'Check URL & Messages'}
             </h1>
             <p className="text-gray-400 text-sm sm:text-lg px-2">
-              Dán link hoặc upload ảnh tin nhắn đáng ngờ để kiểm tra dấu hiệu lừa đảo.
+              {language === 'vi' 
+                ? 'Dán link hoặc upload ảnh tin nhắn đáng ngờ để kiểm tra dấu hiệu lừa đảo.'
+                : 'Paste link or upload suspicious message screenshot to check for scam signs.'}
             </p>
           </motion.div>
 
@@ -338,7 +348,7 @@ export default function ScanPage() {
               }`}
             >
               <Link2 className="w-4 h-4 sm:w-5 sm:h-5" />
-              <span className="hidden xs:inline">Kiểm tra</span> URL
+              <span className="hidden xs:inline">{language === 'vi' ? 'Kiểm tra' : 'Check'}</span> URL
             </button>
             <button
               onClick={() => { setActiveTab('image'); setResult(null); setError(''); setCheckResult(null); }}
@@ -349,7 +359,7 @@ export default function ScanPage() {
               }`}
             >
               <ImageIcon className="w-4 h-4 sm:w-5 sm:h-5" />
-              <span className="hidden xs:inline">Kiểm tra</span> Hình ảnh
+              <span className="hidden xs:inline">{language === 'vi' ? 'Kiểm tra' : 'Check'}</span> {language === 'vi' ? 'Hình ảnh' : 'Image'}
             </button>
             <button
               onClick={() => { setActiveTab('check'); setResult(null); setError(''); setCheckResult(null); setCheckInput(''); }}
@@ -360,7 +370,7 @@ export default function ScanPage() {
               }`}
             >
               <CreditCard className="w-4 h-4 sm:w-5 sm:h-5" />
-              <span className="hidden xs:inline">Tra cứu</span> Lừa đảo
+              <span className="hidden xs:inline">{language === 'vi' ? 'Tra cứu' : 'Check'}</span> {language === 'vi' ? 'Lừa đảo' : 'Scam'}
             </button>
           </motion.div>
 
@@ -377,7 +387,9 @@ export default function ScanPage() {
                 <div className="bg-blue-900/10 rounded-2xl p-6 border border-gray-800">
                   <div className="text-center mb-4">
                     <p className="text-gray-400 text-sm">
-                      Tải lên ảnh chụp màn hình tin nhắn, email, hoặc website đáng ngờ để AI phân tích
+                      {language === 'vi' 
+                        ? 'Tải lên ảnh chụp màn hình tin nhắn, email, hoặc website đáng ngờ để AI phân tích'
+                        : 'Upload screenshot of suspicious message, email, or website for AI analysis'}
                     </p>
                   </div>
                   <ImageUpload />
@@ -408,7 +420,7 @@ export default function ScanPage() {
                       }`}
                     >
                       <CreditCard className="w-4 h-4" />
-                      Tài khoản
+                      {language === 'vi' ? 'Tài khoản' : 'Account'}
                     </button>
                     <button
                       onClick={() => { setCheckType('email'); setCheckResult(null); setCheckInput(''); setCheckError(''); }}
@@ -430,14 +442,14 @@ export default function ScanPage() {
                       }`}
                     >
                       <Phone className="w-4 h-4" />
-                      Điện thoại
+                      {language === 'vi' ? 'Điện thoại' : 'Phone'}
                     </button>
                   </div>
 
                   {/* Bank selector */}
                   {checkType === 'bank' && (
                     <div className="mb-4">
-                      <label className="block text-sm text-gray-400 mb-2">Ngân hàng (tùy chọn)</label>
+                      <label className="block text-sm text-gray-400 mb-2">{language === 'vi' ? 'Ngân hàng (tùy chọn)' : 'Bank (optional)'}</label>
                       <div className="relative">
                         <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                         <select
@@ -445,7 +457,7 @@ export default function ScanPage() {
                           onChange={(e) => setBankName(e.target.value)}
                           className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white appearance-none cursor-pointer focus:outline-none focus:border-blue-500/50"
                         >
-                          <option value="">Chọn ngân hàng...</option>
+                          <option value="">{language === 'vi' ? 'Chọn ngân hàng...' : 'Select bank...'}</option>
                           {banks.map(bank => (
                             <option key={bank} value={bank}>{bank}</option>
                           ))}
@@ -483,12 +495,12 @@ export default function ScanPage() {
                     {checkLoading ? (
                       <>
                         <Loader2 className="w-5 h-5 animate-spin" />
-                        Đang kiểm tra...
+                        {language === 'vi' ? 'Đang kiểm tra...' : 'Checking...'}
                       </>
                     ) : (
                       <>
                         <Search className="w-5 h-5" />
-                        Kiểm tra ngay
+                        {language === 'vi' ? 'Kiểm tra ngay' : 'Check Now'}
                       </>
                     )}
                   </button>
@@ -513,44 +525,44 @@ export default function ScanPage() {
                               <div className="space-y-2 mt-4">
                                 {checkResult.data.reportCount && (
                                   <p className="text-sm text-gray-300">
-                                    📊 Số lần bị báo cáo: <span className="font-semibold text-white">{checkResult.data.reportCount}</span>
+                                    📊 {language === 'vi' ? 'Số lần bị báo cáo' : 'Report count'}: <span className="font-semibold text-white">{checkResult.data.reportCount}</span>
                                   </p>
                                 )}
                                 {checkResult.data.bankName && (
                                   <p className="text-sm text-gray-300">
-                                    🏦 Ngân hàng: <span className="font-semibold text-white">{checkResult.data.bankName}</span>
+                                    🏦 {language === 'vi' ? 'Ngân hàng' : 'Bank'}: <span className="font-semibold text-white">{checkResult.data.bankName}</span>
                                   </p>
                                 )}
                                 {checkResult.data.ownerName && (
                                   <p className="text-sm text-gray-300">
-                                    👤 Chủ tài khoản: <span className="font-semibold text-white">{checkResult.data.ownerName}</span>
+                                    👤 {language === 'vi' ? 'Chủ tài khoản' : 'Account owner'}: <span className="font-semibold text-white">{checkResult.data.ownerName}</span>
                                   </p>
                                 )}
                                 {checkResult.data.totalLoss && (
                                   <p className="text-sm text-gray-300">
-                                    💰 Tổng thiệt hại: <span className="font-semibold text-red-400">
+                                    💰 {language === 'vi' ? 'Tổng thiệt hại' : 'Total loss'}: <span className="font-semibold text-red-400">
                                       {checkResult.data.totalLoss.toLocaleString('vi-VN')} VNĐ
                                     </span>
                                   </p>
                                 )}
                                 {checkResult.data.carrier && (
                                   <p className="text-sm text-gray-300">
-                                    📱 Nhà mạng: <span className="font-semibold text-white">{checkResult.data.carrier}</span>
+                                    📱 {language === 'vi' ? 'Nhà mạng' : 'Carrier'}: <span className="font-semibold text-white">{checkResult.data.carrier}</span>
                                   </p>
                                 )}
                                 {checkResult.data.category && (
                                   <p className="text-sm text-gray-300">
-                                    🏷️ Loại: <span className="font-semibold text-white">{checkResult.data.category}</span>
+                                    🏷️ {language === 'vi' ? 'Loại' : 'Category'}: <span className="font-semibold text-white">{checkResult.data.category}</span>
                                   </p>
                                 )}
                                 {checkResult.data.description && (
                                   <p className="text-sm text-gray-300">
-                                    📝 Mô tả: <span className="text-white">{checkResult.data.description}</span>
+                                    📝 {language === 'vi' ? 'Mô tả' : 'Description'}: <span className="text-white">{checkResult.data.description}</span>
                                   </p>
                                 )}
                                 {checkResult.data.verified && (
                                   <p className="text-sm text-red-400 font-semibold">
-                                    ✓ Đã được xác minh bởi hệ thống
+                                    ✓ {language === 'vi' ? 'Đã được xác minh bởi hệ thống' : 'Verified by system'}
                                   </p>
                                 )}
                               </div>
@@ -565,23 +577,23 @@ export default function ScanPage() {
                   <div className="mt-6 grid md:grid-cols-3 gap-3">
                     <div className="bg-blue-500/5 border border-blue-500/20 rounded-lg p-3">
                       <CreditCard className="w-6 h-6 text-blue-400 mb-2" />
-                      <h4 className="font-medium text-white text-sm mb-1">Kiểm tra tài khoản</h4>
+                      <h4 className="font-medium text-white text-sm mb-1">{language === 'vi' ? 'Kiểm tra tài khoản' : 'Check account'}</h4>
                       <p className="text-xs text-gray-400">
-                        Tra cứu số tài khoản trước khi chuyển tiền
+                        {language === 'vi' ? 'Tra cứu số tài khoản trước khi chuyển tiền' : 'Look up account before transferring money'}
                       </p>
                     </div>
                     <div className="bg-cyan-500/5 border border-cyan-500/20 rounded-lg p-3">
                       <Mail className="w-6 h-6 text-cyan-400 mb-2" />
-                      <h4 className="font-medium text-white text-sm mb-1">Kiểm tra email</h4>
+                      <h4 className="font-medium text-white text-sm mb-1">{language === 'vi' ? 'Kiểm tra email' : 'Check email'}</h4>
                       <p className="text-xs text-gray-400">
-                        Xác minh email có phải lừa đảo không
+                        {language === 'vi' ? 'Xác minh email có phải lừa đảo không' : 'Verify if email is scam'}
                       </p>
                     </div>
                     <div className="bg-purple-500/5 border border-purple-500/20 rounded-lg p-3">
                       <Phone className="w-6 h-6 text-purple-400 mb-2" />
-                      <h4 className="font-medium text-white text-sm mb-1">Kiểm tra SĐT</h4>
+                      <h4 className="font-medium text-white text-sm mb-1">{language === 'vi' ? 'Kiểm tra SĐT' : 'Check phone'}</h4>
                       <p className="text-xs text-gray-400">
-                        Tra cứu số điện thoại lạ gọi đến
+                        {language === 'vi' ? 'Tra cứu số điện thoại lạ gọi đến' : 'Look up unknown phone numbers'}
                       </p>
                     </div>
                   </div>
@@ -591,7 +603,9 @@ export default function ScanPage() {
                     <div className="flex items-start gap-2">
                       <AlertTriangle className="w-4 h-4 text-yellow-400 flex-shrink-0 mt-0.5" />
                       <p className="text-xs text-gray-300">
-                        Kết quả chỉ mang tính tham khảo. Không tìm thấy không đảm bảo 100% an toàn.
+                        {language === 'vi' 
+                          ? 'Kết quả chỉ mang tính tham khảo. Không tìm thấy không đảm bảo 100% an toàn.'
+                          : 'Results are for reference only. Not found does not guarantee 100% safety.'}
                       </p>
                     </div>
                   </div>
@@ -618,7 +632,7 @@ export default function ScanPage() {
                   type="text"
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
-                  placeholder="Dán URL website vào đây..."
+                  placeholder={language === 'vi' ? 'Dán URL website vào đây...' : 'Paste website URL here...'}
                   className="w-full bg-blue-900/10 border border-gray-700 rounded-lg sm:rounded-xl py-3 sm:py-4 pl-24 sm:pl-32 pr-4 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all text-sm sm:text-base"
                   disabled={isLoading}
                 />
@@ -631,13 +645,13 @@ export default function ScanPage() {
                 {isLoading ? (
                   <>
                     <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
-                    <span className="hidden sm:inline">Đang kiểm tra...</span>
-                    <span className="sm:hidden">Đang...</span>
+                    <span className="hidden sm:inline">{language === 'vi' ? 'Đang kiểm tra...' : 'Checking...'}</span>
+                    <span className="sm:hidden">{language === 'vi' ? 'Đang...' : '...'}</span>
                   </>
                 ) : (
                   <>
                     <Search className="w-4 h-4 sm:w-5 sm:h-5" />
-                    Kiểm tra
+                    {language === 'vi' ? 'Kiểm tra' : 'Check'}
                   </>
                 )}
               </button>
@@ -664,7 +678,7 @@ export default function ScanPage() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
               >
-                <h2 className="text-xl font-semibold mb-4">Kết quả phân tích</h2>
+                <h2 className="text-xl font-semibold mb-4">{language === 'vi' ? 'Kết quả phân tích' : 'Analysis Result'}</h2>
 
                 {/* Main Result Card with Mascot */}
                 <div className={`bg-blue-900/10 rounded-2xl p-6 border ${config.borderColor} mb-4`}>
@@ -692,7 +706,7 @@ export default function ScanPage() {
                       onClick={() => toggleSection('details')}
                       className="w-full p-4 flex items-center justify-between text-left hover:bg-[#1a2332] transition-colors"
                     >
-                      <span className="font-medium">Chi tiết phân tích</span>
+                      <span className="font-medium">{language === 'vi' ? 'Chi tiết phân tích' : 'Analysis Details'}</span>
                       {expandedSection === 'details' ? (
                         <ChevronUp className="w-5 h-5 text-gray-400" />
                       ) : (
@@ -716,22 +730,22 @@ export default function ScanPage() {
                                   <p className="text-gray-200 font-medium truncate">{result.domain}</p>
                                 </div>
                                 <div className=" rounded-lg p-3">
-                                  <p className="text-gray-500 text-xs mb-1">Điểm rủi ro</p>
+                                  <p className="text-gray-500 text-xs mb-1">{language === 'vi' ? 'Điểm rủi ro' : 'Risk Score'}</p>
                                   <p className={`font-bold text-lg ${
                                     result.score <= 30 ? 'text-green-400' :
                                     result.score <= 60 ? 'text-yellow-400' : 'text-red-400'
                                   }`}>{result.score}/100</p>
                                 </div>
                                 <div className=" rounded-lg p-3">
-                                  <p className="text-gray-500 text-xs mb-1">Độ tin cậy AI</p>
+                                  <p className="text-gray-500 text-xs mb-1">{language === 'vi' ? 'Độ tin cậy AI' : 'AI Confidence'}</p>
                                   <p className="text-gray-200 font-medium">{Math.round(result.aiConfidence * 100)}%</p>
                                 </div>
                                 <div className=" rounded-lg p-3">
-                                  <p className="text-gray-500 text-xs mb-1">Phân loại</p>
+                                  <p className="text-gray-500 text-xs mb-1">{language === 'vi' ? 'Phân loại' : 'Category'}</p>
                                   <p className="text-gray-200 font-medium">
                                     {typeof result.categoryGuess === 'object' 
                                       ? result.categoryGuess.category 
-                                      : result.categoryGuess || result.websiteInfo?.category || 'Không xác định'}
+                                      : result.categoryGuess || result.websiteInfo?.category || (language === 'vi' ? 'Không xác định' : 'Unknown')}
                                   </p>
                                 </div>
                               </div>
@@ -739,7 +753,7 @@ export default function ScanPage() {
                               {/* SSL & Security */}
                               {result.websiteInfo && (
                                 <div className=" rounded-lg p-3">
-                                  <p className="text-gray-400 text-xs mb-2 font-medium">Kiểm tra bảo mật</p>
+                                  <p className="text-gray-400 text-xs mb-2 font-medium">{language === 'vi' ? 'Kiểm tra bảo mật' : 'Security Check'}</p>
                                   <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                                     <div className="flex items-center gap-2">
                                       {result.websiteInfo.hasSSL ? (
@@ -747,7 +761,7 @@ export default function ScanPage() {
                                       ) : (
                                         <XCircle className="w-4 h-4 text-red-400" />
                                       )}
-                                      <span className="text-gray-300 text-xs">Chứng chỉ SSL</span>
+                                      <span className="text-gray-300 text-xs">{language === 'vi' ? 'Chứng chỉ SSL' : 'SSL Certificate'}</span>
                                     </div>
                                     <div className="flex items-center gap-2">
                                       {result.websiteInfo.hasPrivacyPolicy ? (
@@ -755,7 +769,7 @@ export default function ScanPage() {
                                       ) : (
                                         <XCircle className="w-4 h-4 text-yellow-400" />
                                       )}
-                                      <span className="text-gray-300 text-xs">Chính sách bảo mật</span>
+                                      <span className="text-gray-300 text-xs">{language === 'vi' ? 'Chính sách bảo mật' : 'Privacy Policy'}</span>
                                     </div>
                                     <div className="flex items-center gap-2">
                                       {result.websiteInfo.hasContactInfo ? (
@@ -763,7 +777,7 @@ export default function ScanPage() {
                                       ) : (
                                         <XCircle className="w-4 h-4 text-yellow-400" />
                                       )}
-                                      <span className="text-gray-300 text-xs">Thông tin liên hệ</span>
+                                      <span className="text-gray-300 text-xs">{language === 'vi' ? 'Thông tin liên hệ' : 'Contact Info'}</span>
                                     </div>
                                     <div className="flex items-center gap-2">
                                       {result.websiteInfo.hasSocialLinks ? (
@@ -771,7 +785,7 @@ export default function ScanPage() {
                                       ) : (
                                         <AlertTriangle className="w-4 h-4 text-gray-500" />
                                       )}
-                                      <span className="text-gray-300 text-xs">Liên kết MXH</span>
+                                      <span className="text-gray-300 text-xs">{language === 'vi' ? 'Liên kết MXH' : 'Social Links'}</span>
                                     </div>
                                     <div className="flex items-center gap-2">
                                       {result.websiteInfo.hasLoginForm ? (
@@ -779,7 +793,7 @@ export default function ScanPage() {
                                       ) : (
                                         <CheckCircle className="w-4 h-4 text-gray-500" />
                                       )}
-                                      <span className="text-gray-300 text-xs">Form đăng nhập</span>
+                                      <span className="text-gray-300 text-xs">{language === 'vi' ? 'Form đăng nhập' : 'Login Form'}</span>
                                     </div>
                                     <div className="flex items-center gap-2">
                                       {result.websiteInfo.hasPaymentForm ? (
@@ -787,7 +801,7 @@ export default function ScanPage() {
                                       ) : (
                                         <CheckCircle className="w-4 h-4 text-gray-500" />
                                       )}
-                                      <span className="text-gray-300 text-xs">Form thanh toán</span>
+                                      <span className="text-gray-300 text-xs">{language === 'vi' ? 'Form thanh toán' : 'Payment Form'}</span>
                                     </div>
                                   </div>
                                 </div>
@@ -821,25 +835,25 @@ export default function ScanPage() {
                                       <div className="text-lg font-bold text-red-400">
                                         {result.virusTotal.stats.malicious}
                                       </div>
-                                      <div className="text-[10px] text-gray-400">Độc hại</div>
+                                      <div className="text-[10px] text-gray-400">{language === 'vi' ? 'Độc hại' : 'Malicious'}</div>
                                     </div>
                                     <div className="bg-black/20 rounded p-2 text-center">
                                       <div className="text-lg font-bold text-yellow-400">
                                         {result.virusTotal.stats.suspicious}
                                       </div>
-                                      <div className="text-[10px] text-gray-400">Đáng ngờ</div>
+                                      <div className="text-[10px] text-gray-400">{language === 'vi' ? 'Đáng ngờ' : 'Suspicious'}</div>
                                     </div>
                                     <div className="bg-black/20 rounded p-2 text-center">
                                       <div className="text-lg font-bold text-green-400">
                                         {result.virusTotal.stats.harmless}
                                       </div>
-                                      <div className="text-[10px] text-gray-400">An toàn</div>
+                                      <div className="text-[10px] text-gray-400">{language === 'vi' ? 'An toàn' : 'Safe'}</div>
                                     </div>
                                     <div className="bg-black/20 rounded p-2 text-center">
                                       <div className="text-lg font-bold text-gray-400">
                                         {result.virusTotal.stats.undetected}
                                       </div>
-                                      <div className="text-[10px] text-gray-400">Chưa xác định</div>
+                                      <div className="text-[10px] text-gray-400">{language === 'vi' ? 'Chưa xác định' : 'Undetected'}</div>
                                     </div>
                                   </div>
 
@@ -848,21 +862,21 @@ export default function ScanPage() {
                                       <>
                                         <ShieldX className="w-4 h-4 text-red-400" />
                                         <span className="text-red-400 font-medium">
-                                          ⚠️ {result.virusTotal.stats.malicious} antivirus phát hiện mối đe dọa!
+                                          ⚠️ {result.virusTotal.stats.malicious} {language === 'vi' ? 'antivirus phát hiện mối đe dọa!' : 'antivirus detected threats!'}
                                         </span>
                                       </>
                                     ) : result.virusTotal.stats.suspicious > 0 ? (
                                       <>
                                         <ShieldAlert className="w-4 h-4 text-yellow-400" />
                                         <span className="text-yellow-400 font-medium">
-                                          ⚠️ {result.virusTotal.stats.suspicious} antivirus đánh dấu đáng ngờ
+                                          ⚠️ {result.virusTotal.stats.suspicious} {language === 'vi' ? 'antivirus đánh dấu đáng ngờ' : 'antivirus flagged as suspicious'}
                                         </span>
                                       </>
                                     ) : (
                                       <>
                                         <CheckCircle className="w-4 h-4 text-green-400" />
                                         <span className="text-green-400 font-medium">
-                                          ✓ Không phát hiện mối đe dọa từ {result.virusTotal.stats.total} antivirus
+                                          ✓ {language === 'vi' ? `Không phát hiện mối đe dọa từ ${result.virusTotal.stats.total} antivirus` : `No threats detected from ${result.virusTotal.stats.total} antivirus`}
                                         </span>
                                       </>
                                     )}
@@ -873,7 +887,7 @@ export default function ScanPage() {
                               {/* Website Info */}
                               {result.websiteInfo?.title && (
                                 <div className=" rounded-lg p-3">
-                                  <p className="text-gray-400 text-xs mb-1">Tiêu đề website</p>
+                                  <p className="text-gray-400 text-xs mb-1">{language === 'vi' ? 'Tiêu đề website' : 'Website Title'}</p>
                                   <p className="text-gray-200">{result.websiteInfo.title}</p>
                                   {result.websiteInfo.description && (
                                     <p className="text-gray-500 text-xs mt-1 line-clamp-2">{result.websiteInfo.description}</p>
@@ -884,7 +898,7 @@ export default function ScanPage() {
                               {/* Risk Factors */}
                               {result.websiteInfo?.riskFactors && result.websiteInfo.riskFactors.length > 0 && (
                                 <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3">
-                                  <p className="text-red-400 text-xs mb-2 font-medium">⚠️ Yếu tố rủi ro phát hiện</p>
+                                  <p className="text-red-400 text-xs mb-2 font-medium">⚠️ {language === 'vi' ? 'Yếu tố rủi ro phát hiện' : 'Risk Factors Detected'}</p>
                                   <ul className="space-y-1">
                                     {result.websiteInfo.riskFactors.map((factor, i) => (
                                       <li key={i} className="text-red-300 text-xs flex items-start gap-2">
@@ -898,7 +912,7 @@ export default function ScanPage() {
                               {/* Trust Factors */}
                               {result.websiteInfo?.trustFactors && result.websiteInfo.trustFactors.length > 0 && (
                                 <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3">
-                                  <p className="text-blue-400 text-xs mb-2 font-medium">✓ Yếu tố tin cậy</p>
+                                  <p className="text-blue-400 text-xs mb-2 font-medium">✓ {language === 'vi' ? 'Yếu tố tin cậy' : 'Trust Factors'}</p>
                                   <ul className="space-y-1">
                                     {result.websiteInfo.trustFactors.map((factor, i) => (
                                       <li key={i} className="text-blue-300 text-xs flex items-start gap-2">
@@ -957,7 +971,7 @@ export default function ScanPage() {
                                   <div className="rounded-xl p-4 bg-gradient-to-br from-gray-800/50 to-gray-900/50 border border-gray-700/50">
                                     <h4 className="text-white text-sm font-semibold mb-4 flex items-center gap-2">
                                       <FileText className="w-4 h-4 text-cyan-400" />
-                                      Chi tiết phân tích AI
+                                      {language === 'vi' ? 'Chi tiết phân tích AI' : 'AI Analysis Details'}
                                     </h4>
                                     
                                     {hasStructuredData ? (
@@ -970,7 +984,7 @@ export default function ScanPage() {
                                                 <Globe className="w-4 h-4 text-purple-400" />
                                               </div>
                                               <div className="flex-1 min-w-0">
-                                                <p className="text-purple-400 text-xs font-medium mb-1">Loại website</p>
+                                                <p className="text-purple-400 text-xs font-medium mb-1">{language === 'vi' ? 'Loại website' : 'Website Type'}</p>
                                                 <p className="text-gray-200 text-sm leading-relaxed">{parsed.loaiWebsite}</p>
                                               </div>
                                             </div>
@@ -985,7 +999,7 @@ export default function ScanPage() {
                                                 <Zap className="w-4 h-4 text-blue-400" />
                                               </div>
                                               <div className="flex-1 min-w-0">
-                                                <p className="text-blue-400 text-xs font-medium mb-1">Chức năng</p>
+                                                <p className="text-blue-400 text-xs font-medium mb-1">{language === 'vi' ? 'Chức năng' : 'Function'}</p>
                                                 <p className="text-gray-200 text-sm leading-relaxed">{parsed.chucNang}</p>
                                               </div>
                                             </div>
@@ -1000,7 +1014,7 @@ export default function ScanPage() {
                                                 <Link2 className="w-4 h-4 text-cyan-400" />
                                               </div>
                                               <div className="flex-1 min-w-0">
-                                                <p className="text-cyan-400 text-xs font-medium mb-1">Phân tích domain</p>
+                                                <p className="text-cyan-400 text-xs font-medium mb-1">{language === 'vi' ? 'Phân tích domain' : 'Domain Analysis'}</p>
                                                 <p className="text-gray-200 text-sm leading-relaxed">{parsed.phanTichDomain}</p>
                                               </div>
                                             </div>
@@ -1039,7 +1053,7 @@ export default function ScanPage() {
                                                     : parsed.baoMat.toLowerCase().includes('rủi ro') || parsed.baoMat.toLowerCase().includes('nguy hiểm')
                                                     ? 'text-red-400'
                                                     : 'text-yellow-400'
-                                                }`}>Bảo mật</p>
+                                                }`}>{language === 'vi' ? 'Bảo mật' : 'Security'}</p>
                                                 <p className="text-gray-200 text-sm leading-relaxed">{parsed.baoMat}</p>
                                               </div>
                                             </div>
@@ -1078,7 +1092,7 @@ export default function ScanPage() {
                                                     : result.score <= 60
                                                     ? 'text-yellow-400'
                                                     : 'text-red-400'
-                                                }`}>Kết luận</p>
+                                                }`}>{language === 'vi' ? 'Kết luận' : 'Conclusion'}</p>
                                                 <p className="text-gray-100 text-sm leading-relaxed font-medium">{parsed.ketLuan}</p>
                                               </div>
                                             </div>
@@ -1088,7 +1102,7 @@ export default function ScanPage() {
                                         {/* Other reasons */}
                                         {parsed.other.length > 0 && (
                                           <div className="bg-gray-800/30 border border-gray-700/30 rounded-lg p-3">
-                                            <p className="text-gray-400 text-xs font-medium mb-2">Thông tin khác</p>
+                                            <p className="text-gray-400 text-xs font-medium mb-2">{language === 'vi' ? 'Thông tin khác' : 'Other Information'}</p>
                                             <div className="space-y-2">
                                               {parsed.other.map((reason, i) => (
                                                 <div key={i} className="flex items-start gap-2">
@@ -1137,7 +1151,7 @@ export default function ScanPage() {
                               {/* External Sources */}
                               {result.externalSources && result.externalSources.length > 0 && (
                                 <div className=" rounded-lg p-3">
-                                  <p className="text-gray-400 text-xs mb-2 font-medium">Nguồn kiểm tra bên ngoài</p>
+                                  <p className="text-gray-400 text-xs mb-2 font-medium">{language === 'vi' ? 'Nguồn kiểm tra bên ngoài' : 'External Sources'}</p>
                                   <ul className="space-y-1">
                                     {result.externalSources.map((source, i) => (
                                       <li key={i} className="text-gray-300 text-xs">{source}</li>
@@ -1149,7 +1163,7 @@ export default function ScanPage() {
                               {/* Technologies */}
                               {result.websiteInfo?.technologies && result.websiteInfo.technologies.length > 0 && (
                                 <div className=" rounded-lg p-3">
-                                  <p className="text-gray-400 text-xs mb-2 font-medium">Công nghệ phát hiện</p>
+                                  <p className="text-gray-400 text-xs mb-2 font-medium">{language === 'vi' ? 'Công nghệ phát hiện' : 'Technologies Detected'}</p>
                                   <div className="flex flex-wrap gap-1">
                                     {result.websiteInfo.technologies.map((tech, i) => (
                                       <span key={i} className="px-2 py-0.5 bg-gray-700 rounded text-xs text-gray-300">{tech}</span>
@@ -1176,7 +1190,7 @@ export default function ScanPage() {
                       onClick={() => toggleSection('why')}
                       className="w-full p-4 flex items-center justify-between text-left hover:bg-[#1a2332] transition-colors"
                     >
-                      <span className="font-medium">Tại sao kết quả này lại quan trọng?</span>
+                      <span className="font-medium">{language === 'vi' ? 'Tại sao kết quả này lại quan trọng?' : 'Why is this result important?'}</span>
                       {expandedSection === 'why' ? (
                         <ChevronUp className="w-5 h-5 text-gray-400" />
                       ) : (
@@ -1194,10 +1208,16 @@ export default function ScanPage() {
                           <div className="p-4 pt-0 border-t border-gray-800">
                             <p className="text-gray-400 text-sm leading-relaxed">
                               {result.label === 'SAFE' 
-                                ? 'Website an toàn giúp bạn yên tâm khi truy cập và thực hiện các giao dịch. Tuy nhiên, hãy luôn cảnh giác và không chia sẻ thông tin nhạy cảm nếu không cần thiết.'
+                                ? (language === 'vi' 
+                                    ? 'Website an toàn giúp bạn yên tâm khi truy cập và thực hiện các giao dịch. Tuy nhiên, hãy luôn cảnh giác và không chia sẻ thông tin nhạy cảm nếu không cần thiết.'
+                                    : 'A safe website allows you to browse and transact with peace of mind. However, always stay vigilant and don\'t share sensitive information unnecessarily.')
                                 : result.label === 'CAUTION'
-                                ? 'Các website có dấu hiệu đáng ngờ có thể là trang giả mạo hoặc chứa nội dung không an toàn. Việc nhận biết sớm giúp bạn tránh được các rủi ro về tài chính và thông tin cá nhân.'
-                                : 'Website nguy hiểm có thể đánh cắp thông tin đăng nhập, số thẻ tín dụng, hoặc cài đặt phần mềm độc hại vào thiết bị của bạn. Hàng nghìn người Việt Nam bị lừa đảo mỗi ngày qua các trang web giả mạo.'}
+                                ? (language === 'vi'
+                                    ? 'Các website có dấu hiệu đáng ngờ có thể là trang giả mạo hoặc chứa nội dung không an toàn. Việc nhận biết sớm giúp bạn tránh được các rủi ro về tài chính và thông tin cá nhân.'
+                                    : 'Websites with suspicious signs may be fake or contain unsafe content. Early detection helps you avoid financial and personal information risks.')
+                                : (language === 'vi'
+                                    ? 'Website nguy hiểm có thể đánh cắp thông tin đăng nhập, số thẻ tín dụng, hoặc cài đặt phần mềm độc hại vào thiết bị của bạn. Hàng nghìn người Việt Nam bị lừa đảo mỗi ngày qua các trang web giả mạo.'
+                                    : 'Dangerous websites can steal login credentials, credit card numbers, or install malware on your device. Thousands of people are scammed daily through fake websites.')}
                             </p>
                           </div>
                         </motion.div>
@@ -1211,7 +1231,7 @@ export default function ScanPage() {
                       onClick={() => toggleSection('next')}
                       className="w-full p-4 flex items-center justify-between text-left hover:bg-[#1a2332] transition-colors"
                     >
-                      <span className="font-medium">Tôi nên làm gì tiếp theo?</span>
+                      <span className="font-medium">{language === 'vi' ? 'Tôi nên làm gì tiếp theo?' : 'What should I do next?'}</span>
                       {expandedSection === 'next' ? (
                         <ChevronUp className="w-5 h-5 text-gray-400" />
                       ) : (
@@ -1230,23 +1250,23 @@ export default function ScanPage() {
                             <ul className="space-y-2 text-sm text-gray-400">
                               {result.label === 'SAFE' ? (
                                 <>
-                                  <li className="flex items-start gap-2"><span className="text-green-400">✓</span> Bạn có thể truy cập website này một cách an toàn</li>
-                                  <li className="flex items-start gap-2"><span className="text-green-400">✓</span> Vẫn nên kiểm tra URL trên thanh địa chỉ trước khi đăng nhập</li>
-                                  <li className="flex items-start gap-2"><span className="text-green-400">✓</span> Không chia sẻ OTP hoặc mật khẩu qua bất kỳ kênh nào</li>
+                                  <li className="flex items-start gap-2"><span className="text-green-400">✓</span> {language === 'vi' ? 'Bạn có thể truy cập website này một cách an toàn' : 'You can safely visit this website'}</li>
+                                  <li className="flex items-start gap-2"><span className="text-green-400">✓</span> {language === 'vi' ? 'Vẫn nên kiểm tra URL trên thanh địa chỉ trước khi đăng nhập' : 'Still check the URL in address bar before logging in'}</li>
+                                  <li className="flex items-start gap-2"><span className="text-green-400">✓</span> {language === 'vi' ? 'Không chia sẻ OTP hoặc mật khẩu qua bất kỳ kênh nào' : 'Never share OTP or password through any channel'}</li>
                                 </>
                               ) : result.label === 'CAUTION' ? (
                                 <>
-                                  <li className="flex items-start gap-2"><span className="text-yellow-400">!</span> Không nhập thông tin đăng nhập hoặc tài chính</li>
-                                  <li className="flex items-start gap-2"><span className="text-yellow-400">!</span> Kiểm tra kỹ URL, so sánh với website chính thức</li>
-                                  <li className="flex items-start gap-2"><span className="text-yellow-400">!</span> Tìm kiếm đánh giá về website này trên Google</li>
-                                  <li className="flex items-start gap-2"><span className="text-yellow-400">!</span> Nếu nghi ngờ, hãy liên hệ trực tiếp với tổ chức qua hotline chính thức</li>
+                                  <li className="flex items-start gap-2"><span className="text-yellow-400">!</span> {language === 'vi' ? 'Không nhập thông tin đăng nhập hoặc tài chính' : 'Do not enter login or financial information'}</li>
+                                  <li className="flex items-start gap-2"><span className="text-yellow-400">!</span> {language === 'vi' ? 'Kiểm tra kỹ URL, so sánh với website chính thức' : 'Check URL carefully, compare with official website'}</li>
+                                  <li className="flex items-start gap-2"><span className="text-yellow-400">!</span> {language === 'vi' ? 'Tìm kiếm đánh giá về website này trên Google' : 'Search for reviews about this website on Google'}</li>
+                                  <li className="flex items-start gap-2"><span className="text-yellow-400">!</span> {language === 'vi' ? 'Nếu nghi ngờ, hãy liên hệ trực tiếp với tổ chức qua hotline chính thức' : 'If in doubt, contact the organization directly via official hotline'}</li>
                                 </>
                               ) : (
                                 <>
-                                  <li className="flex items-start gap-2"><span className="text-red-400">✗</span> KHÔNG truy cập website này</li>
-                                  <li className="flex items-start gap-2"><span className="text-red-400">✗</span> KHÔNG nhập bất kỳ thông tin nào</li>
-                                  <li className="flex items-start gap-2"><span className="text-red-400">✗</span> Nếu đã nhập thông tin, hãy đổi mật khẩu ngay</li>
-                                  <li className="flex items-start gap-2"><span className="text-red-400">✗</span> Báo cáo website này để bảo vệ người khác</li>
+                                  <li className="flex items-start gap-2"><span className="text-red-400">✗</span> {language === 'vi' ? 'KHÔNG truy cập website này' : 'DO NOT visit this website'}</li>
+                                  <li className="flex items-start gap-2"><span className="text-red-400">✗</span> {language === 'vi' ? 'KHÔNG nhập bất kỳ thông tin nào' : 'DO NOT enter any information'}</li>
+                                  <li className="flex items-start gap-2"><span className="text-red-400">✗</span> {language === 'vi' ? 'Nếu đã nhập thông tin, hãy đổi mật khẩu ngay' : 'If you entered information, change your password immediately'}</li>
+                                  <li className="flex items-start gap-2"><span className="text-red-400">✗</span> {language === 'vi' ? 'Báo cáo website này để bảo vệ người khác' : 'Report this website to protect others'}</li>
                                 </>
                               )}
                             </ul>
@@ -1264,7 +1284,7 @@ export default function ScanPage() {
                     className="inline-flex items-center gap-2 px-6 py-3 border border-blue-500 text-blue-400 hover:bg-blue-500/10 rounded-xl font-medium transition-colors"
                   >
                     <RotateCcw className="w-4 h-4" />
-                    Kiểm tra một đường dẫn khác
+                    {language === 'vi' ? 'Kiểm tra một đường dẫn khác' : 'Check another URL'}
                   </button>
                 </div>
               </motion.div>
@@ -1280,7 +1300,7 @@ export default function ScanPage() {
               className="text-center py-12"
             >
               <Shield className="w-20 h-20 text-gray-700 mx-auto mb-4" />
-              <p className="text-gray-500">Nhập URL để bắt đầu kiểm tra</p>
+              <p className="text-gray-500">{language === 'vi' ? 'Nhập URL để bắt đầu kiểm tra' : 'Enter URL to start checking'}</p>
             </motion.div>
           )}
         </div>

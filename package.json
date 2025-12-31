@@ -36,6 +36,7 @@
     "clsx": "^2.0.0",
     "date-fns": "^4.1.0",
     "framer-motion": "^10.16.16",
+    "jsqr": "^1.4.0",
     "lucide-react": "^0.303.0",
     "nanoid": "^5.1.6",
     "next": "14.0.4",

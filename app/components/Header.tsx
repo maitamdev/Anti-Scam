@@ -2,28 +2,31 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { Menu, X, Shield, User, LogOut, LayoutDashboard, ChevronDown } from 'lucide-react'
+import { Menu, X, Shield, LogOut, LayoutDashboard, ChevronDown } from 'lucide-react'
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { usePathname } from 'next/navigation'
 import { useSession, signOut } from 'next-auth/react'
-
-const navLinks = [
-  { href: '/', label: 'Trang chủ' },
-  { href: '/scan', label: 'Phân tích' },
-  { href: '/alerts', label: 'Cảnh báo' },
-  { href: '/quiz', label: 'Trắc nghiệm' },
-  { href: '/guide', label: 'Cẩm nang' },
-  { href: '/report', label: 'Báo cáo' },
-]
+import LanguageSwitcher from './LanguageSwitcher'
+import { useTranslation } from '../lib/i18n/LanguageContext'
 
 export default function Header() {
   const { data: session, status } = useSession()
+  const { t } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
   const pathname = usePathname()
   const userMenuRef = useRef<HTMLDivElement>(null)
+
+  const navLinks = [
+    { href: '/', label: t.common.home },
+    { href: '/scan', label: t.common.scan },
+    { href: '/alerts', label: t.common.alerts },
+    { href: '/quiz', label: t.common.quiz },
+    { href: '/guide', label: t.common.guide },
+    { href: '/report', label: t.common.report },
+  ]
 
   useEffect(() => {
     const handleScroll = () => {
@@ -194,10 +197,15 @@ export default function Header() {
                   href="/auth/signin"
                   className="flex items-center gap-1.5 px-3 lg:px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 rounded-lg text-sm font-semibold text-white transition-all shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30"
                 >
-                  <span>Đăng nhập</span>
+                  <span>{t.common.login}</span>
                 </Link>
               </motion.div>
             )}
+            
+            {/* Language Switcher */}
+            <div className="ml-2">
+              <LanguageSwitcher />
+            </div>
           </div>
 
           {/* Mobile menu button */}

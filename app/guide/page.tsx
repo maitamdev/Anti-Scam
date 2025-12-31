@@ -6,6 +6,7 @@ import { Search, ChevronLeft, ChevronRight, Shield, Lock, Mail, Wifi, Smartphone
 import Link from 'next/link'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
+import { useTranslation } from '../lib/i18n/LanguageContext'
 
 interface Category {
   id: string
@@ -54,6 +55,7 @@ const placeholderImages = [
 ]
 
 export default function GuidePage() {
+  const { t } = useTranslation()
   const [categories, setCategories] = useState<Category[]>([])
   const [guides, setGuides] = useState<Guide[]>([])
   const [pagination, setPagination] = useState<Pagination | null>(null)
@@ -114,7 +116,7 @@ export default function GuidePage() {
             className="inline-flex items-center gap-2 text-gray-400 hover:text-blue-400 mb-8 transition-colors"
           >
             <ArrowLeft size={20} />
-            <span>Quay lại trang chủ</span>
+            <span>{t.guidePage.backToHome}</span>
           </Link>
 
           {/* Header */}
@@ -124,10 +126,10 @@ export default function GuidePage() {
             className="mb-8"
           >
             <h1 className="text-3xl md:text-4xl font-bold mb-3">
-              Tài nguyên & Hướng dẫn
+              {t.guidePage.title}
             </h1>
             <p className="text-gray-400">
-              Khám phá các bài viết, mẹo và hướng dẫn để bảo vệ bản thân trên không gian mạng.
+              {t.guidePage.subtitle}
             </p>
           </motion.div>
 
@@ -136,7 +138,7 @@ export default function GuidePage() {
             <div className="lg:col-span-1">
               {/* Categories */}
               <div className="bg-blue-900/10 rounded-2xl p-6 border border-gray-800 mb-6">
-                <h2 className="font-semibold mb-4">Danh mục</h2>
+                <h2 className="font-semibold mb-4">{t.guidePage.categories}</h2>
                 <div className="space-y-1">
                   <button
                     onClick={() => handleCategoryChange('all')}
@@ -146,7 +148,7 @@ export default function GuidePage() {
                         : 'text-gray-400 hover:bg-gray-800'
                     }`}
                   >
-                    <span>Tất cả</span>
+                    <span>{t.guidePage.all}</span>
                     <span className="text-sm">{categories.reduce((sum, c) => sum + c.count, 0)}</span>
                   </button>
                   {categories.map((cat) => {
@@ -171,15 +173,15 @@ export default function GuidePage() {
 
               {/* CTA Card */}
               <div className="bg-gradient-to-br from-blue-600/20 to-cyan-600/10 rounded-2xl p-6 border border-blue-500/20">
-                <h3 className="font-semibold mb-2">Đánh giá mức độ an toàn</h3>
+                <h3 className="font-semibold mb-2">{t.guidePage.assessmentCta.title}</h3>
                 <p className="text-gray-400 text-sm mb-4">
-                  Tìm hiểu xem bạn có đang an toàn trên không gian mạng hay không.
+                  {t.guidePage.assessmentCta.desc}
                 </p>
                 <Link
                   href="/assessment"
                   className="block w-full bg-blue-600 hover:bg-blue-700 text-white text-center py-2 rounded-lg transition-colors"
                 >
-                  Bắt đầu ngay
+                  {t.guidePage.assessmentCta.button}
                 </Link>
               </div>
             </div>
@@ -194,7 +196,7 @@ export default function GuidePage() {
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Tìm kiếm bài viết, hướng dẫn..."
+                    placeholder={t.guidePage.searchPlaceholder}
                     className="w-full bg-blue-900/10 border border-gray-800 rounded-xl py-3 pl-12 pr-4 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-colors"
                   />
                 </div>
@@ -230,7 +232,7 @@ export default function GuidePage() {
                               <span className={`text-xs font-medium ${
                                 guide.level === 'advanced' ? 'text-purple-400' : 'text-cyan-400'
                               }`}>
-                                {guide.level === 'advanced' ? 'Nâng cao' : 'Cơ bản'}
+                                {guide.level === 'advanced' ? t.guidePage.levels.advanced : t.guidePage.levels.basic}
                               </span>
                               <h3 className="font-semibold mt-1 mb-2 line-clamp-2 group-hover:text-blue-400 transition-colors">
                                 {guide.title}
@@ -306,11 +308,11 @@ export default function GuidePage() {
               ) : (
                 <div className="text-center py-20">
                   <Shield className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold mb-2">Chưa có bài viết</h3>
+                  <h3 className="text-xl font-semibold mb-2">{t.guidePage.noArticles}</h3>
                   <p className="text-gray-400">
                     {searchQuery
-                      ? 'Không tìm thấy bài viết phù hợp với từ khóa của bạn.'
-                      : 'Các bài viết hướng dẫn sẽ sớm được cập nhật.'}
+                      ? t.guidePage.noArticlesSearch
+                      : t.guidePage.noArticlesDefault}
                   </p>
                 </div>
               )}

@@ -10,6 +10,7 @@ import {
 import Link from 'next/link'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
+import { useTranslation } from '../lib/i18n/LanguageContext'
 import { 
   generateQuestions, 
   generateQuestionsByCategory,
@@ -48,6 +49,7 @@ const DEFAULT_CONFIG: GameConfig = {
 }
 
 export default function QuizPage() {
+  const { t, language } = useTranslation()
   const [gameConfig, setGameConfig] = useState<GameConfig>(DEFAULT_CONFIG)
   const [gameState, setGameState] = useState<GameState | null>(null)
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null)
@@ -163,7 +165,7 @@ export default function QuizPage() {
               className="inline-flex items-center gap-2 text-gray-400 hover:text-blue-400 mb-8 transition-colors"
             >
               <ArrowLeft size={20} />
-              <span>Quay lại trang chủ</span>
+              <span>{t.quiz.backToHome}</span>
             </Link>
 
             <motion.div
@@ -173,20 +175,20 @@ export default function QuizPage() {
             >
               <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 flex items-center justify-center gap-2 sm:gap-3">
                 <Brain className="w-8 h-8 sm:w-10 sm:h-10 text-blue-400" />
-                Quiz Nhận Biết Lừa Đảo
+                {t.quiz.title}
               </h1>
               <p className="text-gray-400 text-sm sm:text-lg px-2">
-                5000+ câu hỏi đa dạng giúp bạn nhận biết các chiêu trò lừa đảo online
+                {t.quiz.subtitle}
               </p>
             </motion.div>
 
             {/* Game Modes */}
             <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-6 sm:mb-8">
               {[
-                { mode: 'quick' as GameMode, icon: Zap, title: 'Chơi Nhanh', desc: '10 câu ngẫu nhiên', color: 'blue' },
-                { mode: 'challenge' as GameMode, icon: Trophy, title: 'Thử Thách', desc: '20 câu, giới hạn thời gian', color: 'blue' },
-                { mode: 'practice' as GameMode, icon: Target, title: 'Luyện Tập', desc: 'Chọn chủ đề', color: 'blue' },
-                { mode: 'custom' as GameMode, icon: Award, title: 'Tùy Chỉnh', desc: 'Thiết lập theo ý muốn', color: 'blue' },
+                { mode: 'quick' as GameMode, icon: Zap, title: t.quiz.modes.quick.title, desc: t.quiz.modes.quick.desc, color: 'blue' },
+                { mode: 'challenge' as GameMode, icon: Trophy, title: t.quiz.modes.challenge.title, desc: t.quiz.modes.challenge.desc, color: 'blue' },
+                { mode: 'practice' as GameMode, icon: Target, title: t.quiz.modes.practice.title, desc: t.quiz.modes.practice.desc, color: 'blue' },
+                { mode: 'custom' as GameMode, icon: Award, title: t.quiz.modes.custom.title, desc: t.quiz.modes.custom.desc, color: 'blue' },
               ].map(({ mode, icon: Icon, title, desc, color }) => (
                 <motion.button
                   key={mode}
@@ -223,47 +225,47 @@ export default function QuizPage() {
                 animate={{ opacity: 1, height: 'auto' }}
                 className="bg-gray-800/50 rounded-2xl p-6 mb-8 border border-gray-700"
               >
-                <h3 className="font-semibold mb-4">Tùy chỉnh</h3>
+                <h3 className="font-semibold mb-4">{t.quiz.customize}</h3>
                 <div className="grid md:grid-cols-3 gap-4">
                   {/* Question Count */}
                   <div>
-                    <label className="text-sm text-gray-400 mb-2 block">Số câu hỏi</label>
+                    <label className="text-sm text-gray-400 mb-2 block">{t.quiz.questionCount}</label>
                     <select
                       value={gameConfig.questionCount}
                       onChange={(e) => setGameConfig({ ...gameConfig, questionCount: parseInt(e.target.value) })}
                       className="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white"
                     >
-                      <option value={5}>5 câu</option>
-                      <option value={10}>10 câu</option>
-                      <option value={20}>20 câu</option>
-                      <option value={30}>30 câu</option>
-                      <option value={50}>50 câu</option>
+                      <option value={5}>5 {t.quiz.questions}</option>
+                      <option value={10}>10 {t.quiz.questions}</option>
+                      <option value={20}>20 {t.quiz.questions}</option>
+                      <option value={30}>30 {t.quiz.questions}</option>
+                      <option value={50}>50 {t.quiz.questions}</option>
                     </select>
                   </div>
 
                   {/* Difficulty */}
                   <div>
-                    <label className="text-sm text-gray-400 mb-2 block">Độ khó</label>
+                    <label className="text-sm text-gray-400 mb-2 block">{t.quiz.difficulty}</label>
                     <select
                       value={gameConfig.difficulty}
                       onChange={(e) => setGameConfig({ ...gameConfig, difficulty: e.target.value as Difficulty })}
                       className="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white"
                     >
-                      <option value="mixed">Trộn lẫn</option>
-                      <option value="easy">Dễ</option>
-                      <option value="medium">Trung bình</option>
-                      <option value="hard">Khó</option>
+                      <option value="mixed">{t.quiz.difficulties.mixed}</option>
+                      <option value="easy">{t.quiz.difficulties.easy}</option>
+                      <option value="medium">{t.quiz.difficulties.medium}</option>
+                      <option value="hard">{t.quiz.difficulties.hard}</option>
                     </select>
                   </div>
 
                   {/* Category */}
                   <div className="relative">
-                    <label className="text-sm text-gray-400 mb-2 block">Chủ đề</label>
+                    <label className="text-sm text-gray-400 mb-2 block">{t.quiz.category}</label>
                     <button
                       onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
                       className="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white text-left flex items-center justify-between"
                     >
-                      <span>{gameConfig.category ? getCategoryName(gameConfig.category) : 'Tất cả'}</span>
+                      <span>{gameConfig.category ? getCategoryName(gameConfig.category) : t.quiz.allCategories}</span>
                       <ChevronDown className="w-4 h-4" />
                     </button>
                     {showCategoryDropdown && (
@@ -272,7 +274,7 @@ export default function QuizPage() {
                           onClick={() => { setGameConfig({ ...gameConfig, category: null }); setShowCategoryDropdown(false) }}
                           className="w-full px-4 py-2 text-left hover:bg-gray-600 text-sm"
                         >
-                          Tất cả chủ đề
+                          {t.quiz.allCategories}
                         </button>
                         {getCategories().map(cat => (
                           <button
@@ -291,16 +293,16 @@ export default function QuizPage() {
                 {/* Time Limit */}
                 {gameConfig.mode === 'custom' && (
                   <div className="mt-4">
-                    <label className="text-sm text-gray-400 mb-2 block">Giới hạn thời gian</label>
+                    <label className="text-sm text-gray-400 mb-2 block">{t.quiz.timeLimit}</label>
                     <select
                       value={gameConfig.timeLimit || 0}
                       onChange={(e) => setGameConfig({ ...gameConfig, timeLimit: parseInt(e.target.value) || null })}
                       className="bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white"
                     >
-                      <option value={0}>Không giới hạn</option>
-                      <option value={15}>15 giây/câu</option>
-                      <option value={30}>30 giây/câu</option>
-                      <option value={60}>60 giây/câu</option>
+                      <option value={0}>{t.quiz.noTimeLimit}</option>
+                      <option value={15}>15 {t.quiz.secondsPerQuestion}</option>
+                      <option value={30}>30 {t.quiz.secondsPerQuestion}</option>
+                      <option value={60}>60 {t.quiz.secondsPerQuestion}</option>
                     </select>
                   </div>
                 )}
@@ -315,7 +317,7 @@ export default function QuizPage() {
               className="w-full py-3 sm:py-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 rounded-xl font-semibold text-base sm:text-lg flex items-center justify-center gap-2"
             >
               <Zap className="w-5 h-5" />
-              Bắt Đầu Chơi
+              {t.quiz.startGame}
             </motion.button>
           </div>
         </main>
@@ -348,14 +350,14 @@ export default function QuizPage() {
               </div>
 
               <h2 className="text-2xl font-bold mb-2">
-                {percentage >= 80 ? 'Xuất sắc!' : percentage >= 50 ? 'Khá tốt!' : 'Cần cải thiện!'}
+                {percentage >= 80 ? t.quiz.result.excellent : percentage >= 50 ? t.quiz.result.good : t.quiz.result.needImprove}
               </h2>
               <p className="text-gray-400 mb-6">
                 {percentage >= 80 
-                  ? 'Bạn có kiến thức tốt về nhận biết lừa đảo!'
+                  ? t.quiz.result.excellentDesc
                   : percentage >= 50 
-                  ? 'Bạn đã nắm được cơ bản, hãy tiếp tục học hỏi!'
-                  : 'Hãy đọc thêm hướng dẫn để bảo vệ bản thân tốt hơn!'}
+                  ? t.quiz.result.goodDesc
+                  : t.quiz.result.needImproveDesc}
               </p>
 
               <div className="grid grid-cols-3 gap-4 mb-8">
@@ -363,15 +365,15 @@ export default function QuizPage() {
                   <p className={`text-3xl font-bold ${
                     percentage >= 80 ? 'text-green-400' : percentage >= 50 ? 'text-yellow-400' : 'text-red-400'
                   }`}>{percentage}%</p>
-                  <p className="text-gray-400 text-sm">Điểm số</p>
+                  <p className="text-gray-400 text-sm">{t.quiz.result.scoreLabel}</p>
                 </div>
                 <div className="bg-gray-700/50 rounded-xl p-4">
                   <p className="text-3xl font-bold text-blue-400">{gameState.score}/{gameState.questions.length}</p>
-                  <p className="text-gray-400 text-sm">Đúng</p>
+                  <p className="text-gray-400 text-sm">{t.quiz.result.correct}</p>
                 </div>
                 <div className="bg-gray-700/50 rounded-xl p-4">
                   <p className="text-3xl font-bold text-blue-400">{timeTaken}s</p>
-                  <p className="text-gray-400 text-sm">Thời gian</p>
+                  <p className="text-gray-400 text-sm">{t.quiz.result.time}</p>
                 </div>
               </div>
 
@@ -381,14 +383,14 @@ export default function QuizPage() {
                   className="flex-1 py-3 bg-gray-700 hover:bg-gray-600 rounded-xl flex items-center justify-center gap-2"
                 >
                   <RotateCcw className="w-4 h-4" />
-                  Chơi lại
+                  {t.quiz.result.playAgain}
                 </button>
                 <Link
                   href="/guide"
                   className="flex-1 py-3 bg-blue-600 hover:bg-blue-700 rounded-xl flex items-center justify-center gap-2"
                 >
                   <TrendingUp className="w-4 h-4" />
-                  Học thêm
+                  {t.quiz.result.learnMore}
                 </Link>
               </div>
             </motion.div>
@@ -408,8 +410,8 @@ export default function QuizPage() {
           {/* Progress Bar */}
           <div className="mb-6">
             <div className="flex justify-between text-sm mb-2">
-              <span className="text-gray-400">Câu {gameState.currentIndex + 1}/{gameState.questions.length}</span>
-              <span className="text-gray-400">Điểm: {gameState.score}</span>
+              <span className="text-gray-400">{t.quiz.question} {gameState.currentIndex + 1}/{gameState.questions.length}</span>
+              <span className="text-gray-400">{t.quiz.score}: {gameState.score}</span>
             </div>
             <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
               <motion.div
@@ -448,7 +450,7 @@ export default function QuizPage() {
                     currentQuestion.difficulty === 'medium' ? 'bg-blue-400/20 text-blue-300' :
                     'bg-red-500/20 text-red-400'
                   }`}>
-                    {currentQuestion.difficulty === 'easy' ? 'Dễ' : currentQuestion.difficulty === 'medium' ? 'TB' : 'Khó'}
+                    {currentQuestion.difficulty === 'easy' ? t.quiz.difficulties.easy : currentQuestion.difficulty === 'medium' ? t.quiz.difficulties.medium : t.quiz.difficulties.hard}
                   </span>
                 </div>
 
@@ -520,7 +522,7 @@ export default function QuizPage() {
                     animate={{ opacity: 1, y: 0 }}
                     className="mt-6 p-4 bg-blue-500/10 border border-blue-500/30 rounded-xl"
                   >
-                    <h4 className="font-semibold text-blue-400 mb-2">💡 Giải thích</h4>
+                    <h4 className="font-semibold text-blue-400 mb-2">💡 {t.quiz.explanation}</h4>
                     <p className="text-gray-300 text-sm">{currentQuestion.explanation}</p>
                   </motion.div>
                 )}
@@ -537,14 +539,14 @@ export default function QuizPage() {
                           : 'bg-gray-700 text-gray-500 cursor-not-allowed'
                       }`}
                     >
-                      Xác nhận
+                      {t.quiz.confirm}
                     </button>
                   ) : (
                     <button
                       onClick={nextQuestion}
                       className="flex-1 py-3 bg-blue-600 hover:bg-blue-700 rounded-xl font-medium flex items-center justify-center gap-2"
                     >
-                      {gameState.currentIndex < gameState.questions.length - 1 ? 'Câu tiếp theo' : 'Xem kết quả'}
+                      {gameState.currentIndex < gameState.questions.length - 1 ? t.quiz.nextQuestion : t.quiz.viewResult}
                       <ArrowRight className="w-4 h-4" />
                     </button>
                   )}

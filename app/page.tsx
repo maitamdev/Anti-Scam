@@ -17,54 +17,68 @@ import Footer from './components/Footer'
 import StatsCounter from './components/StatsCounter'
 import TrustBadges from './components/TrustBadges'
 import { useRouter } from 'next/navigation'
-
-const features = [
-  {
-    icon: Search,
-    title: 'Kiểm tra URL',
-    description: 'Dán link website đáng ngờ để kiểm tra các dấu hiệu phishing, giả mạo ngân hàng, TMĐT.',
-    color: 'from-blue-500 to-blue-600'
-  },
-  {
-    icon: Eye,
-    title: 'Phân tích Hình ảnh',
-    description: 'Upload ảnh chụp tin nhắn Zalo, SMS, email để AI nhận diện các chiêu trò lừa đảo.',
-    color: 'from-blue-400 to-blue-500'
-  },
-  {
-    icon: Brain,
-    title: 'Quiz Trắc nghiệm',
-    description: '5000+ câu hỏi giúp bạn nhận biết các hình thức lừa đảo phổ biến tại Việt Nam.',
-    color: 'from-blue-500 to-blue-600'
-  }
-]
+import { useTranslation } from './lib/i18n/LanguageContext'
 
 const stats = [
-  { value: '98', label: 'Antivirus Engines' },
-  { value: '100', label: 'Miễn phí', suffix: '%' },
-  { value: '24', label: 'Hoạt động', suffix: '/7' },
+  { value: '98', label: 'Antivirus Engines', suffix: '' },
+  { value: '100', label: 'Free', suffix: '%' },
+  { value: '24', label: 'Active', suffix: '/7' },
 ]
 
 const howItWorks = [
   {
     step: '01',
-    title: 'Nhập URL hoặc Upload ảnh',
-    description: 'Dán link website đáng ngờ hoặc tải lên ảnh chụp tin nhắn lừa đảo'
+    titleVi: 'Nhập URL hoặc Upload ảnh',
+    titleEn: 'Enter URL or Upload image',
+    descVi: 'Dán link website đáng ngờ hoặc tải lên ảnh chụp tin nhắn lừa đảo',
+    descEn: 'Paste suspicious website link or upload screenshot of scam message'
   },
   {
     step: '02',
-    title: 'AI Phân tích',
-    description: 'Hệ thống AI phân tích đa lớp: URL patterns, nội dung, database lừa đảo'
+    titleVi: 'AI Phân tích',
+    titleEn: 'AI Analysis',
+    descVi: 'Hệ thống AI phân tích đa lớp: URL patterns, nội dung, database lừa đảo',
+    descEn: 'Multi-layer AI analysis: URL patterns, content, scam database'
   },
   {
     step: '03',
-    title: 'Nhận kết quả',
-    description: 'Xem điểm rủi ro, dấu hiệu lừa đảo và khuyến nghị hành động cụ thể'
+    titleVi: 'Nhận kết quả',
+    titleEn: 'Get Results',
+    descVi: 'Xem điểm rủi ro, dấu hiệu lừa đảo và khuyến nghị hành động cụ thể',
+    descEn: 'View risk score, scam indicators and specific action recommendations'
   }
 ]
 
 export default function Home() {
   const router = useRouter()
+  const { t, language } = useTranslation()
+  
+  const features = [
+    {
+      icon: Search,
+      title: language === 'vi' ? 'Kiểm tra URL' : 'Check URL',
+      description: language === 'vi' 
+        ? 'Dán link website đáng ngờ để kiểm tra các dấu hiệu phishing, giả mạo ngân hàng, TMĐT.'
+        : 'Paste suspicious website link to check for phishing, fake banking, e-commerce signs.',
+      color: 'from-blue-500 to-blue-600'
+    },
+    {
+      icon: Eye,
+      title: language === 'vi' ? 'Phân tích Hình ảnh' : 'Image Analysis',
+      description: language === 'vi'
+        ? 'Upload ảnh chụp tin nhắn Zalo, SMS, email để AI nhận diện các chiêu trò lừa đảo.'
+        : 'Upload screenshots of Zalo, SMS, email messages for AI to identify scam tactics.',
+      color: 'from-blue-400 to-blue-500'
+    },
+    {
+      icon: Brain,
+      title: language === 'vi' ? 'Quiz Trắc nghiệm' : 'Quiz Test',
+      description: language === 'vi'
+        ? '5000+ câu hỏi giúp bạn nhận biết các hình thức lừa đảo phổ biến tại Việt Nam.'
+        : '5000+ questions to help you recognize common scam types.',
+      color: 'from-blue-500 to-blue-600'
+    }
+  ]
 
   return (
     <div className="min-h-screen flex flex-col ">
@@ -90,23 +104,43 @@ export default function Home() {
                   className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border border-blue-500/20 rounded-full mb-6"
                 >
                   <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                  <span className="text-sm text-gray-300 font-medium">Công cụ hỗ trợ phát hiện lừa đảo</span>
+                  <span className="text-sm text-gray-300 font-medium">
+                    {language === 'vi' ? 'Công cụ hỗ trợ phát hiện lừa đảo' : 'Scam detection support tool'}
+                  </span>
                 </motion.div>
                 
                 <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black leading-[1.1] mb-4 sm:mb-6 uppercase tracking-wider italic relative z-30" style={{ letterSpacing: '0.05em' }}>
-                  <span className="text-white drop-shadow-lg">Bạn có đang</span>
-                  <br />
-                  <span className="whitespace-nowrap">
-                    <span className="text-white drop-shadow-lg">lướt mạng </span>
-                    <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent">
-                      an toàn?
-                    </span>
-                  </span>
+                  {language === 'vi' ? (
+                    <>
+                      <span className="text-white drop-shadow-lg">Bạn có đang</span>
+                      <br />
+                      <span className="whitespace-nowrap">
+                        <span className="text-white drop-shadow-lg">lướt mạng </span>
+                        <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent">
+                          an toàn?
+                        </span>
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="text-white drop-shadow-lg">Are you</span>
+                      <br />
+                      <span className="whitespace-nowrap">
+                        <span className="text-white drop-shadow-lg">browsing </span>
+                        <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent">
+                          safely?
+                        </span>
+                      </span>
+                    </>
+                  )}
                 </h1>
                 
                 <p className="text-base sm:text-lg text-gray-200 mb-8 leading-relaxed max-w-xl">
-                  Kiểm tra URL và hình ảnh để <span className="text-white font-semibold">phát hiện dấu hiệu lừa đảo</span>. 
-                  Công cụ miễn phí giúp bạn cẩn thận hơn khi lướt web.
+                  {language === 'vi' ? (
+                    <>Kiểm tra URL và hình ảnh để <span className="text-white font-semibold">phát hiện dấu hiệu lừa đảo</span>. Công cụ miễn phí giúp bạn cẩn thận hơn khi lướt web.</>
+                  ) : (
+                    <>Check URLs and images to <span className="text-white font-semibold">detect scam signs</span>. Free tool to help you stay safe while browsing.</>
+                  )}
                 </p>
                 
                 <div className="flex flex-wrap gap-3">
@@ -117,7 +151,7 @@ export default function Home() {
                     whileTap={{ scale: 0.98 }}
                   >
                     <Search className="w-4 h-4" />
-                    Kiểm tra ngay
+                    {language === 'vi' ? 'Kiểm tra ngay' : 'Check Now'}
                   </motion.button>
                   
                   <motion.button
@@ -127,7 +161,7 @@ export default function Home() {
                     whileTap={{ scale: 0.98 }}
                   >
                     <Play className="w-4 h-4" />
-                    Làm Quiz
+                    {language === 'vi' ? 'Làm Quiz' : 'Take Quiz'}
                   </motion.button>
                   
                   <motion.button
@@ -137,7 +171,7 @@ export default function Home() {
                     whileTap={{ scale: 0.98 }}
                   >
                     <Shield className="w-4 h-4" />
-                    Báo cáo
+                    {language === 'vi' ? 'Báo cáo' : 'Report'}
                   </motion.button>
                 </div>
               </motion.div>
@@ -211,10 +245,12 @@ export default function Home() {
               className="text-center mb-8 sm:mb-16"
             >
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
-                Các tính năng chính
+                {language === 'vi' ? 'Các tính năng chính' : 'Key Features'}
               </h2>
               <p className="text-gray-400 max-w-2xl mx-auto">
-                Những công cụ giúp bạn cẩn thận hơn trên không gian mạng
+                {language === 'vi' 
+                  ? 'Những công cụ giúp bạn cẩn thận hơn trên không gian mạng'
+                  : 'Tools to help you stay safe in cyberspace'}
               </p>
             </motion.div>
 
@@ -256,10 +292,10 @@ export default function Home() {
               className="text-center mb-8 sm:mb-16"
             >
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
-                Cách sử dụng
+                {language === 'vi' ? 'Cách sử dụng' : 'How to Use'}
               </h2>
               <p className="text-gray-400 text-sm sm:text-base max-w-2xl mx-auto">
-                Chỉ 3 bước đơn giản để kiểm tra
+                {language === 'vi' ? 'Chỉ 3 bước đơn giản để kiểm tra' : 'Just 3 simple steps to check'}
               </p>
             </motion.div>
 
@@ -282,8 +318,12 @@ export default function Home() {
                     <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 flex items-center justify-center mb-4 sm:mb-6">
                       <span className="text-white font-bold text-sm sm:text-base">{item.step}</span>
                     </div>
-                    <h3 className="text-lg sm:text-xl font-semibold mb-2 sm:mb-3">{item.title}</h3>
-                    <p className="text-gray-400 text-sm sm:text-base">{item.description}</p>
+                    <h3 className="text-lg sm:text-xl font-semibold mb-2 sm:mb-3">
+                      {language === 'vi' ? item.titleVi : item.titleEn}
+                    </h3>
+                    <p className="text-gray-400 text-sm sm:text-base">
+                      {language === 'vi' ? item.descVi : item.descEn}
+                    </p>
                   </div>
                 </motion.div>
               ))}
@@ -302,21 +342,28 @@ export default function Home() {
                 viewport={{ once: true }}
               >
                 <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6">
-                  Tại sao nên sử dụng?
+                  {language === 'vi' ? 'Tại sao nên sử dụng?' : 'Why Use This?'}
                 </h2>
                 <p className="text-gray-400 text-sm sm:text-base mb-6 sm:mb-8">
-                  Công cụ đơn giản giúp bạn kiểm tra nhanh các link và tin nhắn đáng ngờ 
-                  trước khi click hoặc cung cấp thông tin cá nhân.
+                  {language === 'vi' 
+                    ? 'Công cụ đơn giản giúp bạn kiểm tra nhanh các link và tin nhắn đáng ngờ trước khi click hoặc cung cấp thông tin cá nhân.'
+                    : 'Simple tool to quickly check suspicious links and messages before clicking or providing personal information.'}
                 </p>
                 
                 <div className="space-y-3 sm:space-y-4">
-                  {[
+                  {(language === 'vi' ? [
                     'Kiểm tra URL website trong vài giây',
                     'Upload ảnh tin nhắn để phân tích',
                     'Quiz 5000+ câu hỏi về lừa đảo',
                     'Cẩm nang hướng dẫn nhận biết',
                     'Hoàn toàn miễn phí',
-                  ].map((item, index) => (
+                  ] : [
+                    'Check website URLs in seconds',
+                    'Upload message screenshots for analysis',
+                    'Quiz with 5000+ questions about scams',
+                    'Guide to recognize scams',
+                    'Completely free',
+                  ]).map((item, index) => (
                     <motion.div
                       key={index}
                       initial={{ opacity: 0, x: -20 }}
@@ -339,7 +386,7 @@ export default function Home() {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  Bắt đầu ngay
+                  {language === 'vi' ? 'Bắt đầu ngay' : 'Get Started'}
                   <ArrowRight className="w-5 h-5" />
                 </motion.button>
               </motion.div>
@@ -351,12 +398,17 @@ export default function Home() {
                 viewport={{ once: true }}
                 className="grid grid-cols-2 gap-3 sm:gap-4"
               >
-                {[
+                {(language === 'vi' ? [
                   { icon: Search, title: 'Kiểm tra URL', desc: 'Phân tích link đáng ngờ' },
                   { icon: Eye, title: 'Scan Hình ảnh', desc: 'Nhận diện tin nhắn lừa đảo' },
                   { icon: Brain, title: 'Quiz Trắc nghiệm', desc: 'Học cách nhận biết' },
                   { icon: Lock, title: 'Miễn phí', desc: 'Không giới hạn sử dụng' },
-                ].map((item, index) => (
+                ] : [
+                  { icon: Search, title: 'Check URL', desc: 'Analyze suspicious links' },
+                  { icon: Eye, title: 'Scan Image', desc: 'Detect scam messages' },
+                  { icon: Brain, title: 'Quiz Test', desc: 'Learn to recognize' },
+                  { icon: Lock, title: 'Free', desc: 'Unlimited usage' },
+                ]).map((item, index) => (
                   <motion.div
                     key={index}
                     initial={{ opacity: 0, scale: 0.9 }}
@@ -391,11 +443,12 @@ export default function Home() {
               
               <div className="relative z-10">
                 <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
-                  Thử kiểm tra ngay?
+                  {language === 'vi' ? 'Thử kiểm tra ngay?' : 'Try checking now?'}
                 </h2>
                 <p className="text-gray-400 text-sm sm:text-base mb-6 sm:mb-8 max-w-2xl mx-auto">
-                  Dán link hoặc upload ảnh tin nhắn đáng ngờ để kiểm tra. 
-                  Hoàn toàn miễn phí, không cần đăng ký.
+                  {language === 'vi' 
+                    ? 'Dán link hoặc upload ảnh tin nhắn đáng ngờ để kiểm tra. Hoàn toàn miễn phí, không cần đăng ký.'
+                    : 'Paste link or upload suspicious message screenshot to check. Completely free, no registration required.'}
                 </p>
                 
                 <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
@@ -405,7 +458,7 @@ export default function Home() {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
-                    Phân tích URL/Ảnh
+                    {language === 'vi' ? 'Phân tích URL/Ảnh' : 'Analyze URL/Image'}
                     <ArrowRight className="w-5 h-5" />
                   </motion.button>
                   
@@ -415,7 +468,7 @@ export default function Home() {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
-                    Làm Quiz Trắc nghiệm
+                    {language === 'vi' ? 'Làm Quiz Trắc nghiệm' : 'Take Quiz'}
                   </motion.button>
                   
                   <motion.button
@@ -425,7 +478,7 @@ export default function Home() {
                     whileTap={{ scale: 0.98 }}
                   >
                     <Shield className="w-5 h-5" />
-                    Báo cáo lừa đảo
+                    {language === 'vi' ? 'Báo cáo lừa đảo' : 'Report Scam'}
                   </motion.button>
                 </div>
               </div>

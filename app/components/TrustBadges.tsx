@@ -2,26 +2,29 @@
 
 import { motion } from 'framer-motion'
 import { Shield, Zap, Lock } from 'lucide-react'
-
-const trustBadges = [
-  {
-    icon: Shield,
-    title: 'Miễn phí 100%',
-    description: 'Không quảng cáo, không thu phí'
-  },
-  {
-    icon: Zap,
-    title: 'Kết quả tức thì',
-    description: 'Phân tích < 3 giây'
-  },
-  {
-    icon: Lock,
-    title: 'Bảo mật tuyệt đối',
-    description: 'Không lưu trữ dữ liệu cá nhân'
-  }
-]
+import { useTranslation } from '../lib/i18n/LanguageContext'
 
 export default function TrustBadges() {
+  const { language } = useTranslation()
+  
+  const trustBadges = [
+    {
+      icon: Shield,
+      title: language === 'vi' ? 'Miễn phí 100%' : '100% Free',
+      description: language === 'vi' ? 'Không quảng cáo, không thu phí' : 'No ads, no fees'
+    },
+    {
+      icon: Zap,
+      title: language === 'vi' ? 'Kết quả tức thì' : 'Instant Results',
+      description: language === 'vi' ? 'Phân tích < 3 giây' : 'Analysis < 3 seconds'
+    },
+    {
+      icon: Lock,
+      title: language === 'vi' ? 'Bảo mật tuyệt đối' : 'Absolute Security',
+      description: language === 'vi' ? 'Không lưu trữ dữ liệu cá nhân' : 'No personal data stored'
+    }
+  ]
+
   return (
     <div className="grid grid-cols-3 gap-4">
       {trustBadges.map((badge, index) => (

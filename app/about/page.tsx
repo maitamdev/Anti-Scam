@@ -6,37 +6,40 @@ import Image from 'next/image'
 import Link from 'next/link'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
-
-const features = [
-  {
-    icon: Eye,
-    title: 'Kiểm tra URL',
-    description: 'Phân tích website để phát hiện dấu hiệu phishing, giả mạo ngân hàng, TMĐT.'
-  },
-  {
-    icon: Brain,
-    title: 'AI Phân tích Hình ảnh',
-    description: 'Upload ảnh tin nhắn Zalo, SMS, email để AI nhận diện chiêu trò lừa đảo.'
-  },
-  {
-    icon: Zap,
-    title: 'Quiz Trắc nghiệm',
-    description: '5000+ câu hỏi giúp nâng cao nhận thức về các hình thức lừa đảo.'
-  },
-  {
-    icon: Lock,
-    title: 'Miễn phí 100%',
-    description: 'Không giới hạn sử dụng, không cần đăng ký, không quảng cáo.'
-  },
-]
-
-const stats = [
-  { value: '15+', label: 'Loại lừa đảo được nhận diện' },
-  { value: '5000+', label: 'Câu hỏi quiz' },
-  { value: '100%', label: 'Miễn phí' },
-]
+import { useTranslation } from '../lib/i18n/LanguageContext'
 
 export default function AboutPage() {
+  const { t } = useTranslation()
+
+  const features = [
+    {
+      icon: Eye,
+      title: t.aboutPage.features.urlCheck.title,
+      description: t.aboutPage.features.urlCheck.desc
+    },
+    {
+      icon: Brain,
+      title: t.aboutPage.features.aiImage.title,
+      description: t.aboutPage.features.aiImage.desc
+    },
+    {
+      icon: Zap,
+      title: t.aboutPage.features.quiz.title,
+      description: t.aboutPage.features.quiz.desc
+    },
+    {
+      icon: Lock,
+      title: t.aboutPage.features.free.title,
+      description: t.aboutPage.features.free.desc
+    },
+  ]
+
+  const stats = [
+    { value: '15+', label: t.aboutPage.stats.scamTypes },
+    { value: '5000+', label: t.aboutPage.stats.quizQuestions },
+    { value: '100%', label: t.aboutPage.stats.free },
+  ]
+
   return (
     <div className="min-h-screen flex flex-col ">
       <Header />
@@ -49,7 +52,7 @@ export default function AboutPage() {
             className="inline-flex items-center gap-2 text-gray-400 hover:text-blue-400 transition-colors"
           >
             <ArrowLeft size={20} />
-            <span>Quay lại trang chủ</span>
+            <span>{t.aboutPage.backToHome}</span>
           </Link>
         </div>
 
@@ -64,11 +67,10 @@ export default function AboutPage() {
                 <Image src="/logo.png" alt="ANTI-SCAM" width={80} height={80} className="rounded-2xl" />
               </div>
               <h1 className="text-4xl md:text-5xl font-bold mb-6">
-                Về <span className="bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent">ANTI-SCAM</span>
+                {t.aboutPage.title} <span className="bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent">ANTI-SCAM</span>
               </h1>
               <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-                Công cụ miễn phí giúp người dùng Việt Nam kiểm tra và nhận biết 
-                các website, tin nhắn lừa đảo trước khi trở thành nạn nhân.
+                {t.aboutPage.subtitle}
               </p>
             </motion.div>
           </div>
@@ -85,18 +87,16 @@ export default function AboutPage() {
               >
                 <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-full mb-4">
                   <Target className="w-4 h-4 text-blue-400" />
-                  <span className="text-sm text-blue-400">Sứ mệnh</span>
+                  <span className="text-sm text-blue-400">{t.aboutPage.mission.badge}</span>
                 </div>
                 <h2 className="text-3xl font-bold mb-4">
-                  Giảm thiểu thiệt hại do lừa đảo online
+                  {t.aboutPage.mission.title}
                 </h2>
                 <p className="text-gray-400 mb-4">
-                  Mỗi năm, hàng nghìn người Việt Nam mất tiền vì các chiêu trò lừa đảo online: 
-                  giả mạo ngân hàng, nhờ chuyển tiền, trúng thưởng giả, tuyển dụng lừa đảo...
+                  {t.aboutPage.mission.desc1}
                 </p>
                 <p className="text-gray-400">
-                  ANTI-SCAM ra đời với mục tiêu cung cấp công cụ đơn giản, miễn phí để mọi người 
-                  có thể kiểm tra nhanh các link và tin nhắn đáng ngờ trước khi click.
+                  {t.aboutPage.mission.desc2}
                 </p>
               </motion.div>
               
@@ -128,8 +128,8 @@ export default function AboutPage() {
               viewport={{ once: true }}
               className="text-center mb-12"
             >
-              <h2 className="text-3xl font-bold mb-4">Tính năng chính</h2>
-              <p className="text-gray-400">Những công cụ giúp bạn an toàn hơn trên mạng</p>
+              <h2 className="text-3xl font-bold mb-4">{t.aboutPage.features.title}</h2>
+              <p className="text-gray-400">{t.aboutPage.features.subtitle}</p>
             </motion.div>
             
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -162,12 +162,11 @@ export default function AboutPage() {
               viewport={{ once: true }}
               className="bg-yellow-500/10 border border-yellow-500/20 rounded-2xl p-8"
             >
-              <h3 className="text-xl font-semibold text-yellow-400 mb-4">⚠️ Lưu ý quan trọng</h3>
+              <h3 className="text-xl font-semibold text-yellow-400 mb-4">{t.aboutPage.disclaimer.title}</h3>
               <ul className="space-y-2 text-gray-300">
-                <li>• Kết quả kiểm tra chỉ mang tính chất <strong>tham khảo</strong>, không đảm bảo 100% chính xác.</li>
-                <li>• Công cụ không thay thế cho việc <strong>cảnh giác cá nhân</strong> khi sử dụng internet.</li>
-                <li>• Luôn <strong>xác minh trực tiếp</strong> với ngân hàng/tổ chức qua hotline chính thức nếu nghi ngờ.</li>
-                <li>• <strong>Không bao giờ</strong> cung cấp OTP, mật khẩu cho bất kỳ ai qua điện thoại/tin nhắn.</li>
+                {t.aboutPage.disclaimer.items.map((item, index) => (
+                  <li key={index}>• {item}</li>
+                ))}
               </ul>
             </motion.div>
           </div>
@@ -181,22 +180,22 @@ export default function AboutPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <h2 className="text-3xl font-bold mb-4">Bắt đầu kiểm tra ngay</h2>
+              <h2 className="text-3xl font-bold mb-4">{t.aboutPage.cta.title}</h2>
               <p className="text-gray-400 mb-8">
-                Dán link hoặc upload ảnh tin nhắn đáng ngờ để kiểm tra miễn phí.
+                {t.aboutPage.cta.subtitle}
               </p>
               <div className="flex flex-wrap justify-center gap-4">
                 <Link
                   href="/scan"
                   className="px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 rounded-xl font-semibold text-white"
                 >
-                  Kiểm tra URL/Ảnh
+                  {t.aboutPage.cta.scanButton}
                 </Link>
                 <Link
                   href="/quiz"
                   className="px-8 py-4 bg-gray-800 hover:bg-gray-700 rounded-xl font-semibold text-white border border-gray-700"
                 >
-                  Làm Quiz
+                  {t.aboutPage.cta.quizButton}
                 </Link>
               </div>
             </motion.div>

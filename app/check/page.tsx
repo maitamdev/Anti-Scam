@@ -3,6 +3,9 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Search, CreditCard, Mail, Phone, AlertTriangle, CheckCircle, XCircle, Loader2, Shield, Building2, Info } from 'lucide-react'
+import { useTranslation } from '../lib/i18n/LanguageContext'
+import Header from '../components/Header'
+import Footer from '../components/Footer'
 
 type CheckType = 'bank' | 'email' | 'phone'
 
@@ -34,6 +37,7 @@ const banks = [
 ]
 
 export default function CheckPage() {
+  const { t } = useTranslation()
   const [checkType, setCheckType] = useState<CheckType>('bank')
   const [inputValue, setInputValue] = useState('')
   const [bankName, setBankName] = useState('')
@@ -43,7 +47,7 @@ export default function CheckPage() {
 
   const handleCheck = async () => {
     if (!inputValue.trim()) {
-      setError('Vui lòng nhập thông tin cần kiểm tra')
+      setError(t.checkPage.enterInfo)
       return
     }
 
@@ -80,10 +84,10 @@ export default function CheckPage() {
       if (data.success) {
         setResult(data)
       } else {
-        setError(data.error || 'Có lỗi xảy ra')
+        setError(data.error || t.common.error)
       }
     } catch (err) {
-      setError('Không thể kết nối đến server')
+      setError(t.checkPage.connectionError)
     } finally {
       setLoading(false)
     }
@@ -111,14 +115,16 @@ export default function CheckPage() {
 
   const getPlaceholder = () => {
     switch (checkType) {
-      case 'bank': return 'Nhập số tài khoản ngân hàng...'
-      case 'email': return 'Nhập địa chỉ email...'
-      case 'phone': return 'Nhập số điện thoại...'
+      case 'bank': return t.checkPage.placeholder.bank
+      case 'email': return t.checkPage.placeholder.email
+      case 'phone': return t.checkPage.placeholder.phone
     }
   }
 
   return (
-    <main className="min-h-screen pt-24 pb-16">
+    <div className="min-h-screen flex flex-col">
+      <Header />
+      <main className="flex-1 pt-24 pb-16">
       <div className="max-w-4xl mx-auto px-4">
         {/* Header */}
         <motion.div
@@ -128,14 +134,14 @@ export default function CheckPage() {
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-full mb-6">
             <Shield className="w-4 h-4 text-blue-400" />
-            <span className="text-blue-400 text-sm font-medium">Kiểm tra miễn phí</span>
+            <span className="text-blue-400 text-sm font-medium">{t.checkPage.freeCheck}</span>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            <span className="text-white">Kiểm tra </span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">Lừa đảo</span>
+            <span className="text-white">{t.checkPage.title} </span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">{t.checkPage.titleHighlight}</span>
           </h1>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            Tra cứu số tài khoản, email, số điện thoại trong cơ sở dữ liệu lừa đảo
+            {t.checkPage.subtitle}
           </p>
         </motion.div>
 
@@ -155,7 +161,7 @@ export default function CheckPage() {
             }`}
           >
             <CreditCard className="w-5 h-5" />
-            Tài khoản
+            {t.checkPage.tabs.account}
           </button>
           <button
             onClick={() => { setCheckType('email'); setResult(null); setInputValue(''); }}
@@ -166,7 +172,7 @@ export default function CheckPage() {
             }`}
           >
             <Mail className="w-5 h-5" />
-            Email
+            {t.checkPage.tabs.email}
           </button>
           <button
             onClick={() => { setCheckType('phone'); setResult(null); setInputValue(''); }}
@@ -177,7 +183,7 @@ export default function CheckPage() {
             }`}
           >
             <Phone className="w-5 h-5" />
-            Điện thoại
+            {t.checkPage.tabs.phone}
           </button>
         </motion.div>
 
@@ -192,7 +198,7 @@ export default function CheckPage() {
             {/* Bank selector (only for bank check) */}
             {checkType === 'bank' && (
               <div>
-                <label className="block text-sm text-gray-400 mb-2">Ngân hàng (tùy chọn)</label>
+                <label className="block text-sm text-gray-400 mb-2">{t.checkPage.bankLabel}</label>
                 <div className="relative">
                   <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <select
@@ -200,7 +206,7 @@ export default function CheckPage() {
                     onChange={(e) => setBankName(e.target.value)}
                     className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white appearance-none cursor-pointer focus:outline-none focus:border-blue-500/50"
                   >
-                    <option value="">Chọn ngân hàng...</option>
+                    <option value="">{t.checkPage.selectBank}</option>
                     {banks.map(bank => (
                       <option key={bank} value={bank}>{bank}</option>
                     ))}
@@ -212,7 +218,7 @@ export default function CheckPage() {
             {/* Main input */}
             <div>
               <label className="block text-sm text-gray-400 mb-2">
-                {checkType === 'bank' ? 'Số tài khoản' : checkType === 'email' ? 'Địa chỉ email' : 'Số điện thoại'}
+                {checkType === 'bank' ? t.checkPage.accountNumber : checkType === 'email' ? t.checkPage.emailAddress : t.checkPage.phoneNumber}
               </label>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -241,12 +247,12 @@ export default function CheckPage() {
               {loading ? (
                 <>
                   <Loader2 className="w-5 h-5 animate-spin" />
-                  Đang kiểm tra...
+                  {t.checkPage.checking}
                 </>
               ) : (
                 <>
                   <Search className="w-5 h-5" />
-                  Kiểm tra ngay
+                  {t.checkPage.checkNow}
                 </>
               )}
             </button>
@@ -273,44 +279,44 @@ export default function CheckPage() {
                     <div className="space-y-2 mt-4">
                       {result.data.reportCount && (
                         <p className="text-sm text-gray-300">
-                          📊 Số lần bị báo cáo: <span className="font-semibold text-white">{result.data.reportCount}</span>
+                          📊 {t.checkPage.result.reportCount}: <span className="font-semibold text-white">{result.data.reportCount}</span>
                         </p>
                       )}
                       {result.data.bankName && (
                         <p className="text-sm text-gray-300">
-                          🏦 Ngân hàng: <span className="font-semibold text-white">{result.data.bankName}</span>
+                          🏦 {t.checkPage.result.bank}: <span className="font-semibold text-white">{result.data.bankName}</span>
                         </p>
                       )}
                       {result.data.ownerName && (
                         <p className="text-sm text-gray-300">
-                          👤 Chủ tài khoản: <span className="font-semibold text-white">{result.data.ownerName}</span>
+                          👤 {t.checkPage.result.owner}: <span className="font-semibold text-white">{result.data.ownerName}</span>
                         </p>
                       )}
                       {result.data.totalLoss && (
                         <p className="text-sm text-gray-300">
-                          💰 Tổng thiệt hại: <span className="font-semibold text-red-400">
+                          💰 {t.checkPage.result.totalLoss}: <span className="font-semibold text-red-400">
                             {result.data.totalLoss.toLocaleString('vi-VN')} VNĐ
                           </span>
                         </p>
                       )}
                       {result.data.carrier && (
                         <p className="text-sm text-gray-300">
-                          📱 Nhà mạng: <span className="font-semibold text-white">{result.data.carrier}</span>
+                          📱 {t.checkPage.result.carrier}: <span className="font-semibold text-white">{result.data.carrier}</span>
                         </p>
                       )}
                       {result.data.category && (
                         <p className="text-sm text-gray-300">
-                          🏷️ Loại: <span className="font-semibold text-white">{result.data.category}</span>
+                          🏷️ {t.checkPage.result.category}: <span className="font-semibold text-white">{result.data.category}</span>
                         </p>
                       )}
                       {result.data.description && (
                         <p className="text-sm text-gray-300">
-                          📝 Mô tả: <span className="text-white">{result.data.description}</span>
+                          📝 {t.checkPage.result.description}: <span className="text-white">{result.data.description}</span>
                         </p>
                       )}
                       {result.data.verified && (
                         <p className="text-sm text-red-400 font-semibold">
-                          ✓ Đã được xác minh bởi hệ thống
+                          ✓ {t.checkPage.result.verified}
                         </p>
                       )}
                     </div>
@@ -330,23 +336,23 @@ export default function CheckPage() {
         >
           <div className="bg-blue-500/5 border border-blue-500/20 rounded-xl p-4">
             <CreditCard className="w-8 h-8 text-blue-400 mb-3" />
-            <h4 className="font-semibold text-white mb-2">Kiểm tra tài khoản</h4>
+            <h4 className="font-semibold text-white mb-2">{t.checkPage.tips.account.title}</h4>
             <p className="text-sm text-gray-400">
-              Tra cứu số tài khoản ngân hàng trước khi chuyển tiền cho người lạ
+              {t.checkPage.tips.account.desc}
             </p>
           </div>
           <div className="bg-cyan-500/5 border border-cyan-500/20 rounded-xl p-4">
             <Mail className="w-8 h-8 text-cyan-400 mb-3" />
-            <h4 className="font-semibold text-white mb-2">Kiểm tra email</h4>
+            <h4 className="font-semibold text-white mb-2">{t.checkPage.tips.email.title}</h4>
             <p className="text-sm text-gray-400">
-              Xác minh email có phải từ nguồn đáng tin cậy hay là lừa đảo
+              {t.checkPage.tips.email.desc}
             </p>
           </div>
           <div className="bg-purple-500/5 border border-purple-500/20 rounded-xl p-4">
             <Phone className="w-8 h-8 text-purple-400 mb-3" />
-            <h4 className="font-semibold text-white mb-2">Kiểm tra số điện thoại</h4>
+            <h4 className="font-semibold text-white mb-2">{t.checkPage.tips.phone.title}</h4>
             <p className="text-sm text-gray-400">
-              Tra cứu số điện thoại lạ gọi đến hoặc nhắn tin yêu cầu chuyển tiền
+              {t.checkPage.tips.phone.desc}
             </p>
           </div>
         </motion.div>
@@ -361,16 +367,16 @@ export default function CheckPage() {
           <div className="flex items-start gap-3">
             <AlertTriangle className="w-5 h-5 text-yellow-400 flex-shrink-0 mt-0.5" />
             <div>
-              <h4 className="font-semibold text-yellow-400 mb-1">Lưu ý quan trọng</h4>
+              <h4 className="font-semibold text-yellow-400 mb-1">{t.checkPage.warning.title}</h4>
               <p className="text-sm text-gray-300">
-                Kết quả kiểm tra chỉ mang tính tham khảo dựa trên dữ liệu báo cáo từ cộng đồng. 
-                Việc không tìm thấy trong danh sách không đảm bảo 100% an toàn. 
-                Hãy luôn cẩn thận và xác minh kỹ trước khi giao dịch.
+                {t.checkPage.warning.content}
               </p>
             </div>
           </div>
         </motion.div>
       </div>
     </main>
+    <Footer />
+    </div>
   )
 }
