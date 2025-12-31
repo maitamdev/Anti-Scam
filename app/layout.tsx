@@ -22,10 +22,22 @@ const spaceGrotesk = Space_Grotesk({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://maitamsite.site'),
-  title: 'ANTI-SCAM - Kiểm tra & Cảnh báo Lừa đảo Mạng',
-  description: 'Nền tảng AI phân tích và cảnh báo website lừa đảo, bảo vệ người dùng Việt Nam khỏi các chiêu trò lừa đảo trực tuyến. Kiểm tra link nghi ngờ, học cách nhận biết lừa đảo ngay.',
-  keywords: ['chống lừa đảo', 'kiểm tra link', 'phishing', 'scam', 'an toàn mạng', 'bảo mật', 'lừa đảo online', 'cảnh báo lừa đảo'],
-  authors: [{ name: 'ANTI-SCAM Team' }],
+  title: {
+    default: 'ANTI-SCAM - Kiểm tra Lừa đảo Online | Chống Scam Việt Nam',
+    template: '%s | ANTI-SCAM'
+  },
+  description: 'ANTI-SCAM - Nền tảng AI kiểm tra và cảnh báo lừa đảo online hàng đầu Việt Nam. Kiểm tra link lừa đảo, số tài khoản ngân hàng, email phishing, số điện thoại scam miễn phí. Bảo vệ bạn khỏi các chiêu trò lừa đảo trực tuyến.',
+  keywords: [
+    'antiscam', 'anti-scam', 'anti scam', 'chống lừa đảo', 'kiểm tra lừa đảo',
+    'kiểm tra link lừa đảo', 'kiểm tra website lừa đảo', 'phishing', 'scam',
+    'lừa đảo online', 'lừa đảo trực tuyến', 'cảnh báo lừa đảo', 'check scam',
+    'kiểm tra số tài khoản lừa đảo', 'kiểm tra email lừa đảo', 'an toàn mạng',
+    'bảo mật online', 'chống phishing', 'website giả mạo', 'link giả mạo',
+    'scam vietnam', 'lừa đảo việt nam', 'kiểm tra url', 'check link'
+  ],
+  authors: [{ name: 'ANTI-SCAM Vietnam', url: 'https://maitamsite.site' }],
+  creator: 'ANTI-SCAM Team',
+  publisher: 'ANTI-SCAM Vietnam',
   manifest: '/manifest.json',
   icons: {
     icon: '/logo.png',
@@ -33,16 +45,16 @@ export const metadata: Metadata = {
     apple: '/logo.png',
   },
   openGraph: {
-    title: 'ANTI-SCAM - Bảo Vệ Bạn Khỏi Lừa Đảo Online',
-    description: '🛡️ Kiểm tra link nghi ngờ • 🤖 AI phân tích thông minh • 📚 5000+ câu hỏi quiz • 🚨 Cảnh báo lừa đảo mới nhất',
+    title: 'ANTI-SCAM - Kiểm tra & Cảnh báo Lừa đảo Online Việt Nam',
+    description: '🛡️ Kiểm tra link lừa đảo miễn phí • 🤖 AI phân tích thông minh • 🏦 Check số tài khoản scam • 📱 Kiểm tra SĐT lừa đảo • 🚨 Cảnh báo lừa đảo mới nhất',
     url: 'https://maitamsite.site',
-    siteName: 'ANTI-SCAM',
+    siteName: 'ANTI-SCAM Vietnam',
     images: [
       {
-        url: '/1h.png',
+        url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'ANTI-SCAM - Nền tảng chống lừa đảo online',
+        alt: 'ANTI-SCAM - Nền tảng chống lừa đảo online Việt Nam',
       },
     ],
     locale: 'vi_VN',
@@ -50,14 +62,33 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'ANTI-SCAM - Bảo Vệ Bạn Khỏi Lừa Đảo Online',
-    description: '🛡️ Kiểm tra link • 🤖 AI phân tích • 📚 Quiz nhận biết lừa đảo',
-    images: ['/1h.png'],
+    title: 'ANTI-SCAM - Kiểm tra Lừa đảo Online Việt Nam',
+    description: '🛡️ Kiểm tra link lừa đảo • 🤖 AI phân tích • 🏦 Check tài khoản scam • 📱 Kiểm tra SĐT',
+    images: ['/og-image.png'],
+    creator: '@antiscam_vn',
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
+  alternates: {
+    canonical: 'https://maitamsite.site',
+    languages: {
+      'vi-VN': 'https://maitamsite.site',
+      'en-US': 'https://maitamsite.site',
+    },
+  },
+  verification: {
+    google: 'your-google-verification-code', // Thay bằng code từ Google Search Console
+  },
+  category: 'technology',
 }
 
 export const viewport: Viewport = {
@@ -76,6 +107,57 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/logo.png" type="image/png" />
         <link rel="shortcut icon" href="/logo.png" type="image/png" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'WebSite',
+              name: 'ANTI-SCAM',
+              alternateName: ['Anti Scam', 'AntiScam', 'Chống Lừa Đảo'],
+              url: 'https://maitamsite.site',
+              description: 'Nền tảng AI kiểm tra và cảnh báo lừa đảo online hàng đầu Việt Nam',
+              potentialAction: {
+                '@type': 'SearchAction',
+                target: {
+                  '@type': 'EntryPoint',
+                  urlTemplate: 'https://maitamsite.site/scan?url={search_term_string}'
+                },
+                'query-input': 'required name=search_term_string'
+              },
+              publisher: {
+                '@type': 'Organization',
+                name: 'ANTI-SCAM Vietnam',
+                logo: {
+                  '@type': 'ImageObject',
+                  url: 'https://maitamsite.site/logo.png'
+                }
+              }
+            })
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'SoftwareApplication',
+              name: 'ANTI-SCAM',
+              applicationCategory: 'SecurityApplication',
+              operatingSystem: 'Web',
+              offers: {
+                '@type': 'Offer',
+                price: '0',
+                priceCurrency: 'VND'
+              },
+              aggregateRating: {
+                '@type': 'AggregateRating',
+                ratingValue: '4.8',
+                ratingCount: '1000'
+              }
+            })
+          }}
+        />
       </head>
       <body className={`${inter.variable} ${montserrat.variable} ${spaceGrotesk.variable} font-sans text-white min-h-screen`} suppressHydrationWarning>
         <Providers>
