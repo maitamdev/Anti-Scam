@@ -10,6 +10,10 @@ import {
   LINK_SHORTENERS,
   BIO_LINK_SERVICES,
   GAMBLING_KEYWORDS,
+  SCAM_URL_KEYWORDS,
+  PHISHING_PATTERNS,
+  CRYPTO_SCAM_PATTERNS,
+  INVESTMENT_SCAM_PATTERNS,
   type Label,
 } from './constants'
 import { extractDomain, extractRootDomain } from './utils'
@@ -58,14 +62,14 @@ async function checkBlocklist(domain: string): Promise<{ blocked: boolean; reaso
   return data
 }
 
-// Fast heuristic analysis
+// Fast heuristic analysis - UPGRADED
 function runHeuristics(url: string, domain: string): { score: number; reasons: string[] } {
   let score = 0
   const reasons: string[] = []
   const urlLower = url.toLowerCase()
   const domainLower = domain.toLowerCase()
 
-  // HTTPS
+  // HTTPS check
   if (!url.startsWith('https://')) {
     score += 15
     reasons.push('Không có HTTPS')
@@ -74,49 +78,84 @@ function runHeuristics(url: string, domain: string): { score: number; reasons: s
   // Link shortener / Bio link
   if (LINK_SHORTENERS.some(s => domainLower.includes(s))) {
     score += 25
-    reasons.push('⚠️ Link rút gọn')
+    reasons.push('⚠️ Link rút gọn - có thể ẩn URL thật')
   }
   if (BIO_LINK_SERVICES.some(s => domainLower.includes(s))) {
     score += 30
-    reasons.push('⚠️ Bio Link - hay bị lạm dụng')
+    reasons.push('⚠️ Bio Link - thường bị lạm dụng cho lừa đảo')
   }
 
-  // Suspicious TLD
+  // Suspicious TLD - stricter
   const badTld = SUSPICIOUS_TLDS.find(t => domainLower.endsWith(t))
   if (badTld) {
-    score += 20
+    score += 25
     reasons.push(`TLD đáng ngờ: ${badTld}`)
   }
 
-  // Brand impersonation
+  // Brand impersonation - improved
   for (const brand of BRAND_KEYWORDS) {
     if (domainLower.includes(brand)) {
-      // Check if it's a legitimate domain or subdomain
       const rootDomain = extractRootDomain(domainLower)
-      const realPatterns = [`${brand}.com`, `${brand}.vn`, `${brand}.com.vn`, `${brand}.me`]
+      const realPatterns = [`${brand}.com`, `${brand}.vn`, `${brand}.com.vn`, `${brand}.me`, `${brand}.net`]
       const isLegit = realPatterns.some(p => rootDomain === p || domainLower === p || domainLower.endsWith(`.${p}`))
       
       if (!isLegit) {
-        score += 35
-        reasons.push(`🚨 Giả mạo "${brand}"`)
+        score += 40
+        reasons.push(`🚨 Nghi ngờ giả mạo "${brand}"`)
         break
       }
     }
   }
 
+  // Phishing patterns check
+  for (const pattern of PHISHING_PATTERNS) {
+    if (pattern.test(urlLower)) {
+      score += 35
+      reasons.push('🚨 Pattern phishing phát hiện')
+      break
+    }
+  }
+
+  // Crypto scam patterns
+  for (const pattern of CRYPTO_SCAM_PATTERNS) {
+    if (pattern.test(urlLower)) {
+      score += 45
+      reasons.push('🚨 Dấu hiệu lừa đảo crypto/airdrop')
+      break
+    }
+  }
+
+  // Investment scam patterns
+  for (const pattern of INVESTMENT_SCAM_PATTERNS) {
+    if (pattern.test(urlLower)) {
+      score += 40
+      reasons.push('🚨 Dấu hiệu lừa đảo đầu tư')
+      break
+    }
+  }
+
+  // Scam URL keywords
+  const scamKeywordHits = SCAM_URL_KEYWORDS.filter(k => urlLower.includes(k))
+  if (scamKeywordHits.length >= 3) {
+    score += 35
+    reasons.push('⚠️ URL chứa nhiều từ khóa lừa đảo')
+  } else if (scamKeywordHits.length >= 1) {
+    score += 15
+    reasons.push(`⚠️ URL có từ khóa đáng ngờ: ${scamKeywordHits[0]}`)
+  }
+
   // Gambling detection - stricter
   const gamblingHits = GAMBLING_KEYWORDS.filter(k => domainLower.includes(k) || urlLower.includes(k))
   if (gamblingHits.length >= 3) {
-    score += 70
+    score += 75
     reasons.push('🎰 Website cờ bạc rõ ràng!')
   } else if (gamblingHits.length === 2) {
-    score += 60
+    score += 65
     reasons.push('🎰 Website cờ bạc!')
   } else if (gamblingHits.length === 1) {
-    // Single gambling keyword but check context
     const keyword = gamblingHits[0]
-    if (['casino', 'bet', 'slot', 'poker', 'inn', 'palace', 'crown'].includes(keyword)) {
-      score += 50
+    if (['casino', 'bet', 'slot', 'poker', 'inn', 'palace', 'crown', 'sunwin', 'go88', 'iwin', 'b52'].includes(keyword)) {
+      score += 55
       reasons.push(`🎰 Tên miền có dấu hiệu casino: ${keyword}`)
     } else {
       score += 30
@@ -124,42 +163,72 @@ function runHeuristics(url: string, domain: string): { score: number; reasons: s
     }
   }
 
-  // Casino/Inn specific patterns (oaxacainn, etc)
-  if (/(casino|inn|club|palace|royal|crown|diamond|gold)(vip|win|bet|88|game)/i.test(domainLower) ||
-      /(vip|win|bet|88|game)(casino|inn|club|palace|royal)/i.test(domainLower)) {
-    score += 60
+  // Casino/Inn specific patterns
+  if (/(casino|inn|club|palace|royal|crown|diamond|gold|king|queen)(vip|win|bet|88|game|fun|live)/i.test(domainLower) ||
+      /(vip|win|bet|88|game|fun|live)(casino|inn|club|palace|royal|crown)/i.test(domainLower)) {
+    score += 65
     reasons.push('🎰 Pattern tên casino điển hình')
   }
 
-  // Gambling domain pattern
-  if (/\d{2,3}(vip|club|win|bet|game|slot)/i.test(domainLower) ||
-      /(vip|club|win|bet|game|slot)\d{2,3}/i.test(domainLower)) {
-    score += 45
-    reasons.push('🎰 Pattern cờ bạc')
+  // Known gambling sites pattern
+  if (/(jun88|new88|hi88|fb88|w88|m88|kubet|oxbet|ae888|sin88|ta88|uk88|vn88|qh88|debet|zbet|sodo|onbet|typhu88|mu88)/i.test(domainLower)) {
+    score += 80
+    reasons.push('🎰 Nhà cái cờ bạc đã biết')
   }
 
-  // Lucky numbers
-  if (/68|88|99|789|888|666|777/.test(domainLower)) {
-    score += 15
-    reasons.push('Số may mắn trong domain')
+  // Gambling domain pattern with numbers
+  if (/\d{2,3}(vip|club|win|bet|game|slot|fun|live)/i.test(domainLower) ||
+      /(vip|club|win|bet|game|slot|fun|live)\d{2,3}/i.test(domainLower)) {
+    score += 50
+    reasons.push('🎰 Pattern cờ bạc với số')
+  }
+
+  // Lucky numbers in domain
+  if (/68|88|99|789|888|666|777|168/.test(domainLower)) {
+    score += 20
+    reasons.push('Số may mắn trong domain - thường dùng cho cờ bạc')
   }
 
   // IP as domain
   if (/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/.test(domain)) {
-    score += 30
-    reasons.push('Dùng IP thay domain')
+    score += 35
+    reasons.push('Dùng IP thay domain - rất đáng ngờ')
   }
 
-  // Cyrillic (homograph)
+  // Cyrillic (homograph attack)
   if (/[а-яА-Я]/.test(url)) {
-    score += 40
+    score += 50
     reasons.push('🚨 Ký tự Cyrillic giả mạo!')
+  }
+
+  // Punycode domain (IDN homograph)
+  if (domain.startsWith('xn--')) {
+    score += 30
+    reasons.push('⚠️ Domain Punycode - có thể giả mạo')
   }
 
   // Long domain
   if (domain.length > 40) {
-    score += 10
+    score += 15
     reasons.push('Domain quá dài')
+  }
+
+  // Many hyphens
+  if ((domain.match(/-/g) || []).length > 3) {
+    score += 20
+    reasons.push('Domain có nhiều dấu gạch ngang')
+  }
+
+  // Many subdomains
+  if ((domain.match(/\./g) || []).length > 3) {
+    score += 15
+    reasons.push('Quá nhiều subdomain')
+  }
+
+  // Random-looking domain
+  if (/[a-z]{10,}[0-9]{3,}/i.test(domain) || /[0-9]{3,}[a-z]{10,}/i.test(domain)) {
+    score += 25
+    reasons.push('Domain có vẻ ngẫu nhiên')
   }
 
   return { score: Math.min(score, 100), reasons }

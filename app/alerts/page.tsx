@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { AlertTriangle, Shield, Clock, Eye, ChevronRight, Filter, Search, Bell, TrendingUp } from 'lucide-react'
+import { AlertTriangle, Shield, Clock, Eye, ChevronRight, Filter, Search, Bell, TrendingUp, Home } from 'lucide-react'
 import Link from 'next/link'
 
 interface ScamAlert {
@@ -294,13 +294,22 @@ export default function AlertsPage() {
           <div className="bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border border-blue-500/20 rounded-2xl p-8">
             <h3 className="text-xl font-bold text-white mb-2">Bạn phát hiện chiêu trò lừa đảo mới?</h3>
             <p className="text-gray-400 mb-4">Hãy báo cáo để giúp cộng đồng cảnh giác</p>
-            <Link
-              href="/report"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-xl text-white font-semibold hover:from-blue-700 hover:to-cyan-700 transition-all"
-            >
-              <AlertTriangle className="w-5 h-5" />
-              Báo cáo ngay
-            </Link>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+              <Link
+                href="/report"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-xl text-white font-semibold hover:from-blue-700 hover:to-cyan-700 transition-all"
+              >
+                <AlertTriangle className="w-5 h-5" />
+                Báo cáo ngay
+              </Link>
+              <Link
+                href="/"
+                className="inline-flex items-center gap-2 px-6 py-3 border border-gray-600 rounded-xl text-gray-300 font-semibold hover:bg-white/5 transition-all"
+              >
+                <Home className="w-5 h-5" />
+                Về trang chủ
+              </Link>
+            </div>
           </div>
         </motion.div>
       </div>
