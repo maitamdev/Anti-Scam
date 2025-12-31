@@ -69,6 +69,9 @@ export default function Footer() {
               <li><Link href="/report" className="text-gray-400 hover:text-white transition-colors">
                 {language === 'vi' ? 'Báo cáo lừa đảo' : 'Report Scam'}
               </Link></li>
+              <li><Link href="/community/stories" className="text-gray-400 hover:text-white transition-colors">
+                {language === 'vi' ? 'Câu chuyện cộng đồng' : 'Community Stories'}
+              </Link></li>
               <li><Link href="/about" className="text-gray-400 hover:text-white transition-colors">
                 {language === 'vi' ? 'Giới thiệu' : 'About'}
               </Link></li>

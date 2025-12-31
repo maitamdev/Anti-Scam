@@ -86,7 +86,7 @@ const tools = [
     descVi: 'Phát hiện điều khoản nguy hiểm trong hợp đồng',
     descEn: 'Detect dangerous clauses in contracts',
     color: 'from-amber-500 to-amber-600',
-    available: false
+    available: true
   },
   {
     icon: ShoppingBag,

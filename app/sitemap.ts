@@ -21,6 +21,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/tools/link-expander',
     '/tools/fake-news',
     '/tools/sms-checker',
+    '/tools/contract-checker',
+    '/community/stories',
     '/extension',
     '/privacy',
     '/terms',
