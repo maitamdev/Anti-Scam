@@ -86,7 +86,7 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: 'your-google-verification-code', // Thay bằng code từ Google Search Console
+    google: 'XQLeFbBWTvnGRd6n6xfNKdnxCv0bqEo7qQtXPXK_eas',
   },
   category: 'technology',
 }
