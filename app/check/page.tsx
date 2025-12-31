@@ -204,11 +204,11 @@ export default function CheckPage() {
                   <select
                     value={bankName}
                     onChange={(e) => setBankName(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white appearance-none cursor-pointer focus:outline-none focus:border-blue-500/50"
+                    className="w-full pl-10 pr-4 py-3 bg-gray-900 border border-white/10 rounded-xl text-white appearance-none cursor-pointer focus:outline-none focus:border-blue-500/50 [&>option]:bg-gray-900 [&>option]:text-white"
                   >
-                    <option value="">{t.checkPage.selectBank}</option>
+                    <option value="" className="bg-gray-900 text-gray-400">{t.checkPage.selectBank}</option>
                     {banks.map(bank => (
-                      <option key={bank} value={bank}>{bank}</option>
+                      <option key={bank} value={bank} className="bg-gray-900 text-white">{bank}</option>
                     ))}
                   </select>
                 </div>

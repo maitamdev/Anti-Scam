@@ -29,7 +29,6 @@ import {
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import ImageUpload from '../components/ImageUpload'
-import ScamTips from '../components/ScamTips'
 import AnimatedEye from '../components/AnimatedEye'
 import ScanMascot from '../components/ScanMascot'
 import { safeStorage } from '../lib/safeStorage'
@@ -321,16 +320,6 @@ export default function ScanPage() {
                 ? 'Dán link hoặc upload ảnh tin nhắn đáng ngờ để kiểm tra dấu hiệu lừa đảo.'
                 : 'Paste link or upload suspicious message screenshot to check for scam signs.'}
             </p>
-          </motion.div>
-
-          {/* Tips */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="mb-8"
-          >
-            <ScamTips />
           </motion.div>
 
           {/* Tab Switcher */}
