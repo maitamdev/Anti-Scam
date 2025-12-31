@@ -12,7 +12,7 @@ import { useTranslation } from '../lib/i18n/LanguageContext'
 
 export default function Header() {
   const { data: session, status } = useSession()
-  const { t } = useTranslation()
+  const { t, language } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
@@ -22,10 +22,10 @@ export default function Header() {
   const navLinks = [
     { href: '/', label: t.common.home },
     { href: '/scan', label: t.common.scan },
+    { href: '/tools', label: language === 'vi' ? 'Công cụ' : 'Tools' },
     { href: '/alerts', label: t.common.alerts },
     { href: '/quiz', label: t.common.quiz },
     { href: '/guide', label: t.common.guide },
-    { href: '/report', label: t.common.report },
   ]
 
   useEffect(() => {

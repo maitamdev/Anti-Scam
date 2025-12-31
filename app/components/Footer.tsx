@@ -45,8 +45,8 @@ export default function Footer() {
               <li><Link href="/scan" className="text-gray-400 hover:text-white transition-colors">
                 {language === 'vi' ? 'Kiểm tra URL' : 'Check URL'}
               </Link></li>
-              <li><Link href="/scan" className="text-gray-400 hover:text-white transition-colors">
-                {language === 'vi' ? 'Phân tích hình ảnh' : 'Image Analysis'}
+              <li><Link href="/tools" className="text-gray-400 hover:text-white transition-colors">
+                {language === 'vi' ? 'Công cụ bảo mật' : 'Security Tools'}
               </Link></li>
               <li><Link href="/quiz" className="text-gray-400 hover:text-white transition-colors">
                 {language === 'vi' ? 'Quiz trắc nghiệm' : 'Quiz Test'}
