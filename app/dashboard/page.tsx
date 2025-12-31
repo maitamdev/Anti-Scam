@@ -7,7 +7,6 @@ import {
   BarChart3, 
   History, 
   Eye, 
-  CreditCard, 
   Key, 
   AlertTriangle,
   Search,
@@ -177,13 +176,6 @@ export default function DashboardPage() {
       description: 'Quản lý API keys',
       color: 'from-yellow-500 to-orange-500',
     },
-    {
-      title: 'Thanh toán',
-      href: '/dashboard/billing',
-      icon: CreditCard,
-      description: 'Quản lý gói dịch vụ',
-      color: 'from-indigo-500 to-purple-500',
-    },
   ]
 
   const getLabelColor = (label: string) => {
@@ -238,14 +230,6 @@ export default function DashboardPage() {
             }`}>
               {session.user.tier} Plan
             </div>
-            {session.user.tier === 'FREE' && (
-              <Link 
-                href="/pricing"
-                className="text-blue-400 hover:text-blue-300 font-medium flex items-center gap-2"
-              >
-                Nâng cấp lên Pro →
-              </Link>
-            )}
           </motion.div>
 
           {/* Quick Stats Cards */}
