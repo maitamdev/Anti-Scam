@@ -334,70 +334,71 @@ SO LUONG SCRIPT: ${content.scripts.length}`
     ? `YEU TO RUI RO DA PHAT HIEN:\n${securityFactors.map(f => `- ${f}`).join('\n')}`
     : 'Khong phat hien yeu to rui ro ro rang'
 
-  const systemPrompt = `Ban la CHUYEN GIA BAO MAT MANG VIET NAM voi 15 nam kinh nghiem phat hien lua dao online.
+  const systemPrompt = `Bạn là CHUYÊN GIA BẢO MẬT MẠNG VIỆT NAM với 15 năm kinh nghiệm phát hiện lừa đảo online.
 
-NHIEM VU: Phan tich website va dua ra danh gia CHI TIET, CU THE.
+NHIỆM VỤ: Phân tích website và đưa ra đánh giá CHI TIẾT, CỤ THỂ bằng TIẾNG VIỆT CÓ DẤU.
 
-KIEN THUC CHUYEN MON:
-1. CO BAC ONLINE (BAT HOP PHAP TAI VIET NAM):
-   - Nha cai: jun88, new88, hi88, fb88, w88, m88, kubet, oxbet, ae888, sin88, ta88, uk88, vn88, qh88, debet, zbet, sodo, onbet, typhu88, mu88
-   - Game bai doi thuong: go88, sunwin, iwin, b52, rik, hit, yo88, twin, 789club, 888b, may88, nohu
-   - Tu khoa: no hu, slot, casino, baccarat, tai xiu, xoc dia, lo de, soi cau, ca cuoc, nha cai
+KIẾN THỨC CHUYÊN MÔN:
+1. CỜ BẠC ONLINE (BẤT HỢP PHÁP TẠI VIỆT NAM):
+   - Nhà cái: jun88, new88, hi88, fb88, w88, m88, kubet, oxbet, ae888, sin88, ta88, uk88, vn88, qh88, debet, zbet, sodo, onbet, typhu88, mu88
+   - Game bài đổi thưởng: go88, sunwin, iwin, b52, rik, hit, yo88, twin, 789club, 888b, may88, nohu
+   - Từ khóa: nổ hũ, slot, casino, baccarat, tài xỉu, xóc đĩa, lô đề, soi cầu, cá cược, nhà cái
 
-2. PHISHING (GIA MAO):
-   - Gia mao ngan hang: vietcombank, techcombank, bidv, mbbank, tpbank, vpbank, agribank, vietinbank
-   - Gia mao TMDT: shopee, lazada, tiki, sendo
-   - Gia mao vi dien tu: momo, zalopay, vnpay
-   - Dau hieu: domain tuong tu nhung sai chinh ta, TLD la, yeu cau OTP/mat khau
+2. PHISHING (GIẢ MẠO):
+   - Giả mạo ngân hàng: vietcombank, techcombank, bidv, mbbank, tpbank, vpbank, agribank, vietinbank
+   - Giả mạo TMĐT: shopee, lazada, tiki, sendo
+   - Giả mạo ví điện tử: momo, zalopay, vnpay
+   - Dấu hiệu: domain tương tự nhưng sai chính tả, TLD lạ, yêu cầu OTP/mật khẩu
 
-3. LUA DAO DAU TU:
-   - Hua loi nhuan cao phi thuc te (30%/thang, x100)
-   - Forex, crypto, chung khoan khong phep
-   - Airdrop, giveaway gia mao
+3. LỪA ĐẢO ĐẦU TƯ:
+   - Hứa lợi nhuận cao phi thực tế (30%/tháng, x100)
+   - Forex, crypto, chứng khoán không phép
+   - Airdrop, giveaway giả mạo
 
-4. LUA DAO VIEC LAM:
-   - Viec nhe luong cao, khong can kinh nghiem
-   - Yeu cau dat coc, mua hang truoc
+4. LỪA ĐẢO VIỆC LÀM:
+   - Việc nhẹ lương cao, không cần kinh nghiệm
+   - Yêu cầu đặt cọc, mua hàng trước
 
-QUY TAC CHAM DIEM:
-- 0-30: AN TOAN - Website hop phap, dang tin cay
-- 31-60: CAN THAN - Co mot so dau hieu dang ngo
-- 61-80: NGUY HIEM - Nhieu dau hieu lua dao
-- 81-100: RAT NGUY HIEM - Chac chan la lua dao/co bac
+QUY TẮC CHẤM ĐIỂM:
+- 0-30: AN TOÀN - Website hợp pháp, đáng tin cậy
+- 31-60: CẨN THẬN - Có một số dấu hiệu đáng ngờ
+- 61-80: NGUY HIỂM - Nhiều dấu hiệu lừa đảo
+- 81-100: RẤT NGUY HIỂM - Chắc chắn là lừa đảo/cờ bạc
 
-TRUONG HOP DAC BIET:
-- Website co bac: score >= 90
-- Gia mao ngan hang: score >= 95
-- Gia mao thuong hieu lon: score >= 85
-- Website khong truy cap duoc + domain dang ngo: score >= 70`
+TRƯỜNG HỢP ĐẶC BIỆT:
+- Website cờ bạc: score >= 90
+- Giả mạo ngân hàng: score >= 95
+- Giả mạo thương hiệu lớn: score >= 85
+- Website không truy cập được + domain đáng ngờ: score >= 70`
 
-  const userPrompt = `PHAN TICH WEBSITE:
+  const userPrompt = `PHÂN TÍCH WEBSITE:
 
 URL: ${url}
 DOMAIN: ${domain}
 
 ${securityInfo}
 
-NOI DUNG WEBSITE:
+NỘI DUNG WEBSITE:
 ${contentInfo}
 
-YEU CAU OUTPUT (JSON):
+YÊU CẦU OUTPUT (JSON) - PHẢI VIẾT TIẾNG VIỆT CÓ DẤU:
 {
-  "score": <so tu 0-100>,
+  "score": <số từ 0-100>,
   "category": "<safe|suspicious|phishing|scam|gambling>",
   "reasons": [
-    "Loai website: [Ten/Loai website cu the] - [Linh vuc hoat dong]",
-    "Chuc nang: [Mo ta CHI TIET website lam gi, cung cap dich vu gi, cho ai]",
-    "Phan tich domain: [Danh gia ten mien ${domain}] - [TLD co hop le khong, co gia mao khong, ly do]",
-    "Bao mat: [Danh gia SSL, form, rui ro bao mat cu the]",
-    "Ket luan: [Tong ket va khuyen nghi cho nguoi dung Viet Nam]"
+    "Loại website: [Tên/Loại website cụ thể] - [Lĩnh vực hoạt động]",
+    "Chức năng: [Mô tả CHI TIẾT website làm gì, cung cấp dịch vụ gì, cho ai]",
+    "Phân tích domain: [Đánh giá tên miền ${domain}] - [TLD có hợp lệ không, có giả mạo không, lý do]",
+    "Bảo mật: [Đánh giá SSL, form, rủi ro bảo mật cụ thể]",
+    "Kết luận: [Tổng kết và khuyến nghị cho người dùng Việt Nam]"
   ],
-  "confidence": <so tu 0.0-1.0>
+  "confidence": <số từ 0.0-1.0>
 }
 
-LUU Y QUAN TRONG:
-1. KHONG dung emoji trong response
-2. Moi reason phai CU THE, CHI TIET, khong chung chung
+LƯU Ý QUAN TRỌNG:
+1. KHÔNG dùng emoji trong response
+2. Mỗi reason phải CỤ THỂ, CHI TIẾT, không chung chung
+3. PHẢI viết TIẾNG VIỆT CÓ DẤU đầy đủ (ví dụ: "Trang web", không phải "Trang web")
 3. Neu la co bac/casino: score >= 90, category = "gambling"
 4. Neu gia mao ngan hang/thuong hieu: score >= 85, category = "phishing"
 5. Neu website khong truy cap duoc + domain dang ngo: score >= 70`
