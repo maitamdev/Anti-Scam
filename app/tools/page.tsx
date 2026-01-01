@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { QrCode, Phone, Mail, FileText, ShoppingBag, ArrowLeft, Wrench, Lock, Link2, Newspaper, MessageSquare, Sparkles, Shield, Wallet } from 'lucide-react'
+import { QrCode, Phone, Mail, FileText, ShoppingBag, ArrowLeft, Wrench, Lock, Link2, Newspaper, MessageSquare, Sparkles, Shield, Wallet, Chrome } from 'lucide-react'
 import Link from 'next/link'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
@@ -9,6 +9,18 @@ import GlowingCard from '../components/GlowingCard'
 import { useTranslation } from '../lib/i18n/LanguageContext'
 
 const tools = [
+  {
+    icon: Chrome,
+    href: '/extension',
+    titleVi: 'Cài Extension',
+    titleEn: 'Install Extension',
+    descVi: 'Tải extension trình duyệt để bảo vệ real-time khi lướt web',
+    descEn: 'Download browser extension for real-time protection',
+    color: 'from-blue-500 to-indigo-500',
+    glowColor: 'rgba(59, 130, 246, 0.4)',
+    available: true,
+    isNew: true
+  },
   {
     icon: Wallet,
     href: '/tools/wallet-checker',
@@ -140,7 +152,7 @@ export default function ToolsPage() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      
+
       <main className="flex-1 pt-24 pb-16">
         <div className="max-w-5xl mx-auto px-4">
           {/* Back */}
@@ -153,7 +165,7 @@ export default function ToolsPage() {
 
           {/* Header */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
-            <motion.div 
+            <motion.div
               className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-2xl mb-4 shadow-lg shadow-cyan-500/25"
               initial={{ scale: 0, rotate: -180 }}
               animate={{ scale: 1, rotate: 0 }}
@@ -165,11 +177,11 @@ export default function ToolsPage() {
               {language === 'vi' ? 'Công cụ Bảo mật' : 'Security Tools'}
             </h1>
             <p className="text-gray-400 max-w-xl mx-auto">
-              {language === 'vi' 
+              {language === 'vi'
                 ? 'Bộ công cụ miễn phí giúp bạn kiểm tra và phòng tránh lừa đảo'
                 : 'Free tools to help you check and prevent scams'}
             </p>
-            
+
             {/* Stats */}
             <div className="flex justify-center gap-8 mt-6">
               <div className="text-center">
@@ -252,7 +264,7 @@ export default function ToolsPage() {
                 {language === 'vi' ? 'Cần kiểm tra URL đáng ngờ?' : 'Need to check a suspicious URL?'}
               </h3>
               <p className="text-gray-400 mb-4">
-                {language === 'vi' 
+                {language === 'vi'
                   ? 'Sử dụng công cụ quét URL chính của chúng tôi để phân tích chi tiết'
                   : 'Use our main URL scanner for detailed analysis'}
               </p>

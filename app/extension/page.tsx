@@ -55,9 +55,9 @@ const features = [
 ]
 
 const browsers = [
-  { name: 'Chrome', icon: '🌐', available: true, url: '#' },
-  { name: 'Edge', icon: '🔷', available: true, url: '#' },
-  { name: 'Firefox', icon: '🦊', available: true, url: '#' },
+  { name: 'Chrome', icon: '🌐', available: true, url: '/antiscam-extension.zip' },
+  { name: 'Edge', icon: '🔷', available: true, url: '/antiscam-extension.zip' },
+  { name: 'Firefox', icon: '🦊', available: true, url: '/antiscam-extension.zip' },
   { name: 'Safari', icon: '🧭', available: false, url: '#' },
 ]
 
@@ -347,7 +347,8 @@ export default function ExtensionPage() {
                       : 'Free installation, no registration required, start being protected immediately.'}
                   </p>
                   <motion.a
-                    href="#"
+                    href="/antiscam-extension.zip"
+                    download
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-xl text-white font-semibold shadow-2xl shadow-purple-500/30 hover:shadow-purple-500/50 transition-shadow"
