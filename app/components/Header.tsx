@@ -24,6 +24,7 @@ export default function Header() {
     { href: '/scan', label: t.common.scan },
     { href: '/tools', label: language === 'vi' ? 'Công cụ' : 'Tools' },
     { href: '/alerts', label: t.common.alerts },
+    { href: '/report', label: language === 'vi' ? 'Báo cáo' : 'Report' },
     { href: '/quiz', label: t.common.quiz },
     { href: '/guide', label: t.common.guide },
   ]
