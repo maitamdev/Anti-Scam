@@ -67,7 +67,7 @@ export default function ExtensionPage() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      
+
       <main className="flex-1 pt-24 pb-16">
         <div className="max-w-5xl mx-auto px-4">
           {/* Back */}
@@ -79,12 +79,12 @@ export default function ExtensionPage() {
           </motion.div>
 
           {/* Hero */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }} 
-            animate={{ opacity: 1, y: 0 }} 
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             className="text-center mb-12"
           >
-            <motion.div 
+            <motion.div
               initial={{ scale: 0, rotate: -180 }}
               animate={{ scale: 1, rotate: 0 }}
               transition={{ type: 'spring', stiffness: 200, delay: 0.2 }}
@@ -105,13 +105,13 @@ export default function ExtensionPage() {
               </span>
             </h1>
             <p className="text-gray-400 text-lg max-w-2xl mx-auto mb-8">
-              {language === 'vi' 
+              {language === 'vi'
                 ? 'Bảo vệ bạn 24/7 khi lướt web. Tự động phát hiện và cảnh báo website lừa đảo, phishing.'
                 : 'Protect you 24/7 while browsing. Auto-detect and warn about scam, phishing websites.'}
             </p>
 
             {/* Stats */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
@@ -156,11 +156,10 @@ export default function ExtensionPage() {
                   href={browser.url}
                   whileHover={{ scale: browser.available ? 1.05 : 1 }}
                   whileTap={{ scale: browser.available ? 0.95 : 1 }}
-                  className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all ${
-                    browser.available 
+                  className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all ${browser.available
                       ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40'
                       : 'bg-gray-800 text-gray-500 cursor-not-allowed'
-                  }`}
+                    }`}
                 >
                   <span className="text-xl">{browser.icon}</span>
                   <span>{browser.name}</span>
@@ -196,7 +195,7 @@ export default function ExtensionPage() {
                 >
                   <GlowingCard glowColor="rgba(139, 92, 246, 0.3)">
                     <div className="bg-gradient-to-br from-purple-900/20 to-blue-900/20 border border-purple-500/20 rounded-xl p-5 h-full hover:border-purple-500/40 transition-colors">
-                      <motion.div 
+                      <motion.div
                         className="w-12 h-12 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-xl flex items-center justify-center mb-4"
                         whileHover={{ scale: 1.1, rotate: 5 }}
                       >
@@ -260,7 +259,7 @@ export default function ExtensionPage() {
                   )}
                   <GlowingCard glowColor="rgba(6, 182, 212, 0.3)">
                     <div className="bg-gradient-to-br from-cyan-900/20 to-blue-900/20 border border-cyan-500/20 rounded-xl p-6 text-center relative z-10">
-                      <motion.div 
+                      <motion.div
                         className="w-14 h-14 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-cyan-500/25"
                         whileHover={{ scale: 1.1, rotate: 10 }}
                       >
@@ -280,11 +279,231 @@ export default function ExtensionPage() {
             </div>
           </motion.div>
 
-          {/* Privacy Note */}
+          {/* Installation Guide */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
+            className="mb-16"
+          >
+            <h2 className="text-2xl font-bold text-center mb-4">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-400">
+                {language === 'vi' ? 'Hướng dẫn Cài đặt' : 'Installation Guide'}
+              </span>
+            </h2>
+            <p className="text-center text-gray-400 mb-8 max-w-2xl mx-auto">
+              {language === 'vi'
+                ? 'Extension chưa có trên Store, bạn cần cài đặt thủ công bằng Developer Mode. Làm theo hướng dẫn dưới đây:'
+                : 'Extension is not yet on Store, you need to install manually using Developer Mode. Follow the guide below:'}
+            </p>
+
+            {/* Chrome Installation */}
+            <GlowingCard glowColor="rgba(234, 179, 8, 0.3)">
+              <div className="bg-gradient-to-br from-yellow-900/20 to-orange-900/20 border border-yellow-500/20 rounded-xl p-6 mb-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-lg flex items-center justify-center text-2xl">
+                    🌐
+                  </div>
+                  <h3 className="text-xl font-bold text-white">
+                    {language === 'vi' ? 'Chrome / Edge' : 'Chrome / Edge'}
+                  </h3>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="flex gap-4">
+                    <div className="flex-shrink-0 w-8 h-8 bg-yellow-500/20 rounded-full flex items-center justify-center text-yellow-400 font-bold">
+                      1
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-white mb-1">
+                        {language === 'vi' ? 'Tải Extension' : 'Download Extension'}
+                      </h4>
+                      <p className="text-sm text-gray-400">
+                        {language === 'vi'
+                          ? 'Nhấn nút "Tải Extension" ở trên để tải file ZIP về máy'
+                          : 'Click "Download Extension" button above to download the ZIP file'}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-4">
+                    <div className="flex-shrink-0 w-8 h-8 bg-yellow-500/20 rounded-full flex items-center justify-center text-yellow-400 font-bold">
+                      2
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-white mb-1">
+                        {language === 'vi' ? 'Giải nén File' : 'Extract File'}
+                      </h4>
+                      <p className="text-sm text-gray-400">
+                        {language === 'vi'
+                          ? 'Chuột phải vào file ZIP → "Extract All" → Chọn thư mục để giải nén'
+                          : 'Right-click ZIP file → "Extract All" → Choose folder to extract'}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-4">
+                    <div className="flex-shrink-0 w-8 h-8 bg-yellow-500/20 rounded-full flex items-center justify-center text-yellow-400 font-bold">
+                      3
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-white mb-1">
+                        {language === 'vi' ? 'Mở trang Extensions' : 'Open Extensions Page'}
+                      </h4>
+                      <p className="text-sm text-gray-400 mb-2">
+                        {language === 'vi'
+                          ? 'Mở Chrome/Edge → Gõ vào thanh địa chỉ:'
+                          : 'Open Chrome/Edge → Type in address bar:'}
+                      </p>
+                      <div className="bg-black/30 border border-yellow-500/20 rounded-lg p-3 font-mono text-sm text-yellow-400">
+                        chrome://extensions
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1">
+                        {language === 'vi'
+                          ? '(Hoặc Edge: edge://extensions)'
+                          : '(Or Edge: edge://extensions)'}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-4">
+                    <div className="flex-shrink-0 w-8 h-8 bg-yellow-500/20 rounded-full flex items-center justify-center text-yellow-400 font-bold">
+                      4
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-white mb-1">
+                        {language === 'vi' ? 'Bật Developer Mode' : 'Enable Developer Mode'}
+                      </h4>
+                      <p className="text-sm text-gray-400">
+                        {language === 'vi'
+                          ? 'Tìm và bật công tắc "Developer mode" ở góc trên bên phải'
+                          : 'Find and toggle "Developer mode" switch in top right corner'}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-4">
+                    <div className="flex-shrink-0 w-8 h-8 bg-yellow-500/20 rounded-full flex items-center justify-center text-yellow-400 font-bold">
+                      5
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-white mb-1">
+                        {language === 'vi' ? 'Load Extension' : 'Load Extension'}
+                      </h4>
+                      <p className="text-sm text-gray-400 mb-2">
+                        {language === 'vi'
+                          ? 'Nhấn nút "Load unpacked" → Chọn thư mục đã giải nén → Nhấn "Select Folder"'
+                          : 'Click "Load unpacked" → Select extracted folder → Click "Select Folder"'}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-4">
+                    <div className="flex-shrink-0 w-8 h-8 bg-green-500/20 rounded-full flex items-center justify-center text-green-400 font-bold">
+                      ✓
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-green-400 mb-1">
+                        {language === 'vi' ? 'Hoàn tất!' : 'Done!'}
+                      </h4>
+                      <p className="text-sm text-gray-400">
+                        {language === 'vi'
+                          ? 'Extension đã được cài đặt! Bạn sẽ thấy icon Anti-Scam trên thanh công cụ.'
+                          : 'Extension installed! You will see Anti-Scam icon on toolbar.'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </GlowingCard>
+
+            {/* Firefox Installation */}
+            <GlowingCard glowColor="rgba(249, 115, 22, 0.3)">
+              <div className="bg-gradient-to-br from-orange-900/20 to-red-900/20 border border-orange-500/20 rounded-xl p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-500 rounded-lg flex items-center justify-center text-2xl">
+                    🦊
+                  </div>
+                  <h3 className="text-xl font-bold text-white">Firefox</h3>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="flex gap-4">
+                    <div className="flex-shrink-0 w-8 h-8 bg-orange-500/20 rounded-full flex items-center justify-center text-orange-400 font-bold">
+                      1
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-white mb-1">
+                        {language === 'vi' ? 'Tải & Giải nén' : 'Download & Extract'}
+                      </h4>
+                      <p className="text-sm text-gray-400">
+                        {language === 'vi'
+                          ? 'Tải file ZIP và giải nén như hướng dẫn Chrome ở trên'
+                          : 'Download ZIP file and extract as Chrome guide above'}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-4">
+                    <div className="flex-shrink-0 w-8 h-8 bg-orange-500/20 rounded-full flex items-center justify-center text-orange-400 font-bold">
+                      2
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-white mb-1">
+                        {language === 'vi' ? 'Mở trang Add-ons' : 'Open Add-ons Page'}
+                      </h4>
+                      <p className="text-sm text-gray-400 mb-2">
+                        {language === 'vi'
+                          ? 'Mở Firefox → Gõ vào thanh địa chỉ:'
+                          : 'Open Firefox → Type in address bar:'}
+                      </p>
+                      <div className="bg-black/30 border border-orange-500/20 rounded-lg p-3 font-mono text-sm text-orange-400">
+                        about:debugging#/runtime/this-firefox
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-4">
+                    <div className="flex-shrink-0 w-8 h-8 bg-orange-500/20 rounded-full flex items-center justify-center text-orange-400 font-bold">
+                      3
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-white mb-1">
+                        {language === 'vi' ? 'Load Extension' : 'Load Extension'}
+                      </h4>
+                      <p className="text-sm text-gray-400">
+                        {language === 'vi'
+                          ? 'Nhấn "Load Temporary Add-on..." → Chọn file manifest.json trong thư mục đã giải nén'
+                          : 'Click "Load Temporary Add-on..." → Select manifest.json file in extracted folder'}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-4">
+                    <div className="flex-shrink-0 w-8 h-8 bg-yellow-500/20 rounded-full flex items-center justify-center">
+                      <AlertTriangle className="w-4 h-4 text-yellow-400" />
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-yellow-400 mb-1">
+                        {language === 'vi' ? 'Lưu ý' : 'Note'}
+                      </h4>
+                      <p className="text-sm text-gray-400">
+                        {language === 'vi'
+                          ? 'Extension tạm thời sẽ bị xóa khi tắt Firefox. Bạn cần load lại sau mỗi lần khởi động.'
+                          : 'Temporary extension will be removed when Firefox closes. You need to reload after each restart.'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </GlowingCard>
+          </motion.div>
+
+          {/* Privacy Note */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
             className="bg-green-500/10 border border-green-500/20 rounded-xl p-6 mb-8"
           >
             <div className="flex items-start gap-4">
@@ -327,7 +546,7 @@ export default function ExtensionPage() {
                   <div className="absolute top-0 left-1/4 w-32 h-32 bg-blue-500 rounded-full blur-3xl" />
                   <div className="absolute bottom-0 right-1/4 w-32 h-32 bg-purple-500 rounded-full blur-3xl" />
                 </div>
-                
+
                 <div className="relative z-10">
                   <motion.div
                     animate={{ y: [0, -5, 0] }}
@@ -337,12 +556,12 @@ export default function ExtensionPage() {
                     <Sparkles className="w-4 h-4 text-green-400" />
                     <span className="text-green-400 text-sm font-medium">{language === 'vi' ? 'Miễn phí vĩnh viễn' : 'Free forever'}</span>
                   </motion.div>
-                  
+
                   <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
                     {language === 'vi' ? 'Bảo vệ bạn ngay hôm nay!' : 'Protect yourself today!'}
                   </h2>
                   <p className="text-gray-400 mb-6 max-w-lg mx-auto">
-                    {language === 'vi' 
+                    {language === 'vi'
                       ? 'Cài đặt miễn phí, không cần đăng ký, bắt đầu được bảo vệ ngay lập tức.'
                       : 'Free installation, no registration required, start being protected immediately.'}
                   </p>
