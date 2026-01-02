@@ -24,6 +24,7 @@ import FeatureShowcase from './components/FeatureShowcase'
 import TestimonialCarousel from './components/TestimonialCarousel'
 import ScamTypeCards from './components/ScamTypeCards'
 import TypewriterText from './components/TypewriterText'
+import SafetyToolkit from './components/SafetyToolkit'
 import { useRouter } from 'next/navigation'
 import { useTranslation } from './lib/i18n/LanguageContext'
 
@@ -570,6 +571,35 @@ export default function Home() {
             </motion.div>
 
             <FeatureShowcase language={language} />
+          </div>
+        </section>
+
+        {/* Safety Toolkit Section - NEW */}
+        <section className="py-12 sm:py-20 px-4">
+          <div className="max-w-6xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-8 sm:mb-12"
+            >
+              <div>
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-2">
+                  {language === 'vi' ? 'Tăng tốc an toàn' : 'Accelerate your safety'}
+                </h2>
+                <p className="text-gray-400 max-w-2xl">
+                  {language === 'vi'
+                    ? 'Chọn bước tiếp theo để tận dụng tối đa bộ công cụ chống lừa đảo.'
+                    : 'Pick your next move to get the most from the anti-scam toolkit.'}
+                </p>
+              </div>
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold text-cyan-200">
+                <Sparkles className="h-4 w-4" />
+                {language === 'vi' ? 'Đề xuất thông minh' : 'Smart recommendations'}
+              </div>
+            </motion.div>
+
+            <SafetyToolkit />
           </div>
         </section>
 
