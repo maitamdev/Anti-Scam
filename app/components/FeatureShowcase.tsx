@@ -23,12 +23,12 @@ const features: Feature[] = [
     icon: Search,
     titleVi: 'Kiểm tra URL',
     titleEn: 'URL Scanner',
-    descVi: 'Phân tích URL với AI và 98+ nguồn dữ liệu để phát hiện website lừa đảo, phishing, malware.',
-    descEn: 'Analyze URLs with AI and 98+ data sources to detect scam, phishing, malware websites.',
+    descVi: 'Phân tích URL với AI để phát hiện dấu hiệu website lừa đảo, phishing, malware.',
+    descEn: 'Analyze URLs with AI to detect scam, phishing, malware website signs.',
     color: 'from-blue-500 to-cyan-500',
     stats: [
-      { labelVi: 'Nguồn dữ liệu', labelEn: 'Data sources', value: '98+' },
-      { labelVi: 'Độ chính xác', labelEn: 'Accuracy', value: '99.2%' },
+      { labelVi: 'Loại lừa đảo', labelEn: 'Scam types', value: '15+' },
+      { labelVi: 'Phân tích', labelEn: 'Analysis', value: 'AI' },
       { labelVi: 'Thời gian', labelEn: 'Time', value: '<3s' }
     ]
   },
@@ -93,11 +93,10 @@ export default function FeatureShowcase({ language }: Props) {
             <motion.button
               key={feature.id}
               onClick={() => setActiveFeature(feature)}
-              className={`w-full text-left p-4 rounded-xl border transition-all ${
-                isActive 
-                  ? 'bg-white/10 border-blue-500/50' 
+              className={`w-full text-left p-4 rounded-xl border transition-all ${isActive
+                  ? 'bg-white/10 border-blue-500/50'
                   : 'bg-white/5 border-white/10 hover:bg-white/10'
-              }`}
+                }`}
               whileHover={{ x: 5 }}
             >
               <div className="flex items-center gap-4">
@@ -137,7 +136,7 @@ export default function FeatureShowcase({ language }: Props) {
                 {language === 'vi' ? activeFeature.titleVi : activeFeature.titleEn}
               </h3>
             </div>
-            
+
             <p className="text-gray-300 mb-6">
               {language === 'vi' ? activeFeature.descVi : activeFeature.descEn}
             </p>

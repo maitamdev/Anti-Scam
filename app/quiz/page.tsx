@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { 
-  Brain, Trophy, Target, Clock, CheckCircle, XCircle, 
+import {
+  Brain, Trophy, Target, Clock, CheckCircle, XCircle,
   ArrowRight, RotateCcw, Home, Zap, Award, TrendingUp,
   ChevronDown, ArrowLeft, Star, Sparkles, Share2
 } from 'lucide-react'
@@ -14,13 +14,13 @@ import GlowingCard from '../components/GlowingCard'
 import Confetti from '../components/Confetti'
 import ShareButtons from '../components/ShareButtons'
 import { useTranslation } from '../lib/i18n/LanguageContext'
-import { 
-  generateQuestions, 
+import {
+  generateQuestions,
   generateQuestionsByCategory,
   generateQuestionsByDifficulty,
   getCategories,
   getCategoryName,
-  type QuizQuestion 
+  type QuizQuestion
 } from '../lib/quizData'
 
 type GameMode = 'quick' | 'challenge' | 'practice' | 'custom'
@@ -73,7 +73,7 @@ export default function QuizPage() {
 
   const startGame = () => {
     let questions: QuizQuestion[]
-    
+
     if (gameConfig.category) {
       questions = generateQuestionsByCategory(gameConfig.category, gameConfig.questionCount)
     } else if (gameConfig.difficulty !== 'mixed') {
@@ -110,10 +110,10 @@ export default function QuizPage() {
 
   const submitAnswer = () => {
     if (!selectedAnswer || !gameState) return
-    
+
     const currentQuestion = gameState.questions[gameState.currentIndex]
     const isCorrect = currentQuestion.options.find(o => o.id === selectedAnswer)?.isCorrect || false
-    
+
     setGameState({
       ...gameState,
       answers: { ...gameState.answers, [currentQuestion.id]: selectedAnswer },
@@ -124,7 +124,7 @@ export default function QuizPage() {
 
   const nextQuestion = () => {
     if (!gameState) return
-    
+
     if (gameState.currentIndex < gameState.questions.length - 1) {
       setGameState({
         ...gameState,
@@ -163,8 +163,8 @@ export default function QuizPage() {
         <main className="flex-1 pt-24 pb-12">
           <div className="max-w-4xl mx-auto px-4">
             {/* Back Button */}
-            <Link 
-              href="/" 
+            <Link
+              href="/"
               className="inline-flex items-center gap-2 text-gray-400 hover:text-blue-400 mb-8 transition-colors"
             >
               <ArrowLeft size={20} />
@@ -219,11 +219,10 @@ export default function QuizPage() {
                           setGameConfig({ ...DEFAULT_CONFIG, mode: 'custom' })
                         }
                       }}
-                      className={`w-full p-4 sm:p-6 rounded-xl sm:rounded-2xl border text-left transition-all ${
-                        gameConfig.mode === mode
+                      className={`w-full p-4 sm:p-6 rounded-xl sm:rounded-2xl border text-left transition-all ${gameConfig.mode === mode
                           ? 'bg-gray-800/80 border-blue-500'
                           : 'bg-gray-800/50 border-gray-700/50'
-                      }`}
+                        }`}
                     >
                       <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br ${gradient} flex items-center justify-center mb-3 shadow-lg`}>
                         <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
@@ -374,7 +373,7 @@ export default function QuizPage() {
     const percentage = Math.round((gameState.score / gameState.questions.length) * 100)
     const timeTaken = gameState.endTime ? Math.round((gameState.endTime - gameState.startTime) / 1000) : 0
     const showConfetti = percentage >= 80
-    
+
     const getGrade = () => {
       if (percentage >= 90) return { grade: 'A+', color: 'text-green-400', bg: 'bg-green-500/20' }
       if (percentage >= 80) return { grade: 'A', color: 'text-green-400', bg: 'bg-green-500/20' }
@@ -383,9 +382,9 @@ export default function QuizPage() {
       if (percentage >= 50) return { grade: 'D', color: 'text-orange-400', bg: 'bg-orange-500/20' }
       return { grade: 'F', color: 'text-red-400', bg: 'bg-red-500/20' }
     }
-    
+
     const gradeInfo = getGrade()
-    
+
     return (
       <div className="min-h-screen flex flex-col">
         <Header />
@@ -421,11 +420,11 @@ export default function QuizPage() {
                   transition={{ delay: 0.4 }}
                   className="text-gray-400 mt-2"
                 >
-                  {percentage >= 80 
+                  {percentage >= 80
                     ? t.quiz.result.excellentDesc
-                    : percentage >= 50 
-                    ? t.quiz.result.goodDesc
-                    : t.quiz.result.needImproveDesc}
+                    : percentage >= 50
+                      ? t.quiz.result.goodDesc
+                      : t.quiz.result.needImproveDesc}
                 </motion.p>
               </div>
 
@@ -511,7 +510,7 @@ export default function QuizPage() {
                   </p>
                   <ShareButtons
                     url={typeof window !== 'undefined' ? window.location.href : ''}
-                    title={`${language === 'vi' ? 'Tôi đạt' : 'I scored'} ${percentage}% ${language === 'vi' ? 'trong bài quiz ScamShield!' : 'on ScamShield quiz!'}`}
+                    title={`${language === 'vi' ? 'Tôi đạt' : 'I scored'} ${percentage}% ${language === 'vi' ? 'trong bài quiz ANTI-SCAM!' : 'on ANTI-SCAM quiz!'}`}
                   />
                 </motion.div>
 
@@ -589,11 +588,10 @@ export default function QuizPage() {
                   <span className="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-full text-xs">
                     {currentQuestion.category}
                   </span>
-                  <span className={`px-3 py-1 rounded-full text-xs ${
-                    currentQuestion.difficulty === 'easy' ? 'bg-blue-500/20 text-blue-400' :
-                    currentQuestion.difficulty === 'medium' ? 'bg-blue-400/20 text-blue-300' :
-                    'bg-red-500/20 text-red-400'
-                  }`}>
+                  <span className={`px-3 py-1 rounded-full text-xs ${currentQuestion.difficulty === 'easy' ? 'bg-blue-500/20 text-blue-400' :
+                      currentQuestion.difficulty === 'medium' ? 'bg-blue-400/20 text-blue-300' :
+                        'bg-red-500/20 text-red-400'
+                    }`}>
                     {currentQuestion.difficulty === 'easy' ? t.quiz.difficulties.easy : currentQuestion.difficulty === 'medium' ? t.quiz.difficulties.medium : t.quiz.difficulties.hard}
                   </span>
                 </div>
@@ -621,35 +619,33 @@ export default function QuizPage() {
                     const isSelected = selectedAnswer === option.id
                     const isCorrect = option.isCorrect
                     const showCorrectness = showExplanation
-                    
+
                     return (
                       <button
                         key={option.id}
                         onClick={() => handleAnswer(option.id)}
                         disabled={showExplanation}
-                        className={`w-full text-left p-4 rounded-xl border transition-all flex items-center gap-3 ${
-                          showCorrectness
+                        className={`w-full text-left p-4 rounded-xl border transition-all flex items-center gap-3 ${showCorrectness
                             ? isCorrect
                               ? 'bg-green-500/20 border-green-500'
                               : isSelected
-                              ? 'bg-red-500/20 border-red-500'
-                              : 'bg-gray-700/50 border-gray-600'
+                                ? 'bg-red-500/20 border-red-500'
+                                : 'bg-gray-700/50 border-gray-600'
                             : isSelected
-                            ? 'bg-blue-500/20 border-blue-500'
-                            : 'bg-gray-700/50 border-gray-600 hover:border-gray-500'
-                        }`}
+                              ? 'bg-blue-500/20 border-blue-500'
+                              : 'bg-gray-700/50 border-gray-600 hover:border-gray-500'
+                          }`}
                       >
-                        <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
-                          showCorrectness
+                        <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${showCorrectness
                             ? isCorrect
                               ? 'border-green-500 bg-green-500'
                               : isSelected
-                              ? 'border-red-500 bg-red-500'
-                              : 'border-gray-600'
+                                ? 'border-red-500 bg-red-500'
+                                : 'border-gray-600'
                             : isSelected
-                            ? 'border-blue-500 bg-blue-500'
-                            : 'border-gray-600'
-                        }`}>
+                              ? 'border-blue-500 bg-blue-500'
+                              : 'border-gray-600'
+                          }`}>
                           {showCorrectness && isCorrect && <CheckCircle className="w-4 h-4 text-white" />}
                           {showCorrectness && isSelected && !isCorrect && <XCircle className="w-4 h-4 text-white" />}
                         </div>
@@ -677,11 +673,10 @@ export default function QuizPage() {
                     <button
                       onClick={submitAnswer}
                       disabled={!selectedAnswer}
-                      className={`flex-1 py-3 rounded-xl font-medium flex items-center justify-center gap-2 ${
-                        selectedAnswer
+                      className={`flex-1 py-3 rounded-xl font-medium flex items-center justify-center gap-2 ${selectedAnswer
                           ? 'bg-blue-600 hover:bg-blue-700'
                           : 'bg-gray-700 text-gray-500 cursor-not-allowed'
-                      }`}
+                        }`}
                     >
                       {t.quiz.confirm}
                     </button>

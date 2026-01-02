@@ -67,12 +67,12 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      
+
       <main className="flex-1 pt-24 pb-12">
         {/* Back Button */}
         <div className="max-w-7xl mx-auto px-4 mb-8">
-          <Link 
-            href="/" 
+          <Link
+            href="/"
             className="inline-flex items-center gap-2 text-gray-400 hover:text-blue-400 transition-colors"
           >
             <ArrowLeft size={20} />
@@ -87,7 +87,7 @@ export default function AboutPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
             >
-              <motion.div 
+              <motion.div
                 className="flex justify-center mb-6"
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
@@ -99,7 +99,7 @@ export default function AboutPage() {
                 </div>
               </motion.div>
               <h1 className="text-4xl md:text-5xl font-bold mb-6">
-                {t.aboutPage.title} <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent animate-gradient">ScamShield</span>
+                {t.aboutPage.title} <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent animate-gradient">ANTI-SCAM</span>
               </h1>
               <p className="text-xl text-gray-400 max-w-2xl mx-auto">
                 {t.aboutPage.subtitle}
@@ -131,7 +131,7 @@ export default function AboutPage() {
                   {t.aboutPage.mission.desc2}
                 </p>
               </motion.div>
-              
+
               <motion.div
                 initial={{ opacity: 0, x: 30 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -164,7 +164,7 @@ export default function AboutPage() {
             >
               <h2 className="text-3xl font-bold mb-4">{language === 'vi' ? 'Giá trị cốt lõi' : 'Core Values'}</h2>
             </motion.div>
-            
+
             <div className="grid md:grid-cols-3 gap-6">
               {values.map((value, index) => (
                 <motion.div
@@ -198,7 +198,7 @@ export default function AboutPage() {
               <h2 className="text-3xl font-bold mb-4">{t.aboutPage.features.title}</h2>
               <p className="text-gray-400">{t.aboutPage.features.subtitle}</p>
             </motion.div>
-            
+
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               {features.map((feature, index) => (
                 <GlowingCard key={index}>
@@ -236,7 +236,7 @@ export default function AboutPage() {
               </h3>
               <ul className="space-y-3 text-gray-300">
                 {t.aboutPage.disclaimer.items.map((item, index) => (
-                  <motion.li 
+                  <motion.li
                     key={index}
                     initial={{ opacity: 0, x: -10 }}
                     whileInView={{ opacity: 1, x: 0 }}

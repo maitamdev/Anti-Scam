@@ -31,7 +31,7 @@ export default function ExtensionBanner({ language }: Props) {
       {/* Animated background */}
       <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 via-purple-600/20 to-cyan-600/20" />
       <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
-      
+
       <div className="relative bg-gradient-to-r from-blue-900/40 to-purple-900/40 backdrop-blur-sm rounded-2xl border border-blue-500/30 p-6 sm:p-8">
         {/* Close button */}
         <button
@@ -93,13 +93,13 @@ export default function ExtensionBanner({ language }: Props) {
         {/* Stats */}
         <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-center gap-6 text-center">
           <div>
-            <p className="text-lg font-bold text-white">50K+</p>
-            <p className="text-xs text-gray-500">{language === 'vi' ? 'Người dùng' : 'Users'}</p>
+            <p className="text-lg font-bold text-blue-400">Beta</p>
+            <p className="text-xs text-gray-500">{language === 'vi' ? 'Phiên bản' : 'Version'}</p>
           </div>
           <div className="w-px h-8 bg-white/10" />
           <div>
-            <p className="text-lg font-bold text-white">4.8★</p>
-            <p className="text-xs text-gray-500">{language === 'vi' ? 'Đánh giá' : 'Rating'}</p>
+            <p className="text-lg font-bold text-white">24/7</p>
+            <p className="text-xs text-gray-500">{language === 'vi' ? 'Hoạt động' : 'Active'}</p>
           </div>
           <div className="w-px h-8 bg-white/10" />
           <div>

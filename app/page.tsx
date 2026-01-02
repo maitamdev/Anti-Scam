@@ -28,9 +28,9 @@ import { useRouter } from 'next/navigation'
 import { useTranslation } from './lib/i18n/LanguageContext'
 
 const stats = [
-  { value: '98', label: 'Antivirus Engines', suffix: '' },
+  { value: '15', label: 'Loại lừa đảo', suffix: '+' },
   { value: '100', label: 'Free', suffix: '%' },
-  { value: '24', label: 'Active', suffix: '/7' },
+  { value: '5000', label: 'Câu hỏi Quiz', suffix: '+' },
 ]
 
 const howItWorks = [
@@ -60,12 +60,12 @@ const howItWorks = [
 export default function Home() {
   const router = useRouter()
   const { language } = useTranslation()
-  
+
   const features = [
     {
       icon: Search,
       title: language === 'vi' ? 'Kiểm tra URL' : 'Check URL',
-      description: language === 'vi' 
+      description: language === 'vi'
         ? 'Dán link website đáng ngờ để kiểm tra các dấu hiệu phishing, giả mạo ngân hàng, TMĐT.'
         : 'Paste suspicious website link to check for phishing, fake banking, e-commerce signs.',
       color: 'from-blue-500 to-blue-600'
@@ -91,7 +91,7 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col ">
       <Header />
-      
+
       <main className="flex-1">
         {/* Hero Section */}
         <section className="pt-24 sm:pt-32 pb-8 sm:pb-16 px-3 sm:px-4 relative overflow-hidden">
@@ -105,7 +105,7 @@ export default function Home() {
                 className="relative z-20 text-center lg:text-left"
               >
                 {/* Badge */}
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
@@ -116,7 +116,7 @@ export default function Home() {
                     {language === 'vi' ? 'Công cụ hỗ trợ phát hiện lừa đảo' : 'Scam detection support tool'}
                   </span>
                 </motion.div>
-                
+
                 <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-black leading-[1.1] mb-3 sm:mb-6 uppercase tracking-wider italic relative z-30" style={{ letterSpacing: '0.05em' }}>
                   {language === 'vi' ? (
                     <>
@@ -145,15 +145,15 @@ export default function Home() {
 
                 {/* Typewriter subtitle */}
                 <div className="text-sm sm:text-base lg:text-lg text-cyan-400 mb-3 sm:mb-4 h-6 sm:h-7">
-                  <TypewriterText 
-                    texts={language === 'vi' 
+                  <TypewriterText
+                    texts={language === 'vi'
                       ? ['Phát hiện website lừa đảo', 'Kiểm tra tin nhắn giả mạo', 'Bảo vệ thông tin cá nhân', 'Quiz 5000+ câu hỏi']
                       : ['Detect scam websites', 'Check fake messages', 'Protect personal info', 'Quiz 5000+ questions']
                     }
                     className="font-medium"
                   />
                 </div>
-                
+
                 <p className="text-sm sm:text-base lg:text-lg text-gray-200 mb-6 sm:mb-8 leading-relaxed max-w-xl mx-auto lg:mx-0">
                   {language === 'vi' ? (
                     <>Kiểm tra URL và hình ảnh để <span className="text-white font-semibold">phát hiện dấu hiệu lừa đảo</span>. Công cụ miễn phí giúp bạn cẩn thận hơn khi lướt web.</>
@@ -161,7 +161,7 @@ export default function Home() {
                     <>Check URLs and images to <span className="text-white font-semibold">detect scam signs</span>. Free tool to help you stay safe while browsing.</>
                   )}
                 </p>
-                
+
                 <div className="flex flex-wrap justify-center lg:justify-start gap-2 sm:gap-3">
                   <motion.button
                     onClick={() => router.push('/scan')}
@@ -172,7 +172,7 @@ export default function Home() {
                     <Search className="w-4 h-4 sm:w-5 sm:h-5" />
                     {language === 'vi' ? 'Kiểm tra ngay' : 'Check Now'}
                   </motion.button>
-                  
+
                   <motion.button
                     onClick={() => router.push('/quiz')}
                     className="px-4 sm:px-5 py-2.5 sm:py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl font-medium text-white text-sm sm:text-base flex items-center gap-2"
@@ -182,7 +182,7 @@ export default function Home() {
                     <Play className="w-4 h-4 sm:w-5 sm:h-5" />
                     {language === 'vi' ? 'Làm Quiz' : 'Take Quiz'}
                   </motion.button>
-                  
+
                   <motion.button
                     onClick={() => router.push('/report')}
                     className="px-4 sm:px-5 py-2.5 sm:py-3 bg-red-500/10 border border-red-500/30 rounded-xl font-medium text-red-400 text-sm sm:text-base flex items-center gap-2 hover:bg-red-500/20"
@@ -206,7 +206,7 @@ export default function Home() {
                   {/* Animated glow rings */}
                   <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/30 to-blue-500/30 blur-3xl animate-pulse" />
                   <div className="absolute inset-8 bg-gradient-to-r from-purple-500/20 to-pink-500/20 blur-2xl animate-pulse" style={{ animationDelay: '0.5s' }} />
-                  
+
                   {/* Orbiting particles */}
                   <div className="absolute inset-0 animate-spin-slow">
                     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3 h-3 bg-cyan-400 rounded-full shadow-lg shadow-cyan-400/50" />
@@ -214,7 +214,7 @@ export default function Home() {
                     <div className="absolute left-0 top-1/2 -translate-y-1/2 w-2 h-2 bg-purple-400 rounded-full shadow-lg shadow-purple-400/50" />
                     <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-green-400 rounded-full shadow-lg shadow-green-400/50" />
                   </div>
-                  
+
                   {/* Hero Image with float animation */}
                   <motion.div
                     animate={{ y: [0, -15, 0] }}
@@ -230,7 +230,7 @@ export default function Home() {
                       priority
                     />
                   </motion.div>
-                  
+
                   {/* Scanning line effect */}
                   <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent animate-scan-line opacity-60" />
                 </div>
@@ -261,7 +261,7 @@ export default function Home() {
               <div className="lg:col-span-1">
                 <QuickCheckWidget language={language} />
               </div>
-              
+
               {/* Scam Trend Widget */}
               <div className="lg:col-span-1">
                 <ScamTrendWidget language={language} />
@@ -283,7 +283,7 @@ export default function Home() {
                 {language === 'vi' ? 'Các tính năng chính' : 'Key Features'}
               </h2>
               <p className="text-gray-400 max-w-2xl mx-auto">
-                {language === 'vi' 
+                {language === 'vi'
                   ? 'Những công cụ giúp bạn cẩn thận hơn trên không gian mạng'
                   : 'Tools to help you stay safe in cyberspace'}
               </p>
@@ -305,10 +305,10 @@ export default function Home() {
                       <feature.icon className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
                     </div>
                   </div>
-                  
+
                   <h3 className="text-lg sm:text-xl font-semibold mb-2 sm:mb-3">{feature.title}</h3>
                   <p className="text-gray-400 text-sm sm:text-base leading-relaxed">{feature.description}</p>
-                  
+
                   {/* Hover effect */}
                   <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/5 to-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </motion.div>
@@ -348,7 +348,7 @@ export default function Home() {
                   {index < howItWorks.length - 1 && (
                     <div className="hidden md:block absolute top-12 left-full w-full h-0.5 bg-gradient-to-r from-blue-500/50 to-transparent -translate-x-1/2" />
                   )}
-                  
+
                   <div className="bg-blue-900/10 rounded-xl sm:rounded-2xl p-5 sm:p-8 border border-gray-800 h-full">
                     <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 flex items-center justify-center mb-4 sm:mb-6">
                       <span className="text-white font-bold text-sm sm:text-base">{item.step}</span>
@@ -380,11 +380,11 @@ export default function Home() {
                   {language === 'vi' ? 'Tại sao nên sử dụng?' : 'Why Use This?'}
                 </h2>
                 <p className="text-gray-400 text-sm sm:text-base mb-6 sm:mb-8">
-                  {language === 'vi' 
+                  {language === 'vi'
                     ? 'Công cụ đơn giản giúp bạn kiểm tra nhanh các link và tin nhắn đáng ngờ trước khi click hoặc cung cấp thông tin cá nhân.'
                     : 'Simple tool to quickly check suspicious links and messages before clicking or providing personal information.'}
                 </p>
-                
+
                 <div className="space-y-3 sm:space-y-4">
                   {(language === 'vi' ? [
                     'Kiểm tra URL website trong vài giây',
@@ -414,7 +414,7 @@ export default function Home() {
                     </motion.div>
                   ))}
                 </div>
-                
+
                 <motion.button
                   onClick={() => router.push('/scan')}
                   className="mt-6 sm:mt-8 px-5 py-2.5 sm:px-6 sm:py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 rounded-xl font-semibold text-white flex items-center gap-2 text-sm sm:text-base"
@@ -475,17 +475,17 @@ export default function Home() {
             >
               {/* Background glow */}
               <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 blur-3xl" />
-              
+
               <div className="relative z-10">
                 <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
                   {language === 'vi' ? 'Thử kiểm tra ngay?' : 'Try checking now?'}
                 </h2>
                 <p className="text-gray-400 text-sm sm:text-base mb-6 sm:mb-8 max-w-2xl mx-auto">
-                  {language === 'vi' 
+                  {language === 'vi'
                     ? 'Dán link hoặc upload ảnh tin nhắn đáng ngờ để kiểm tra. Hoàn toàn miễn phí, không cần đăng ký.'
                     : 'Paste link or upload suspicious message screenshot to check. Completely free, no registration required.'}
                 </p>
-                
+
                 <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
                   <motion.button
                     onClick={() => router.push('/scan')}
@@ -496,7 +496,7 @@ export default function Home() {
                     {language === 'vi' ? 'Phân tích URL/Ảnh' : 'Analyze URL/Image'}
                     <ArrowRight className="w-5 h-5" />
                   </motion.button>
-                  
+
                   <motion.button
                     onClick={() => router.push('/quiz')}
                     className="px-6 py-3 sm:px-8 sm:py-4 bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl font-semibold text-white flex items-center justify-center gap-2"
@@ -505,7 +505,7 @@ export default function Home() {
                   >
                     {language === 'vi' ? 'Làm Quiz Trắc nghiệm' : 'Take Quiz'}
                   </motion.button>
-                  
+
                   <motion.button
                     onClick={() => router.push('/report')}
                     className="px-6 py-3 sm:px-8 sm:py-4 bg-red-600/20 hover:bg-red-600/30 border border-red-500/50 rounded-xl font-semibold text-red-400 hover:text-red-300 flex items-center justify-center gap-2"
@@ -540,7 +540,7 @@ export default function Home() {
                 {language === 'vi' ? 'Các hình thức Lừa đảo phổ biến' : 'Common Scam Types'}
               </h2>
               <p className="text-gray-400 max-w-2xl mx-auto">
-                {language === 'vi' 
+                {language === 'vi'
                   ? 'Tìm hiểu các chiêu trò lừa đảo đang hoành hành để tự bảo vệ mình'
                   : 'Learn about scam tactics to protect yourself'}
               </p>
@@ -563,7 +563,7 @@ export default function Home() {
                 {language === 'vi' ? 'Khám phá Tính năng' : 'Explore Features'}
               </h2>
               <p className="text-gray-400 max-w-2xl mx-auto">
-                {language === 'vi' 
+                {language === 'vi'
                   ? 'Bộ công cụ toàn diện giúp bạn an toàn trên không gian mạng'
                   : 'Comprehensive toolkit to keep you safe online'}
               </p>
@@ -586,7 +586,7 @@ export default function Home() {
                 {language === 'vi' ? 'Người dùng nói gì?' : 'What Users Say'}
               </h2>
               <p className="text-gray-400 max-w-2xl mx-auto">
-                {language === 'vi' 
+                {language === 'vi'
                   ? 'Phản hồi từ cộng đồng người dùng ANTI-SCAM'
                   : 'Feedback from the ANTI-SCAM user community'}
               </p>

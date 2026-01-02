@@ -12,15 +12,15 @@ interface Props {
   language?: string
 }
 
-export default function QuizResultCard({ 
-  score, 
-  totalQuestions, 
+export default function QuizResultCard({
+  score,
+  totalQuestions,
   correctAnswers,
   timeSpent,
   language = 'vi'
 }: Props) {
   const percentage = Math.round((correctAnswers / totalQuestions) * 100)
-  
+
   const getGrade = () => {
     if (percentage >= 90) return { grade: 'A+', color: 'text-green-400', bg: 'bg-green-500/20' }
     if (percentage >= 80) return { grade: 'A', color: 'text-green-400', bg: 'bg-green-500/20' }
@@ -157,7 +157,7 @@ export default function QuizResultCard({
           </p>
           <ShareButtons
             url={typeof window !== 'undefined' ? window.location.href : ''}
-            title={`${language === 'vi' ? 'Tôi đạt' : 'I scored'} ${percentage}% ${language === 'vi' ? 'trong bài quiz ScamShield!' : 'on ScamShield quiz!'}`}
+            title={`${language === 'vi' ? 'Tôi đạt' : 'I scored'} ${percentage}% ${language === 'vi' ? 'trong bài quiz ANTI-SCAM!' : 'on ANTI-SCAM quiz!'}`}
           />
         </motion.div>
       </div>

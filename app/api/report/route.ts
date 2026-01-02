@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import prisma from '@/app/lib/db'
 import { extractDomain, getToday } from '@/app/lib/utils'
+import { getClientIP, checkRateLimit, sanitizeText, getSecurityHeaders } from '@/app/lib/security'
 
 export const dynamic = 'force-dynamic'
 
@@ -13,18 +14,34 @@ const reportSchema = z.object({
 })
 
 export async function POST(request: NextRequest) {
+  const headers = getSecurityHeaders()
+
   try {
+    // Rate limiting - anti-spam
+    const clientIP = getClientIP(request)
+    const rateLimit = checkRateLimit(clientIP, 'report')
+
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { success: false, error: 'Quá nhiều báo cáo. Vui lòng thử lại sau.' },
+        { status: 429, headers: { ...headers, 'Retry-After': String(Math.ceil(rateLimit.resetIn / 1000)) } }
+      )
+    }
+
     const body = await request.json()
-    const { url, reason, description, screenshot } = reportSchema.parse(body)
+    const parsed = reportSchema.parse(body)
+
+    // Sanitize inputs
+    const url = parsed.url
+    const reason = sanitizeText(parsed.reason, 500)
+    const description = sanitizeText(parsed.description || '', 2000)
+    const screenshot = parsed.screenshot && parsed.screenshot.startsWith('data:image/')
+      ? parsed.screenshot
+      : undefined
 
     // Normalize URL
     const normalizedUrl = url.startsWith('http') ? url : `https://${url}`
     const domain = extractDomain(normalizedUrl)
-
-    // Get client info
-    const ipAddress = request.headers.get('x-forwarded-for') || 
-                      request.headers.get('x-real-ip') || 
-                      'unknown'
 
     // Save report to database
     const report = await prisma.report.create({
@@ -34,7 +51,7 @@ export async function POST(request: NextRequest) {
         reason,
         description,
         screenshot,
-        ipAddress,
+        ipAddress: clientIP,
       },
     })
 
@@ -54,7 +71,7 @@ export async function POST(request: NextRequest) {
           tags: ['phishing', 'scam', 'anti-scam-vn'],
         }),
       })
-      
+
       if (urlscanRes.ok) {
         const data = await urlscanRes.json()
         publicSubmitted = true
@@ -86,8 +103,8 @@ export async function POST(request: NextRequest) {
       success: true,
       data: {
         id: report.id,
-        message: publicSubmitted 
-          ? `Báo cáo đã được gửi thành công và đã công khai trên URLScan.io! 🌍` 
+        message: publicSubmitted
+          ? `Báo cáo đã được gửi thành công và đã công khai trên URLScan.io! 🌍`
           : 'Báo cáo đã được gửi thành công',
         publicSubmitted,
         scanUrl,
@@ -95,7 +112,7 @@ export async function POST(request: NextRequest) {
     })
   } catch (error) {
     console.error('Report error:', error)
-    
+
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { success: false, error: 'Invalid data' },

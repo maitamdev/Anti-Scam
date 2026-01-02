@@ -5,7 +5,7 @@ import { getToken } from 'next-auth/jwt'
 // Security middleware for all routes
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
-  
+
   // Protected routes requiring authentication
   const protectedRoutes = [
     '/dashboard',
@@ -29,9 +29,9 @@ export async function middleware(request: NextRequest) {
 
   // Auth check for protected routes
   if (isProtectedRoute || isAdminRoute || isBusinessRoute) {
-    const token = await getToken({ 
+    const token = await getToken({
       req: request,
-      secret: process.env.NEXTAUTH_SECRET 
+      secret: process.env.NEXTAUTH_SECRET
     })
 
     // Not authenticated
@@ -73,11 +73,12 @@ export async function middleware(request: NextRequest) {
   response.headers.set('X-Frame-Options', 'DENY')
   response.headers.set('X-XSS-Protection', '1; mode=block')
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
+  response.headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains')
   response.headers.set(
     'Permissions-Policy',
     'camera=(), microphone=(), geolocation=()'
   )
-  
+
   // CSP header - allow unsafe-eval for development (framer-motion needs it)
   if (process.env.NODE_ENV === 'development') {
     response.headers.set(

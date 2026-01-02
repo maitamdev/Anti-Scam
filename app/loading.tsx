@@ -15,7 +15,7 @@ export default function Loading() {
             animate={{ rotate: 360 }}
             transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
           />
-          
+
           {/* Middle ring with gradient */}
           <motion.div
             className="absolute inset-2 rounded-full"
@@ -25,18 +25,18 @@ export default function Loading() {
             animate={{ rotate: -360 }}
             transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
           />
-          
+
           {/* Inner ring */}
           <motion.div
             className="absolute inset-4 rounded-full border-2 border-cyan-400/40"
             animate={{ rotate: 360 }}
             transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
           />
-          
+
           {/* Center shield icon */}
           <div className="absolute inset-0 flex items-center justify-center">
             <motion.div
-              animate={{ 
+              animate={{
                 scale: [1, 1.1, 1],
                 opacity: [0.8, 1, 0.8]
               }}
@@ -45,7 +45,7 @@ export default function Loading() {
               <Shield className="w-8 h-8 text-blue-400" />
             </motion.div>
           </div>
-          
+
           {/* Pulse rings */}
           {[0, 1, 2].map(i => (
             <motion.div
@@ -53,49 +53,49 @@ export default function Loading() {
               className="absolute inset-0 rounded-full border border-blue-500/20"
               initial={{ scale: 0.8, opacity: 0.8 }}
               animate={{ scale: 1.5, opacity: 0 }}
-              transition={{ 
-                duration: 2, 
-                repeat: Infinity, 
+              transition={{
+                duration: 2,
+                repeat: Infinity,
                 delay: i * 0.6,
                 ease: 'easeOut'
               }}
             />
           ))}
-          
+
           {/* Glow effect */}
           <div className="absolute inset-0 rounded-full bg-blue-500/10 blur-xl" />
         </div>
-        
+
         {/* Loading text with animation */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <motion.p 
+          <motion.p
             className="text-gray-300 font-medium text-lg"
             animate={{ opacity: [0.5, 1, 0.5] }}
             transition={{ duration: 1.5, repeat: Infinity }}
           >
             Đang tải...
           </motion.p>
-          <p className="text-gray-500 text-sm mt-2">ScamShield đang bảo vệ bạn</p>
+          <p className="text-gray-500 text-sm mt-2">ANTI-SCAM đang tải...</p>
         </motion.div>
-        
+
         {/* Progress dots */}
         <div className="flex justify-center gap-2 mt-6">
           {[0, 1, 2].map(i => (
             <motion.div
               key={i}
               className="w-2 h-2 bg-blue-400 rounded-full"
-              animate={{ 
+              animate={{
                 y: [0, -8, 0],
                 opacity: [0.4, 1, 0.4]
               }}
-              transition={{ 
-                duration: 0.8, 
-                repeat: Infinity, 
-                delay: i * 0.15 
+              transition={{
+                duration: 0.8,
+                repeat: Infinity,
+                delay: i * 0.15
               }}
             />
           ))}
