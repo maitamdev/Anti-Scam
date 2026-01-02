@@ -69,18 +69,18 @@ export default function SafetyToolkit() {
       {cards.map((card, index) => {
         const Icon = card.icon
 
-          return (
-            <motion.button
-              key={card.action}
-              onClick={() => router.push(card.action)}
-              type="button"
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.05 }}
-              aria-label={language === 'vi' ? card.title.vi : card.title.en}
-              className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-5 text-left shadow-lg backdrop-blur-xl transition hover:-translate-y-1 hover:border-white/20"
-            >
+        return (
+          <motion.button
+            key={card.action}
+            onClick={() => router.push(card.action)}
+            type="button"
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: index * 0.05 }}
+            aria-label={language === 'vi' ? card.title.vi : card.title.en}
+            className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-5 text-left shadow-lg backdrop-blur-xl transition hover:-translate-y-1 hover:border-white/20"
+          >
             <div className={`absolute inset-0 bg-gradient-to-br ${card.color} opacity-40`} />
             <div className="relative flex items-start gap-4">
               <div className="rounded-xl bg-white/10 p-3 text-white shadow-inner">
