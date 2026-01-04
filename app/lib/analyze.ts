@@ -19,6 +19,12 @@ import {
 import { extractDomain, extractRootDomain } from './utils'
 import prisma from './db'
 import { analyzeWithAI } from './aiModel'
+import {
+  isGamblingDomain,
+  isPhishingDomain,
+  detectSocialEngineering,
+  detectInvestmentScam,
+} from './vietnameseScamPatterns'
 
 export interface AnalysisResult {
   url: string
@@ -45,7 +51,7 @@ async function checkWhitelist(domain: string): Promise<boolean> {
     prisma.whitelist.findUnique({ where: { domain } }),
     domain !== rootDomain ? prisma.whitelist.findUnique({ where: { domain: rootDomain } }) : null
   ])
-  
+
   const isWhitelisted = !!(fullMatch || rootMatch)
   dbCache.set(key, { data: isWhitelisted, expires: Date.now() + 300000 })
   return isWhitelisted
@@ -98,7 +104,7 @@ function runHeuristics(url: string, domain: string): { score: number; reasons: s
       const rootDomain = extractRootDomain(domainLower)
       const realPatterns = [`${brand}.com`, `${brand}.vn`, `${brand}.com.vn`, `${brand}.me`, `${brand}.net`]
       const isLegit = realPatterns.some(p => rootDomain === p || domainLower === p || domainLower.endsWith(`.${p}`))
-      
+
       if (!isLegit) {
         score += 40
         reasons.push(`🚨 Nghi ngờ giả mạo "${brand}"`)
@@ -144,15 +150,22 @@ function runHeuristics(url: string, domain: string): { score: number; reasons: s
     reasons.push(`⚠️ URL có từ khóa đáng ngờ: ${scamKeywordHits[0]}`)
   }
 
-  // Gambling detection - stricter
+  // Gambling detection - Enhanced with Vietnamese patterns
+  const gamblingCheck = isGamblingDomain(domain)
+  if (gamblingCheck.isGambling) {
+    score += Math.min(gamblingCheck.confidence * 100, 80)
+    reasons.push(`🎰 Phát hiện cờ bạc: ${gamblingCheck.matchedPatterns.join(', ')}`)
+  }
+
+  // Fallback to old gambling detection
   const gamblingHits = GAMBLING_KEYWORDS.filter(k => domainLower.includes(k) || urlLower.includes(k))
-  if (gamblingHits.length >= 3) {
+  if (gamblingHits.length >= 3 && !gamblingCheck.isGambling) {
     score += 75
     reasons.push('🎰 Website cờ bạc rõ ràng!')
-  } else if (gamblingHits.length === 2) {
+  } else if (gamblingHits.length === 2 && !gamblingCheck.isGambling) {
     score += 65
     reasons.push('🎰 Website cờ bạc!')
-  } else if (gamblingHits.length === 1) {
+  } else if (gamblingHits.length === 1 && !gamblingCheck.isGambling) {
     const keyword = gamblingHits[0]
     if (['casino', 'bet', 'slot', 'poker', 'inn', 'palace', 'crown', 'sunwin', 'go88', 'iwin', 'b52'].includes(keyword)) {
       score += 55
@@ -165,7 +178,7 @@ function runHeuristics(url: string, domain: string): { score: number; reasons: s
 
   // Casino/Inn specific patterns
   if (/(casino|inn|club|palace|royal|crown|diamond|gold|king|queen)(vip|win|bet|88|game|fun|live)/i.test(domainLower) ||
-      /(vip|win|bet|88|game|fun|live)(casino|inn|club|palace|royal|crown)/i.test(domainLower)) {
+    /(vip|win|bet|88|game|fun|live)(casino|inn|club|palace|royal|crown)/i.test(domainLower)) {
     score += 65
     reasons.push('🎰 Pattern tên casino điển hình')
   }
@@ -178,7 +191,7 @@ function runHeuristics(url: string, domain: string): { score: number; reasons: s
 
   // Gambling domain pattern with numbers
   if (/\d{2,3}(vip|club|win|bet|game|slot|fun|live)/i.test(domainLower) ||
-      /(vip|club|win|bet|game|slot|fun|live)\d{2,3}/i.test(domainLower)) {
+    /(vip|club|win|bet|game|slot|fun|live)\d{2,3}/i.test(domainLower)) {
     score += 50
     reasons.push('🎰 Pattern cờ bạc với số')
   }
@@ -231,6 +244,13 @@ function runHeuristics(url: string, domain: string): { score: number; reasons: s
     reasons.push('Domain có vẻ ngẫu nhiên')
   }
 
+  // Vietnamese phishing detection
+  const phishingCheck = isPhishingDomain(domain, url)
+  if (phishingCheck.isPhishing) {
+    score += Math.min(phishingCheck.confidence * 100, 85)
+    reasons.push(`🚨 Phishing: ${phishingCheck.matchedPatterns.join(', ')}`)
+  }
+
   return { score: Math.min(score, 100), reasons }
 }
 
@@ -266,7 +286,7 @@ export async function analyzeUrl(url: string): Promise<AnalysisResult> {
   // Special case: gambling keywords + unreachable website = very dangerous
   const hasGamblingKeyword = GAMBLING_KEYWORDS.some(k => domain.toLowerCase().includes(k))
   const isUnreachable = !ai.contentFetched
-  
+
   if (hasGamblingKeyword && isUnreachable) {
     // Dead gambling site or blocked - extremely suspicious
     return {

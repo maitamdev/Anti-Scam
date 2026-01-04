@@ -58,7 +58,7 @@ export default function SignInPage() {
         className="max-w-md w-full relative z-10"
       >
         {/* Back Button */}
-        <Link 
+        <Link
           href="/"
           className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-6 transition-colors"
         >
@@ -76,7 +76,7 @@ export default function SignInPage() {
           >
             <LogIn className="w-8 h-8 text-white" />
           </motion.div>
-          
+
           <h2 className="text-3xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
             Chào mừng trở lại
           </h2>
@@ -119,7 +119,7 @@ export default function SignInPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 /50 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  className="w-full pl-11 pr-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                   placeholder="email@example.com"
                 />
               </div>
@@ -138,7 +138,7 @@ export default function SignInPage() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 /50 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  className="w-full pl-11 pr-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                   placeholder="••••••••"
                 />
               </div>
@@ -146,8 +146,8 @@ export default function SignInPage() {
 
             {/* Forgot Password */}
             <div className="flex items-center justify-end">
-              <Link 
-                href="/auth/forgot-password" 
+              <Link
+                href="/auth/forgot-password"
                 className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
               >
                 Quên mật khẩu?

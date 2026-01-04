@@ -53,15 +53,15 @@ async function fetchContent(url: string): Promise<WebContent | null> {
     const html = await res.text()
     const title = html.match(/<title[^>]*>([^<]*)<\/title>/i)?.[1]?.trim() || ''
     const description = html.match(/<meta[^>]*name=["']description["'][^>]*content=["']([^"']*)["']/i)?.[1] || ''
-    
+
     // Extract links
     const linkMatches = html.match(/href=["']([^"']+)["']/gi) || []
     const links = linkMatches.map(l => l.replace(/href=["']|["']/gi, '')).slice(0, 50)
-    
+
     // Extract scripts
     const scriptMatches = html.match(/src=["']([^"']+\.js[^"']*)["']/gi) || []
     const scripts = scriptMatches.map(s => s.replace(/src=["']|["']/gi, '')).slice(0, 20)
-    
+
     const bodyText = html
       .replace(/<script[\s\S]*?<\/script>/gi, '')
       .replace(/<style[\s\S]*?<\/style>/gi, '')
@@ -74,7 +74,7 @@ async function fetchContent(url: string): Promise<WebContent | null> {
     const hasPasswordInput = /<input[^>]*type=["']password["']/i.test(html)
     const hasLoginKeywords = /login|signin|sign.in|dang.nhap|đăng.nhập|auth|account/i.test(html)
     const hasLoginLinks = links.some(l => /login|signin|auth|account/i.test(l))
-    
+
     return {
       title,
       description,
@@ -93,7 +93,7 @@ async function fetchContent(url: string): Promise<WebContent | null> {
 async function checkGoogleSafeBrowsing(url: string): Promise<{ isMalicious: boolean; threats: string[] } | null> {
   const apiKey = process.env.GOOGLE_SAFE_BROWSING_API_KEY
   if (!apiKey) return null
-  
+
   try {
     const res = await fetch(`https://safebrowsing.googleapis.com/v4/threatMatches:find?key=${apiKey}`, {
       method: 'POST',
@@ -108,7 +108,7 @@ async function checkGoogleSafeBrowsing(url: string): Promise<{ isMalicious: bool
         },
       }),
     })
-    
+
     if (!res.ok) return null
     const data = await res.json()
     const matches = data.matches || []
@@ -125,20 +125,20 @@ async function checkGoogleSafeBrowsing(url: string): Promise<{ isMalicious: bool
 async function checkVirusTotal(url: string): Promise<{ detected: boolean; positives: number; total: number } | null> {
   const apiKey = process.env.VIRUSTOTAL_API_KEY
   if (!apiKey) return null
-  
+
   try {
     // First, submit URL for scanning
     const urlId = Buffer.from(url).toString('base64').replace(/=/g, '')
     const res = await fetch(`https://www.virustotal.com/api/v3/urls/${urlId}`, {
       headers: { 'x-apikey': apiKey },
     })
-    
+
     if (!res.ok) return null
     const data = await res.json()
     const stats = data.data?.attributes?.last_analysis_stats || {}
     const positives = (stats.malicious || 0) + (stats.suspicious || 0)
     const total = Object.values(stats).reduce((a: number, b) => a + (b as number), 0) as number
-    
+
     return { detected: positives > 0, positives, total }
   } catch {
     return null
@@ -149,18 +149,18 @@ async function checkVirusTotal(url: string): Promise<{ detected: boolean; positi
 async function checkPhishTank(url: string): Promise<{ isPhishing: boolean; verified: boolean } | null> {
   const apiKey = process.env.PHISHTANK_API_KEY
   if (!apiKey) return null
-  
+
   try {
     const formData = new URLSearchParams()
     formData.append('url', url)
     formData.append('format', 'json')
     formData.append('app_key', apiKey)
-    
+
     const res = await fetch('https://checkurl.phishtank.com/checkurl/', {
       method: 'POST',
       body: formData,
     })
-    
+
     if (!res.ok) return null
     const data = await res.json()
     return {
@@ -177,12 +177,12 @@ async function checkURLhaus(url: string): Promise<{ isMalware: boolean; threat: 
   try {
     const formData = new URLSearchParams()
     formData.append('url', url)
-    
+
     const res = await fetch('https://urlhaus-api.abuse.ch/v1/url/', {
       method: 'POST',
       body: formData,
     })
-    
+
     if (!res.ok) return null
     const data = await res.json()
     return {
@@ -197,17 +197,17 @@ async function checkURLhaus(url: string): Promise<{ isMalware: boolean; threat: 
 async function checkDatabase(domain: string) {
   try {
     const prisma = (await import('./db')).default
-    
+
     const blocked = await prisma.blocklist.findUnique({ where: { domain } })
     if (blocked) {
       return { isBlocked: true, reason: blocked.reason, source: blocked.source, severity: blocked.severity }
     }
-    
+
     const whitelist = await prisma.whitelist.findUnique({ where: { domain } })
     if (whitelist) {
       return { isWhitelisted: true, reason: `${whitelist.brand} - ${whitelist.category}` }
     }
-    
+
     // Check root domain
     const parts = domain.split('.')
     if (parts.length > 2) {
@@ -217,7 +217,7 @@ async function checkDatabase(domain: string) {
         return { isWhitelisted: true, reason: `${rootWhitelist.brand} - ${rootWhitelist.category}` }
       }
     }
-    
+
     return null
   } catch {
     return null
@@ -231,7 +231,7 @@ async function runExternalChecks(url: string): Promise<ExternalCheckResult> {
     checkPhishTank(url),
     checkURLhaus(url),
   ])
-  
+
   return {
     googleSafeBrowsing: googleSB || undefined,
     virusTotal: virusTotal || undefined,
@@ -244,18 +244,18 @@ async function runExternalChecks(url: string): Promise<ExternalCheckResult> {
 function analyzeSecurityFactors(url: string, domain: string, content: WebContent | null) {
   const factors: string[] = []
   let riskScore = 0
-  
+
   // SSL check
   if (!url.startsWith('https://')) {
     factors.push('Không có SSL/HTTPS - Kết nối không được mã hóa')
     riskScore += 15
   }
-  
+
   // Very suspicious TLDs (commonly abused for scams)
   const highRiskTLDs = ['.tk', '.ml', '.ga', '.cf', '.gq', '.click', '.link', '.buzz', '.icu']
   const mediumRiskTLDs = ['.xyz', '.top', '.club', '.work', '.online', '.site', '.website', '.space', '.fun']
   // Note: .info, .io, .co are legitimate TLDs used by many real businesses
-  
+
   const tld = '.' + domain.split('.').pop()
   if (highRiskTLDs.includes(tld)) {
     factors.push(`TLD rủi ro cao: ${tld} - Thường bị lạm dụng cho lừa đảo`)
@@ -264,48 +264,48 @@ function analyzeSecurityFactors(url: string, domain: string, content: WebContent
     factors.push(`TLD đáng ngờ: ${tld}`)
     riskScore += 10
   }
-  
+
   // Domain analysis
   if (domain.length > 35) {
     factors.push('Domain quá dài - Có thể là domain giả mạo')
     riskScore += 10
   }
-  
+
   const hyphens = (domain.match(/-/g) || []).length
   if (hyphens > 3) {
     factors.push(`Domain có ${hyphens} dấu gạch ngang - Dấu hiệu giả mạo`)
     riskScore += 15
   }
-  
+
   if (/\d{5,}/.test(domain)) {
     factors.push('Domain chứa nhiều số liên tiếp - Thường là domain spam')
     riskScore += 10
   }
-  
+
   // IP as domain
   if (/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/.test(domain)) {
     factors.push('Sử dụng IP thay vì domain - Rất đáng ngờ')
     riskScore += 30
   }
-  
+
   // Punycode (IDN homograph)
   if (domain.startsWith('xn--')) {
     factors.push('Domain Punycode - Có thể là tấn công homograph')
     riskScore += 25
   }
-  
+
   // Content analysis
   if (content) {
     if (content.hasLoginForm && !url.startsWith('https://')) {
       factors.push('Form đăng nhập không bảo mật - Nguy hiểm')
       riskScore += 30
     }
-    
+
     if (content.hasPaymentForm) {
       factors.push('Có form thanh toán - Cần xác minh kỹ')
       riskScore += 10
     }
-    
+
     // Check for suspicious keywords
     const bodyLower = content.bodyText.toLowerCase()
     const gamblingKeywords = ['casino', 'slot', 'poker', 'baccarat', 'xo so', 'lo de', 'ca cuoc', 'nha cai', 'no hu', 'tai xiu']
@@ -314,7 +314,7 @@ function analyzeSecurityFactors(url: string, domain: string, content: WebContent
       factors.push(`Nội dung cờ bạc: ${gamblingHits.join(', ')}`)
       riskScore += 50
     }
-    
+
     const scamKeywords = ['trung thuong', 'nhan qua', 'mien phi', 'kiem tien', 'lam giau', 'dau tu', 'loi nhuan', 'x100', 'airdrop']
     const scamHits = scamKeywords.filter(k => bodyLower.includes(k))
     if (scamHits.length >= 2) {
@@ -322,7 +322,7 @@ function analyzeSecurityFactors(url: string, domain: string, content: WebContent
       riskScore += 30
     }
   }
-  
+
   return { factors, riskScore: Math.min(riskScore, 100) }
 }
 
@@ -342,7 +342,7 @@ SO LUONG LINK: ${content.links.length}
 SO LUONG SCRIPT: ${content.scripts.length}`
     : 'KHONG THE TRUY CAP WEBSITE (co the da chet hoac bi chan)'
 
-  const securityInfo = securityFactors.length > 0 
+  const securityInfo = securityFactors.length > 0
     ? `YEU TO RUI RO DA PHAT HIEN:\n${securityFactors.map(f => `- ${f}`).join('\n')}`
     : 'Khong phat hien yeu to rui ro ro rang'
 
@@ -351,46 +351,85 @@ SO LUONG SCRIPT: ${content.scripts.length}`
 NHIỆM VỤ: Phân tích website và đưa ra đánh giá CHI TIẾT, CỤ THỂ bằng TIẾNG VIỆT CÓ DẤU.
 
 KIẾN THỨC CHUYÊN MÔN:
+
 1. CỜ BẠC ONLINE (BẤT HỢP PHÁP TẠI VIỆT NAM):
-   - Nhà cái: jun88, new88, hi88, fb88, w88, m88, kubet, oxbet, ae888, sin88, ta88, uk88, vn88, qh88, debet, zbet, sodo, onbet, typhu88, mu88
-   - Game bài đổi thưởng: go88, sunwin, iwin, b52, rik, hit, yo88, twin, 789club, 888b, may88, nohu
-   - Từ khóa: nổ hũ, slot, casino, baccarat, tài xỉu, xóc đĩa, lô đề, soi cầu, cá cược, nhà cái
+   - Nhà cái Tier 1: jun88, new88, hi88, fb88, w88, m88, kubet, sbobet, 188bet, fun88
+   - Nhà cái Tier 2: ae888, sin88, ta88, uk88, vn88, qh88, debet, zbet, sodo, onbet, typhu88, mu88, shbet, mb66
+   - Game bài đổi thưởng: sunwin, iwin, go88, b52, rikvip, hit, yo88, twin, 789club, 888b, may88, nohu
+   - Từ khóa: nổ hũ, quay hũ, slot, casino, baccarat, poker, tài xỉu, xóc đĩa, lô đề, xổ số, soi cầu, cá cược, nhà cái, kèo bóng
+   - Pattern domain: 88vip, win99, club88, vipbet, casino + số may mắn (68, 88, 99, 168, 188, 288, 388, 588, 666, 777, 888, 999)
 
 2. PHISHING (GIẢ MẠO):
-   - Giả mạo ngân hàng: vietcombank, techcombank, bidv, mbbank, tpbank, vpbank, agribank, vietinbank
-   - Giả mạo TMĐT: shopee, lazada, tiki, sendo
-   - Giả mạo ví điện tử: momo, zalopay, vnpay
-   - Dấu hiệu: domain tương tự nhưng sai chính tả, TLD lạ, yêu cầu OTP/mật khẩu
+   a) Giả mạo ngân hàng:
+      - Chính thống: vietcombank.com.vn, techcombank.com.vn, mbbank.com.vn, tpbank.vn, vpbank.com.vn
+      - Giả mạo: vietcombank.com, techcombank.net, mbbank-verify.com, tpbank-secure.xyz
+      - Dấu hiệu: TLD sai (.com thay vì .com.vn), subdomain abuse (vietcombank.scam.com), typosquatting (vietc0mbank)
+   
+   b) Giả mạo TMĐT:
+      - Chính thống: shopee.vn, lazada.vn, tiki.vn, sendo.vn
+      - Giả mạo: shopee.com, lazada-sale.net, tiki-deal.com
+   
+   c) Giả mạo ví điện tử:
+      - Chính thống: momo.vn, zalopay.vn, vnpay.vn
+      - Giả mạo: momo.com, zalopay-verify.net
+   
+   d) URL patterns đáng ngờ:
+      - login + bank, verify + account, update + secure, confirm + otp
+      - Ví dụ: /login-bank, /verify-account, /update-payment
 
 3. LỪA ĐẢO ĐẦU TƯ:
-   - Hứa lợi nhuận cao phi thực tế (30%/tháng, x100)
-   - Forex, crypto, chứng khoán không phép
-   - Airdrop, giveaway giả mạo
+   - Lợi nhuận phi thực tế: lãi 30%/tháng, lợi nhuận 100%, x100, x1000, sinh lời 200%
+   - Cam kết không rủi ro: "cam kết lãi", "bảo toàn vốn 100%", "không rủi ro"
+   - Forex/Crypto scam: bot forex, EA tự động, airdrop miễn phí, staking 1000% APY
+   - MLM/Ponzi: hoa hồng cấp bậc, thu nhập thụ động, giới thiệu bạn bè, mạng lưới
 
 4. LỪA ĐẢO VIỆC LÀM:
-   - Việc nhẹ lương cao, không cần kinh nghiệm
-   - Yêu cầu đặt cọc, mua hàng trước
+   - Việc nhẹ lương cao: "lương 20-30 triệu", "không cần kinh nghiệm", "làm tại nhà"
+   - Yêu cầu đặt cọc: "phí đào tạo", "mua tài liệu", "phí xét duyệt"
+   - Công việc đáng ngờ: nhấn like kiếm tiền, đánh giá sản phẩm, chạy đơn hàng, nạp rút tiền
 
-5. WEBSITE HỢP PHÁP:
-   - Công cụ/tiện ích: form builder, automation, productivity tools
-   - SaaS, startup công nghệ
-   - Blog, tin tức, giáo dục
-   - Thương mại điện tử có thương hiệu rõ ràng
+5. GIẢ MẠO TRÚNG THƯỞNG:
+   - "Chúc mừng bạn đã trúng", "nhận ngay 10 triệu", "quà tặng iPhone"
+   - Urgency tactics: "chỉ còn 5 phút", "hết hạn hôm nay", "nhanh tay kẻo lỡ"
 
-QUY TẮC CHẤM ĐIỂM:
-- 0-20: RẤT AN TOÀN - Website uy tín, thương hiệu lớn
-- 21-40: AN TOÀN - Website hợp pháp, có thể tin cậy
-- 41-60: CẨN THẬN - Có một số điểm cần lưu ý nhưng không nguy hiểm
-- 61-80: NGUY HIỂM - Nhiều dấu hiệu lừa đảo
-- 81-100: RẤT NGUY HIỂM - Chắc chắn là lừa đảo/cờ bạc
+6. SOCIAL ENGINEERING (THAO TÚC TÂM LÝ):
+   - URGENCY (Gấp rút): khẩn cấp, gấp, ngay lập tức, hết hạn, chỉ còn
+   - FEAR (Sợ hãi): tài khoản bị khóa, vi phạm, cảnh báo, bị hack, mất tiền
+   - GREED (Tham lam): miễn phí, quà tặng, giảm giá 90%, kiếm tiền dễ dàng
+   - AUTHORITY (Quyền lực): chính phủ yêu cầu, ngân hàng thông báo, cảnh sát, thuế
+
+7. WEBSITE HỢP PHÁP:
+   - Công cụ/tiện ích: form builder, automation, productivity tools, SaaS
+   - Startup công nghệ: có thông tin công ty, team, contact
+   - Blog, tin tức, giáo dục: nội dung chất lượng
+   - TMĐT có thương hiệu: logo rõ ràng, chính sách đổi trả, hotline
+
+QUY TẮC CHẤM ĐIỂM (NGHIÊM NGẶT):
+- 0-20:   RẤT AN TOÀN - Thương hiệu uy tín quốc tế/VN, chính phủ, ngân hàng chính thống
+- 21-40:  AN TOÀN - Website hợp pháp, có đầy đủ thông tin công ty, chính sách
+- 41-60:  CẨN THẬN - Thiếu thông tin, có 1-2 dấu hiệu đáng ngờ nhẹ
+- 61-80:  NGUY HIỂM - Nhiều dấu hiệu lừa đảo, phishing, hoặc scam
+- 81-100: RẤT NGUY HIỂM - Chắc chắn là lừa đảo/cờ bạc/phishing
 
 NGUYÊN TẮC ĐÁNH GIÁ:
-- Website công cụ/tiện ích hợp pháp: score 15-35
-- Website startup/SaaS mới: score 25-45
-- Website thiếu thông tin nhưng không có dấu hiệu lừa đảo: score 35-50
-- Website có dấu hiệu đáng ngờ nhẹ: score 45-60
-- Website cờ bạc: score >= 90
-- Giả mạo ngân hàng/thương hiệu: score >= 85`
+- Website công cụ/SaaS hợp pháp (Notion, Figma, Canva...): score 5-25
+- Website startup mới nhưng hợp pháp: score 25-40
+- Website thiếu thông tin NHƯNG không có dấu hiệu lừa đảo: score 35-50
+- Website có 1-2 social engineering tactics: score 50-65
+- Website có 3+ social engineering tactics: score 70-85
+- Website cờ bạc (nhà cái, game bài): score >= 90
+- Giả mạo ngân hàng/TMĐT/ví điện tử: score >= 85
+- Lừa đảo đầu tư (lợi nhuận phi thực tế): score >= 80
+- Lừa đảo việc làm (đặt cọc, việc nhẹ lương cao): score >= 75
+
+LƯU Ý QUAN TRỌNG:
+1. KHÔNG dùng emoji trong reasons
+2. PHẢI viết TIẾNG VIỆT CÓ DẤU đầy đủ (ví dụ: "Trang web an toàn", KHÔNG "Trang web an toan")
+3. Đánh giá CÔNG BẰNG - không quá khắt khe với website hợp pháp
+4. TLD .info, .io, .co, .app là hợp lệ, KHÔNG tự động coi là đáng ngờ
+5. Website công cụ/tiện ích thiếu thông tin liên hệ là BÌNH THƯỜNG
+6. Chỉ đánh giá NGUY HIỂM khi có BẰNG CHỨNG RÕ RÀNG
+7. Nếu không chắc chắn, cho điểm thấp hơn (tránh false positive)`
 
   const userPrompt = `PHÂN TÍCH WEBSITE:
 
@@ -398,6 +437,7 @@ URL: ${url}
 DOMAIN: ${domain}
 
 ${securityInfo}
+
 
 NỘI DUNG WEBSITE:
 ${contentInfo}
@@ -603,7 +643,7 @@ export async function getModelInfo() {
     const samples = await prisma.trainingData.count()
     const blocklist = await prisma.blocklist.count()
     const whitelist = await prisma.whitelist.count()
-    
+
     return {
       version: model?.version || 2,
       samples,

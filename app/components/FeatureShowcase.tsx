@@ -66,7 +66,7 @@ const features: Feature[] = [
     titleVi: 'Công cụ Bảo mật',
     titleEn: 'Security Tools',
     descVi: 'Bộ công cụ đầy đủ: QR Scanner, Email Analyzer, Password Checker, Link Expander...',
-    descEn: 'Complete toolkit: QR Scanner, Email Analyzer, Password Checker, Link Expander...',
+    descEn: 'Complete    : QR Scanner, Email Analyzer, Password Checker, Link Expander...',
     color: 'from-orange-500 to-red-500',
     stats: [
       { labelVi: 'Công cụ', labelEn: 'Tools', value: '9+' },
