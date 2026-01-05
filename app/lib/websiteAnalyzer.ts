@@ -328,13 +328,23 @@ export async function analyzeWebsite(url: string): Promise<WebsiteInfo | null> {
       }
     }
 
-    // Content analysis
+    // Content analysis - improved patterns for international sites
     const hasLoginForm = /<input[^>]*type=["']password["']/i.test(html)
     const hasPaymentForm = /credit.?card|cvv|thẻ.?tín.?dụng|visa|mastercard/i.test(html)
-    const hasContactInfo = /contact|liên hệ|hotline|điện thoại|email/i.test(htmlLower)
-    const hasSocialLinks = /facebook\.com|twitter\.com|instagram\.com|youtube\.com|zalo/i.test(html)
-    const hasPrivacyPolicy = /privacy|chính sách bảo mật|điều khoản riêng tư/i.test(htmlLower)
-    const hasTermsOfService = /terms|điều khoản|quy định/i.test(htmlLower)
+    
+    // Improved contact info detection - works for both Vietnamese and international sites
+    const hasContactInfo = /contact|liên hệ|hotline|điện thoại|email|support|help|about.?us|company|team|careers|jobs|press|blog|community|discord|slack|twitter|linkedin|github/i.test(htmlLower) ||
+      /<a[^>]*href=["']mailto:/i.test(html) ||
+      /<footer/i.test(html) // Most legitimate sites have footer with contact info
+    
+    // Improved social links detection
+    const hasSocialLinks = /facebook\.com|twitter\.com|x\.com|instagram\.com|youtube\.com|zalo|linkedin\.com|github\.com|discord\.(gg|com)|slack\.com|reddit\.com|medium\.com/i.test(html)
+    
+    // Improved privacy policy detection
+    const hasPrivacyPolicy = /privacy|chính sách bảo mật|điều khoản riêng tư|data.?protection|gdpr|cookie.?policy/i.test(htmlLower)
+    
+    // Improved terms detection
+    const hasTermsOfService = /terms|điều khoản|quy định|conditions|legal|tos|eula/i.test(htmlLower)
     const hasMetaTags = /<meta[^>]*property=["']og:/i.test(html)
     const hasSitemap = /sitemap/i.test(html)
     const mobileOptimized = /viewport/i.test(html)

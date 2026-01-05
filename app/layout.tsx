@@ -164,28 +164,52 @@ export default function RootLayout({
           {children}
         </Providers>
         
-        {/* Telegram Floating Button */}
-        <div className="fixed bottom-6 right-6 z-50 group">
-          {/* Tooltip */}
-          <div className="absolute bottom-full right-0 mb-3 px-3 py-2 bg-gray-800 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none border border-gray-700 shadow-xl">
-            💬 Chat với Anti-Scam Bot
-            <div className="absolute top-full right-4 border-8 border-transparent border-t-gray-800" />
+        {/* Social Floating Buttons */}
+        <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
+          {/* Facebook Button */}
+          <div className="group relative">
+            {/* Tooltip */}
+            <div className="absolute bottom-1/2 translate-y-1/2 right-full mr-3 px-3 py-2 bg-gray-800 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none border border-gray-700 shadow-xl">
+              📘 Theo dõi Facebook
+              <div className="absolute top-1/2 -translate-y-1/2 left-full border-8 border-transparent border-l-gray-800" />
+            </div>
+            
+            {/* Button */}
+            <a
+              href="https://www.facebook.com/profile.php?id=61585781176147"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="relative w-12 h-12 bg-gradient-to-br from-[#1877F2] to-[#0d65d9] hover:from-[#2088ff] hover:to-[#1877F2] rounded-full shadow-lg shadow-blue-600/40 flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-blue-600/60 active:scale-95"
+            >
+              <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+              </svg>
+            </a>
           </div>
-          
-          {/* Pulse ring */}
-          <span className="absolute inset-0 rounded-full bg-[#0088cc] animate-ping opacity-25" />
-          
-          {/* Button */}
-          <a
-            href="https://t.me/antiscam_vn_bot"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="relative w-14 h-14 bg-gradient-to-br from-[#0088cc] to-[#0066aa] hover:from-[#0099dd] hover:to-[#0077bb] rounded-full shadow-lg shadow-blue-500/40 flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-blue-500/60 active:scale-95"
-          >
-            <svg className="w-7 h-7 text-white" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
-            </svg>
-          </a>
+
+          {/* Telegram Button */}
+          <div className="group relative">
+            {/* Tooltip */}
+            <div className="absolute bottom-1/2 translate-y-1/2 right-full mr-3 px-3 py-2 bg-gray-800 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none border border-gray-700 shadow-xl">
+              💬 Chat với Anti-Scam Bot
+              <div className="absolute top-1/2 -translate-y-1/2 left-full border-8 border-transparent border-l-gray-800" />
+            </div>
+            
+            {/* Pulse ring */}
+            <span className="absolute inset-0 rounded-full bg-[#0088cc] animate-ping opacity-25" />
+            
+            {/* Button */}
+            <a
+              href="https://t.me/antiscam_vn_bot"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="relative w-12 h-12 bg-gradient-to-br from-[#0088cc] to-[#0066aa] hover:from-[#0099dd] hover:to-[#0077bb] rounded-full shadow-lg shadow-blue-500/40 flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-blue-500/60 active:scale-95"
+            >
+              <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
+              </svg>
+            </a>
+          </div>
         </div>
       </body>
     </html>

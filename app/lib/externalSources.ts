@@ -134,6 +134,37 @@ const VN_TRUSTED_DOMAINS = [
   { domain: 'youtube.com', brand: 'YouTube', category: 'social' },
   { domain: 'google.com', brand: 'Google', category: 'tech' },
   { domain: 'google.com.vn', brand: 'Google VN', category: 'tech' },
+  
+  // International Tech Giants
+  { domain: 'github.com', brand: 'GitHub', category: 'tech' },
+  { domain: 'gitlab.com', brand: 'GitLab', category: 'tech' },
+  { domain: 'huggingface.co', brand: 'Hugging Face', category: 'tech' },
+  { domain: 'openai.com', brand: 'OpenAI', category: 'tech' },
+  { domain: 'anthropic.com', brand: 'Anthropic', category: 'tech' },
+  { domain: 'microsoft.com', brand: 'Microsoft', category: 'tech' },
+  { domain: 'apple.com', brand: 'Apple', category: 'tech' },
+  { domain: 'amazon.com', brand: 'Amazon', category: 'tech' },
+  { domain: 'aws.amazon.com', brand: 'AWS', category: 'tech' },
+  { domain: 'cloudflare.com', brand: 'Cloudflare', category: 'tech' },
+  { domain: 'vercel.com', brand: 'Vercel', category: 'tech' },
+  { domain: 'netlify.com', brand: 'Netlify', category: 'tech' },
+  { domain: 'stackoverflow.com', brand: 'Stack Overflow', category: 'tech' },
+  { domain: 'npmjs.com', brand: 'npm', category: 'tech' },
+  { domain: 'pypi.org', brand: 'PyPI', category: 'tech' },
+  { domain: 'docker.com', brand: 'Docker', category: 'tech' },
+  { domain: 'linkedin.com', brand: 'LinkedIn', category: 'social' },
+  { domain: 'twitter.com', brand: 'Twitter', category: 'social' },
+  { domain: 'x.com', brand: 'X', category: 'social' },
+  { domain: 'reddit.com', brand: 'Reddit', category: 'social' },
+  { domain: 'discord.com', brand: 'Discord', category: 'social' },
+  { domain: 'slack.com', brand: 'Slack', category: 'tech' },
+  { domain: 'notion.so', brand: 'Notion', category: 'tech' },
+  { domain: 'figma.com', brand: 'Figma', category: 'tech' },
+  { domain: 'canva.com', brand: 'Canva', category: 'tech' },
+  { domain: 'medium.com', brand: 'Medium', category: 'news' },
+  { domain: 'wikipedia.org', brand: 'Wikipedia', category: 'education' },
+  { domain: 'kaggle.com', brand: 'Kaggle', category: 'tech' },
+  { domain: 'colab.research.google.com', brand: 'Google Colab', category: 'tech' },
 ]
 
 // Sync data to database
@@ -241,9 +272,13 @@ export async function checkExternalSources(domain: string, fullUrl?: string): Pr
           notFound: false,
         }
         if (vtResult.detected) {
-          sources.push(
-            `VirusTotal: ${vtResult.stats.malicious} engines phát hiện nguy hiểm`
-          )
+          // Only add to sources if significant detection (>= 3 engines)
+          // 1-2 engines could be false positives
+          if (vtResult.stats.malicious >= 3) {
+            sources.push(
+              `VirusTotal: ${vtResult.stats.malicious} engines phát hiện nguy hiểm`
+            )
+          }
         }
       }
     } catch (error) {
@@ -327,8 +362,10 @@ async function checkVirusTotal(url: string): Promise<{
       console.log('[VirusTotal] Stats:', stats)
       
       if (stats) {
+        // Only consider detected if >= 3 malicious engines (to avoid false positives)
+        // 1-2 engines could be false positives from overly aggressive scanners
         return {
-          detected: stats.malicious > 0 || stats.suspicious > 2,
+          detected: stats.malicious >= 3 || stats.suspicious > 5,
           stats: {
             malicious: stats.malicious || 0,
             suspicious: stats.suspicious || 0,
