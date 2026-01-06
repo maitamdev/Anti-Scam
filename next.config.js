@@ -13,6 +13,14 @@ const nextConfig = {
     ],
     formats: ['image/avif', 'image/webp'],
   },
+  // Exclude adventure-world from Next.js compilation (it's a separate monorepo)
+  webpack: (config, { isServer }) => {
+    config.watchOptions = {
+      ...config.watchOptions,
+      ignored: ['**/adventure-world/**', '**/node_modules/**'],
+    };
+    return config;
+  },
   // Performance optimizations
   swcMinify: true,
   compiler: {
