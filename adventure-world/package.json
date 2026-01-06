@@ -1,0 +1,22 @@
+{
+    "name": "adventure-world",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "dev": "turbo run dev",
+        "build": "turbo run build",
+        "lint": "turbo run lint",
+        "clean": "turbo run clean",
+        "db:generate": "pnpm --filter @adventure/shared db:generate",
+        "db:push": "pnpm --filter @adventure/shared db:push",
+        "db:studio": "pnpm --filter @adventure/shared db:studio"
+    },
+    "devDependencies": {
+        "turbo": "^2.0.0",
+        "typescript": "^5.3.3"
+    },
+    "packageManager": "pnpm@8.15.0",
+    "engines": {
+        "node": ">=18.0.0"
+    }
+}

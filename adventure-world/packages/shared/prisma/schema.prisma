@@ -1,0 +1,362 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==================== USER & AUTH ====================
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  username      String    @unique
+  passwordHash  String
+  role          Role      @default(USER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  lastLoginAt   DateTime?
+  
+  profile       Profile?
+  progress      UserProgress?
+  badges        UserBadge[]
+  inventory     InventoryItem[]
+  scanHistory   ScanHistory[]
+  reports       Report[]        @relation("Reporter")
+  reportedBy    Report[]        @relation("Reported")
+  chatMessages  ChatMessage[]
+  partyMemberships PartyMember[]
+  
+  @@index([email])
+  @@index([username])
+}
+
+enum Role {
+  USER
+  MODERATOR
+  ADMIN
+}
+
+model Profile {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  displayName String?
+  avatarId    String   @default("default_avatar")
+  titleId     String?
+  bio         String?  @db.VarChar(200)
+  
+  soundEnabled    Boolean @default(true)
+  musicEnabled    Boolean @default(true)
+  graphicsQuality String  @default("medium")
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ==================== PROGRESSION ====================
+
+model UserProgress {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  level       Int      @default(1)
+  xp          Int      @default(0)
+  coins       Int      @default(0)
+  reputation  Float    @default(1.0)
+  
+  hubUnlocked Boolean  @default(true)
+  z1Unlocked  Boolean  @default(true)
+  z2Unlocked  Boolean  @default(false)
+  z3Unlocked  Boolean  @default(false)
+  z4Unlocked  Boolean  @default(false)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  questProgress QuestProgress[]
+  
+  @@index([level])
+  @@index([xp])
+}
+
+model QuestProgress {
+  id              String        @id @default(cuid())
+  userProgressId  String
+  userProgress    UserProgress  @relation(fields: [userProgressId], references: [id], onDelete: Cascade)
+  
+  questId         String
+  status          QuestStatus   @default(NOT_STARTED)
+  progress        Int           @default(0)
+  completedAt     DateTime?
+  attempts        Int           @default(0)
+  
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  
+  @@unique([userProgressId, questId])
+  @@index([questId])
+}
+
+enum QuestStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+}
+
+// ==================== BADGES ====================
+
+model Badge {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String
+  iconId      String
+  rarity      BadgeRarity
+  condition   Json
+  
+  users       UserBadge[]
+}
+
+enum BadgeRarity {
+  COMMON
+  RARE
+  EPIC
+  LEGENDARY
+}
+
+model UserBadge {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badgeId   String
+  badge     Badge    @relation(fields: [badgeId], references: [id])
+  
+  earnedAt  DateTime @default(now())
+  
+  @@unique([userId, badgeId])
+}
+
+// ==================== INVENTORY ====================
+
+model InventoryItem {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  itemId    String
+  item      ShopItem @relation(fields: [itemId], references: [id])
+  
+  equipped  Boolean  @default(false)
+  acquiredAt DateTime @default(now())
+  
+  @@unique([userId, itemId])
+}
+
+model ShopItem {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  category    ItemCategory
+  price       Int
+  rarity      BadgeRarity
+  previewUrl  String?
+  assetId     String
+  isAvailable Boolean  @default(true)
+  
+  owners      InventoryItem[]
+}
+
+enum ItemCategory {
+  AVATAR_SKIN
+  TITLE
+  PET
+  ACCESSORY
+}
+
+// ==================== SCAN CENTER ====================
+
+model ScanHistory {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  inputType   ScanInputType
+  inputValue  String   @db.Text
+  inputHash   String
+  
+  riskScore   Int
+  riskLevel   RiskLevel
+  reasons     String[]
+  recommendations String[]
+  
+  scannedAt   DateTime @default(now())
+  
+  @@index([userId])
+  @@index([inputHash])
+}
+
+enum ScanInputType {
+  URL
+  TEXT
+  IMAGE
+}
+
+enum RiskLevel {
+  SAFE
+  SUSPICIOUS
+  DANGEROUS
+  CRITICAL
+}
+
+// ==================== COMMUNITY ====================
+
+model ChatMessage {
+  id          String   @id @default(cuid())
+  senderId    String
+  sender      User     @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  
+  channel     String
+  content     String   @db.VarChar(500)
+  contentRaw  String?  @db.VarChar(500)
+  
+  isSystem    Boolean  @default(false)
+  isDeleted   Boolean  @default(false)
+  
+  createdAt   DateTime @default(now())
+  
+  @@index([channel])
+  @@index([createdAt])
+}
+
+model Report {
+  id          String   @id @default(cuid())
+  
+  reporterId  String
+  reporter    User     @relation("Reporter", fields: [reporterId], references: [id])
+  
+  reportedUserId String?
+  reportedUser   User?   @relation("Reported", fields: [reportedUserId], references: [id])
+  
+  targetType  ReportTargetType
+  targetId    String
+  targetContent String? @db.Text
+  
+  reason      ReportReason
+  description String?  @db.VarChar(500)
+  
+  status      ReportStatus @default(PENDING)
+  resolvedBy  String?
+  resolvedAt  DateTime?
+  resolution  String?
+  
+  reporterReputationDelta Float @default(0)
+  
+  createdAt   DateTime @default(now())
+  
+  @@index([status])
+  @@index([reporterId])
+}
+
+enum ReportTargetType {
+  MESSAGE
+  USER
+  URL
+  CONTENT
+}
+
+enum ReportReason {
+  SPAM
+  SCAM_ATTEMPT
+  HARASSMENT
+  INAPPROPRIATE
+  IMPERSONATION
+  OTHER
+}
+
+enum ReportStatus {
+  PENDING
+  REVIEWING
+  CONFIRMED
+  REJECTED
+  FALSE_POSITIVE
+}
+
+// ==================== PARTY ====================
+
+model Party {
+  id          String   @id @default(cuid())
+  code        String   @unique @default(cuid())
+  
+  leaderId    String
+  currentZone String?
+  
+  status      PartyStatus @default(OPEN)
+  maxSize     Int         @default(4)
+  
+  createdAt   DateTime @default(now())
+  disbandedAt DateTime?
+  
+  members     PartyMember[]
+  
+  @@index([code])
+}
+
+enum PartyStatus {
+  OPEN
+  FULL
+  IN_ZONE
+  DISBANDED
+}
+
+model PartyMember {
+  id        String   @id @default(cuid())
+  partyId   String
+  party     Party    @relation(fields: [partyId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  
+  isLeader  Boolean  @default(false)
+  joinedAt  DateTime @default(now())
+  
+  @@unique([partyId, userId])
+}
+
+// ==================== LEADERBOARD ====================
+
+model LeaderboardEntry {
+  id          String   @id @default(cuid())
+  
+  userId      String
+  username    String
+  
+  period      LeaderboardPeriod
+  periodStart DateTime
+  periodEnd   DateTime
+  
+  category    LeaderboardCategory
+  score       Int
+  rank        Int?
+  
+  createdAt   DateTime @default(now())
+  
+  @@unique([userId, period, periodStart, category])
+  @@index([period, category, score])
+}
+
+enum LeaderboardPeriod {
+  WEEKLY
+  MONTHLY
+  ALL_TIME
+}
+
+enum LeaderboardCategory {
+  XP_EARNED
+  QUESTS_COMPLETED
+  ACCURATE_REPORTS
+  SCANS_PERFORMED
+}

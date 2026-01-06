@@ -1,0 +1,9 @@
+{
+    "installCommand": "npm install -g pnpm && pnpm install",
+    "buildCommand": "cd apps/web && pnpm build",
+    "outputDirectory": "apps/web/.next",
+    "framework": "nextjs",
+    "regions": [
+        "sin1"
+    ]
+}

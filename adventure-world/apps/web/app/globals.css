@@ -1,0 +1,238 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Primary - Trust Blue */
+  --color-primary-50: #E6F0FF;
+  --color-primary-100: #B3D1FF;
+  --color-primary-500: #2563EB;
+  --color-primary-700: #1D4ED8;
+  --color-primary-900: #1E3A8A;
+
+  /* Secondary - Growth Green */
+  --color-secondary-50: #ECFDF5;
+  --color-secondary-500: #10B981;
+  --color-secondary-700: #047857;
+
+  /* Warning - Alert Orange */
+  --color-warning-500: #F97316;
+
+  /* Danger - Critical Red */
+  --color-danger-500: #EF4444;
+
+  /* Game colors */
+  --color-xp: #FBBF24;
+  --color-coin: #F59E0B;
+  --color-reputation: #8B5CF6;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  color: white;
+  min-height: 100vh;
+}
+
+/* Game canvas container */
+.game-canvas-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.game-canvas-container canvas {
+  width: 100%;
+  height: 100%;
+  outline: none;
+}
+
+/* UI Overlay */
+.game-ui-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.game-ui-overlay > * {
+  pointer-events: auto;
+}
+
+/* HUD styles */
+.hud-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.5), transparent);
+}
+
+.hud-left {
+  position: absolute;
+  top: 80px;
+  left: 16px;
+  width: 280px;
+}
+
+.hud-right {
+  position: absolute;
+  top: 80px;
+  right: 16px;
+  width: 320px;
+}
+
+.hud-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 16px;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  background: linear-gradient(to top, rgba(0,0,0,0.5), transparent);
+}
+
+/* Panel styles */
+.game-panel {
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 12px;
+  padding: 16px;
+  backdrop-filter: blur(10px);
+}
+
+/* Button styles */
+.btn-game {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 0 #1e40af;
+}
+
+.btn-game:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 #1e40af;
+}
+
+.btn-game:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #1e40af;
+}
+
+/* XP Bar */
+.xp-bar {
+  height: 8px;
+  background: rgba(59, 130, 246, 0.2);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.xp-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-xp), #fcd34d);
+  border-radius: 4px;
+  transition: width 0.5s ease-out;
+}
+
+/* Chat styles */
+.chat-messages {
+  height: 300px;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.chat-message {
+  padding: 8px;
+  margin-bottom: 4px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.chat-message .sender {
+  font-weight: 600;
+  color: var(--color-primary-500);
+}
+
+.chat-input {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 12px;
+  color: white;
+  width: 100%;
+}
+
+.chat-input:focus {
+  outline: none;
+  border-color: var(--color-primary-500);
+}
+
+/* Modal styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal-content {
+  background: #1e293b;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 16px;
+  padding: 24px;
+  max-width: 600px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+/* Risk level colors */
+.risk-safe { color: #10B981; }
+.risk-suspicious { color: #F59E0B; }
+.risk-dangerous { color: #F97316; }
+.risk-critical { color: #EF4444; }
+
+/* Loading animation */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.loading {
+  animation: pulse 2s ease-in-out infinite;
+}
