@@ -6,6 +6,9 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Mail, Lock, LogIn, Chrome, ArrowLeft } from 'lucide-react'
+import { auth, googleProvider } from '@/app/lib/firebase'
+import { signInWithPopup } from 'firebase/auth'
+
 
 export default function SignInPage() {
   const [email, setEmail] = useState('')
@@ -39,9 +42,41 @@ export default function SignInPage() {
     }
   }
 
-  const handleGoogleSignIn = () => {
-    signIn('google', { callbackUrl: '/dashboard' })
+  const handleGoogleSignIn = async () => {
+    try {
+      setError('')
+      // Sign in with Firebase
+      const result = await signInWithPopup(auth, googleProvider)
+      const user = result.user
+
+      // Get Firebase ID token
+      const idToken = await user.getIdToken()
+
+      // Sign in with NextAuth using the Firebase token
+      const response = await signIn('google', {
+        callbackUrl: '/dashboard',
+        redirect: false
+      })
+
+      if (response?.error) {
+        setError('Đăng nhập Google thất bại. Vui lòng thử lại.')
+      } else {
+        router.push('/dashboard')
+        router.refresh()
+      }
+    } catch (error: any) {
+      console.error("Lỗi đăng nhập Google:", error)
+      if (error.code === 'auth/popup-closed-by-user') {
+        setError('Bạn đã đóng cửa sổ đăng nhập.')
+      } else if (error.code === 'auth/cancelled-popup-request') {
+        // Ignore this error - happens when multiple popups are triggered
+        return
+      } else {
+        setError('Đăng nhập Google thất bại. Vui lòng thử lại.')
+      }
+    }
   }
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0a0f1a] via-[#0d1425] to-[#0a0f1a] px-4 py-12">
