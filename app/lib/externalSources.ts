@@ -134,7 +134,7 @@ const VN_TRUSTED_DOMAINS = [
   { domain: 'youtube.com', brand: 'YouTube', category: 'social' },
   { domain: 'google.com', brand: 'Google', category: 'tech' },
   { domain: 'google.com.vn', brand: 'Google VN', category: 'tech' },
-  
+
   // International Tech Giants
   { domain: 'github.com', brand: 'GitHub', category: 'tech' },
   { domain: 'gitlab.com', brand: 'GitLab', category: 'tech' },
@@ -253,7 +253,7 @@ export async function checkExternalSources(domain: string, fullUrl?: string): Pr
   // Check VirusTotal (works with free API key too)
   let virusTotalData
   const vtApiKey = process.env.VIRUSTOTAL_API_KEY_PRO || process.env.VIRUSTOTAL_API_KEY
-  
+
   if (vtApiKey && vtApiKey.length >= 64 && !vtApiKey.includes('xxx') && !vtApiKey.includes('your_')) {
     try {
       console.log('[VirusTotal] Checking:', domain)
@@ -272,9 +272,9 @@ export async function checkExternalSources(domain: string, fullUrl?: string): Pr
           notFound: false,
         }
         if (vtResult.detected) {
-          // Only add to sources if significant detection (>= 3 engines)
-          // 1-2 engines could be false positives
-          if (vtResult.stats.malicious >= 3) {
+          // Flag ANY detection - even 1 engine can indicate issues
+          // Especially important for new/unknown threats
+          if (vtResult.stats.malicious >= 1 || vtResult.stats.suspicious >= 2) {
             sources.push(
               `VirusTotal: ${vtResult.stats.malicious} engines phát hiện nguy hiểm`
             )
@@ -285,7 +285,7 @@ export async function checkExternalSources(domain: string, fullUrl?: string): Pr
       console.error('[VirusTotal] Error:', error)
     }
   }
-  
+
   // Check Google Safe Browsing (free, fast lookup)
   let googleSafeBrowsingData
   if (fullUrl) {
@@ -299,7 +299,7 @@ export async function checkExternalSources(domain: string, fullUrl?: string): Pr
       console.error('[Google Safe Browsing] Error:', error)
     }
   }
-  
+
   // Check AbuseIPDB for IP reputation (if we have IP)
   let abuseIPDBData
   // Note: IP extraction would happen in websiteAnalyzer.ts, this is placeholder
@@ -328,9 +328,9 @@ async function checkVirusTotal(url: string): Promise<{
   notFound?: boolean
 }> {
   const apiKey = process.env.VIRUSTOTAL_API_KEY
-  
+
   console.log('[VirusTotal] API Key:', apiKey ? `${apiKey.substring(0, 10)}...` : 'NOT SET')
-  
+
   if (!apiKey || apiKey.includes('xxx') || apiKey.includes('your_')) {
     console.log('[VirusTotal] API key not configured')
     return { detected: false, stats: null }
@@ -339,7 +339,7 @@ async function checkVirusTotal(url: string): Promise<{
   try {
     const urlId = Buffer.from(url).toString('base64').replace(/=/g, '')
     console.log('[VirusTotal] Fetching URL ID:', urlId)
-    
+
     const res = await fetch(
       `https://www.virustotal.com/api/v3/urls/${urlId}`,
       {
@@ -358,14 +358,14 @@ async function checkVirusTotal(url: string): Promise<{
     if (res.ok) {
       const data = await res.json()
       const stats = data.data?.attributes?.last_analysis_stats
-      
+
       console.log('[VirusTotal] Stats:', stats)
-      
+
       if (stats) {
-        // Only consider detected if >= 3 malicious engines (to avoid false positives)
-        // 1-2 engines could be false positives from overly aggressive scanners
+        // Flag ANY malicious detection - even 1 engine is worth investigating
+        // Modern threats may only be detected by specialized engines
         return {
-          detected: stats.malicious >= 3 || stats.suspicious > 5,
+          detected: stats.malicious >= 1 || stats.suspicious >= 3,
           stats: {
             malicious: stats.malicious || 0,
             suspicious: stats.suspicious || 0,

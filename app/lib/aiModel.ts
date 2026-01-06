@@ -398,11 +398,20 @@ KIẾN THỨC CHUYÊN MÔN:
    - GREED (Tham lam): miễn phí, quà tặng, giảm giá 90%, kiếm tiền dễ dàng
    - AUTHORITY (Quyền lực): chính phủ yêu cầu, ngân hàng thông báo, cảnh sát, thuế
 
-7. WEBSITE HỢP PHÁP:
+7. PHIM LẬU / STREAMING BẤT HỢP PHÁP (VI PHẠM BẢN QUYỀN):
+   - TLD đặc trưng: .li (Liechtenstein - KHÔNG phải Libya), .to, .cc, .ws, .nu
+   - Từ khóa phim: phim, xemphim, phimmoi, phimhay, phimhd, phimvietsub, rophim, ophim, bilutv, motphim, luotphim
+   - Từ khóa streaming: xem online, full hd, 1080p, 720p, 4k, bluray, vietsub, thuyết minh
+   - Pattern domain: rophim, ophim, phimmoiz, phimmoii, phimnhanh, phimbathu, nguonphim, phimgi
+   - Dấu hiệu: không có thông tin công ty, không có chính sách bản quyền, quảng cáo nhiều
+   - Đánh giá: score 60-75 (bất hợp pháp nhưng ít nguy hiểm hơn lừa đảo/cờ bạc)
+
+8. WEBSITE HỢP PHÁP:
    - Công cụ/tiện ích: form builder, automation, productivity tools, SaaS
    - Startup công nghệ: có thông tin công ty, team, contact
    - Blog, tin tức, giáo dục: nội dung chất lượng
    - TMĐT có thương hiệu: logo rõ ràng, chính sách đổi trả, hotline
+
 
 QUY TẮC CHẤM ĐIỂM (NGHIÊM NGẶT):
 - 0-20:   RẤT AN TOÀN - Thương hiệu uy tín quốc tế/VN, chính phủ, ngân hàng chính thống

@@ -10,6 +10,7 @@ import {
   LINK_SHORTENERS,
   BIO_LINK_SERVICES,
   GAMBLING_KEYWORDS,
+  PIRACY_KEYWORDS,
   SCAM_URL_KEYWORDS,
   PHISHING_PATTERNS,
   CRYPTO_SCAM_PATTERNS,
@@ -249,6 +250,23 @@ function runHeuristics(url: string, domain: string): { score: number; reasons: s
   if (phishingCheck.isPhishing) {
     score += Math.min(phishingCheck.confidence * 100, 85)
     reasons.push(`🚨 Phishing: ${phishingCheck.matchedPatterns.join(', ')}`)
+  }
+
+  // Piracy/Illegal Streaming detection - NEW
+  const piracyHits = PIRACY_KEYWORDS.filter(k => domainLower.includes(k) || urlLower.includes(k))
+  if (piracyHits.length >= 2) {
+    score += 60
+    reasons.push(`🎬 Website phim lậu/streaming bất hợp pháp: ${piracyHits.slice(0, 2).join(', ')}`)
+  } else if (piracyHits.length === 1) {
+    const keyword = piracyHits[0]
+    // High-confidence piracy keywords
+    if (['rophim', 'ophim', 'phimmoiz', 'phimmoi', 'bilutv', 'phimbathu', 'motphim', 'luotphim'].includes(keyword)) {
+      score += 65
+      reasons.push(`🎬 Website phim lậu đã biết: ${keyword}`)
+    } else if (['phim', 'film', 'movie', 'xemphim', 'phimhd'].includes(keyword)) {
+      score += 40
+      reasons.push(`🎬 Dấu hiệu website phim lậu: ${keyword}`)
+    }
   }
 
   return { score: Math.min(score, 100), reasons }

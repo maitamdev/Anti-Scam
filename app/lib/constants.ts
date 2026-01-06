@@ -119,7 +119,7 @@ export const SUSPICIOUS_TLDS = [
   '.tk', '.ml', '.ga', '.cf', '.gq', '.pw',
   '.click', '.link', '.buzz', '.icu', '.monster',
   // Medium risk
-  '.xyz', '.top', '.club', '.work', '.online', 
+  '.xyz', '.top', '.club', '.work', '.online',
   '.site', '.website', '.space', '.fun',
   '.loan', '.win', '.bid', '.trade', '.date',
   '.review', '.stream', '.download', '.racing',
@@ -205,6 +205,33 @@ export const GAMBLING_KEYWORDS = [
   'ba-cay', 'bacay', 'xi-to', 'xito', 'xi-dach', 'xidach',
 ]
 
+// Piracy/Illegal Streaming keywords - Vietnamese - NEW
+export const PIRACY_KEYWORDS = [
+  // Movie/Film keywords
+  'phim', 'film', 'movie', 'xem-phim', 'xemphim',
+  'phim-bo', 'phimbo', 'phim-le', 'phimle',
+  'phim-hay', 'phimhay', 'phim-moi', 'phimmoi',
+  'phim-hd', 'phimhd', 'phim-vietsub', 'phimvietsub',
+  'phim-thuyet-minh', 'phimthuyetminh',
+  // Streaming
+  'xem-online', 'xemonline', 'stream', 'streaming',
+  'watch-online', 'watchonline', 'full-hd', 'fullhd',
+  '1080p', '720p', '4k', 'bluray', 'hdviet', 'vietsub',
+  // Torrent/Download
+  'download', 'tai-phim', 'taiphim', 'torrent',
+  // Common piracy site patterns
+  'rophim', 'ophim', 'phimmoiz', 'phimmoii', 'phimmoi',
+  'phimnhanh', 'phimhay', 'phimhot', 'phimvip',
+  'bilutv', 'phimbathu', 'motphim', 'luotphim',
+  'nguonphim', 'phimgi', 'phimmoichill', 'phim14',
+  'phim47', 'phim3s', 'phim1080', 'phimhd',
+  'fimfast', 'phimfast', 'phimtv', 'tvhay',
+  // TV/Series
+  'tap', 'season', 'episode', 'ep', 'ss',
+  'hoanthanh', 'hoan-thanh', 'full', 'completed',
+]
+
+
 // Brand keywords that scammers often impersonate - expanded
 export const BRAND_KEYWORDS = [
   // Banks
@@ -285,7 +312,7 @@ export const INVESTMENT_SCAM_PATTERNS = [
 // Labels
 export const LABELS = {
   SAFE: 'SAFE',
-  CAUTION: 'CAUTION', 
+  CAUTION: 'CAUTION',
   DANGEROUS: 'DANGEROUS',
 } as const
 
