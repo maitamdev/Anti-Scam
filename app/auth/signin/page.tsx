@@ -45,6 +45,8 @@ export default function SignInPage() {
   const handleGoogleSignIn = async () => {
     try {
       setError('')
+      setIsLoading(true)
+
       // Sign in with Firebase
       const result = await signInWithPopup(auth, googleProvider)
       const user = result.user
@@ -52,14 +54,34 @@ export default function SignInPage() {
       // Get Firebase ID token
       const idToken = await user.getIdToken()
 
-      // Sign in with NextAuth using the Firebase token
-      const response = await signIn('google', {
-        callbackUrl: '/dashboard',
+      // Call API to create/update user in database with Firebase token
+      const response = await fetch('/api/auth/firebase-signin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          idToken,
+          email: user.email,
+          name: user.displayName,
+          avatar: user.photoURL
+        })
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        setError(data.error || 'Đăng nhập Google thất bại.')
+        return
+      }
+
+      // Now sign in with NextAuth using credentials (email from Firebase)
+      const authResult = await signIn('credentials', {
+        email: user.email,
+        password: data.tempPassword, // API will return this
         redirect: false
       })
 
-      if (response?.error) {
-        setError('Đăng nhập Google thất bại. Vui lòng thử lại.')
+      if (authResult?.error) {
+        setError('Đăng nhập thất bại. Vui lòng thử lại.')
       } else {
         router.push('/dashboard')
         router.refresh()
@@ -74,6 +96,8 @@ export default function SignInPage() {
       } else {
         setError('Đăng nhập Google thất bại. Vui lòng thử lại.')
       }
+    } finally {
+      setIsLoading(false)
     }
   }
 
