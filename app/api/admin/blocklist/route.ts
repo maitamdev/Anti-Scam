@@ -1,0 +1,4 @@
+﻿import{NextRequest,NextResponse}from'next/server'
+import prisma from'@/app/lib/db'
+export async function GET(req:NextRequest){try{const page=parseInt(req.nextUrl.searchParams.get('page')||'1');const items=await prisma.blocklist.findMany({skip:(page-1)*20,take:20,orderBy:{createdAt:'desc'}});return NextResponse.json({success:true,data:items})}catch{return NextResponse.json({success:false,error:'Server error'},{status:500})}}
+export async function POST(req:NextRequest){try{const{domain,reason,severity}=await req.json();const item=await prisma.blocklist.create({data:{domain,reason,severity:severity||'MEDIUM',source:'manual'}});return NextResponse.json({success:true,data:item})}catch{return NextResponse.json({success:false,error:'Server error'},{status:500})}}feat: add admin blocklist management API endpoint
