@@ -1,0 +1,2 @@
+﻿import{NextRequest,NextResponse}from'next/server'
+export async function GET(req:NextRequest){try{const q=req.nextUrl.searchParams.get('q')||'';const type=req.nextUrl.searchParams.get('type')||'all';if(!q)return NextResponse.json({success:false,error:'Query required'},{status:400});return NextResponse.json({success:true,data:{query:q,type,results:[],total:0}})}catch{return NextResponse.json({success:false,error:'Server error'},{status:500})}}feat: add global search API endpoint
