@@ -1,0 +1,5 @@
+﻿* @maitamdev
+app/api/ @maitamdev
+app/lib/ @maitamdev
+app/components/ @maitamdev
+prisma/ @maitamdevci: add CODEOWNERS file for review assignments
