@@ -1,0 +1,5 @@
+﻿export type Permission='scan:read'|'scan:write'|'report:read'|'report:write'|'admin:read'|'admin:write'|'api:manage'|'org:manage'
+const ROLE_PERMISSIONS:Record<string,Permission[]>={USER:['scan:read','scan:write','report:read','report:write'],MODERATOR:['scan:read','scan:write','report:read','report:write','admin:read'],ADMIN:['scan:read','scan:write','report:read','report:write','admin:read','admin:write','api:manage','org:manage']}
+const TIER_FEATURES:Record<string,string[]>={FREE:['basic_scan','quiz'],PRO:['basic_scan','quiz','image_scan','history','export'],BUSINESS:['basic_scan','quiz','image_scan','history','export','api_keys','watchlist'],ENTERPRISE:['basic_scan','quiz','image_scan','history','export','api_keys','watchlist','organization','custom_quiz']}
+export function hasPermission(role:string,permission:Permission):boolean{return(ROLE_PERMISSIONS[role]||[]).includes(permission)}
+export function hasFeature(tier:string,feature:string):boolean{return(TIER_FEATURES[tier]||TIER_FEATURES.FREE).includes(feature)}feat: add role-based permission service
