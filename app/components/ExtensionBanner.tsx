@@ -16,7 +16,7 @@ export default function ExtensionBanner({ language }: Props) {
 
   const features = [
     { icon: Shield, textVi: 'Tự động cảnh báo website nguy hiểm', textEn: 'Auto-warn dangerous websites' },
-    { icon: Zap, textVi: 'Kiểm tra link ngay khi hover', textEn: 'Check links on hover' },
+    { icon: Zap, textVi: 'Kiểm tra link ngay khi truy cập', textEn: 'Check links on hover' },
     { icon: Bell, textVi: 'Thông báo lừa đảo mới nhất', textEn: 'Latest scam notifications' },
     { icon: Lock, textVi: 'Bảo vệ thông tin cá nhân', textEn: 'Protect personal info' },
   ]
