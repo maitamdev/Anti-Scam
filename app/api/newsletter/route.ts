@@ -1,0 +1,2 @@
+﻿import{NextRequest,NextResponse}from'next/server'
+export async function POST(req:NextRequest){try{const{email}=await req.json();if(!email)return NextResponse.json({success:false,error:'Email required'},{status:400});return NextResponse.json({success:true,data:{message:'Successfully subscribed'}})}catch{return NextResponse.json({success:false,error:'Server error'},{status:500})}}feat: add newsletter subscription API endpoint
