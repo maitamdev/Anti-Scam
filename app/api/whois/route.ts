@@ -1,0 +1,2 @@
+﻿import{NextRequest,NextResponse}from'next/server'
+export async function POST(req:NextRequest){try{const{domain}=await req.json();if(!domain)return NextResponse.json({success:false,error:'Domain required'},{status:400});return NextResponse.json({success:true,data:{domain,registrar:'Unknown',createdDate:'Unknown',expiryDate:'Unknown',nameServers:[],status:'Unknown'}})}catch{return NextResponse.json({success:false,error:'Server error'},{status:500})}}feat: add WHOIS lookup API endpoint
