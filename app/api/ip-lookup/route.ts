@@ -1,0 +1,2 @@
+﻿import{NextRequest,NextResponse}from'next/server'
+export async function POST(req:NextRequest){try{const{ip}=await req.json();if(!ip)return NextResponse.json({success:false,error:'IP required'},{status:400});return NextResponse.json({success:true,data:{ip,country:'Unknown',city:'Unknown',isp:'Unknown',isProxy:false,isTor:false,threatLevel:'low'}})}catch{return NextResponse.json({success:false,error:'Server error'},{status:500})}}feat: add IP lookup API endpoint
