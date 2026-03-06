@@ -1,0 +1,2 @@
+﻿import{NextRequest,NextResponse}from'next/server'
+export async function POST(req:NextRequest){try{const body=await req.json();const{type,title,description}=body;if(!type||!title||!description)return NextResponse.json({success:false,error:'Missing fields'},{status:400});return NextResponse.json({success:true,data:{id:crypto.randomUUID(),message:'Feedback received'}})}catch{return NextResponse.json({success:false,error:'Server error'},{status:500})}}feat: add user feedback API endpoint
