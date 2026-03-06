@@ -1,0 +1,8 @@
+﻿node_modules
+.next
+dist
+build
+coverage
+prisma/migrations
+*.min.js
+*.min.csschore: add Prettier ignore configuration
