@@ -1,0 +1,3 @@
+﻿import{NextRequest,NextResponse}from'next/server'
+import prisma from'@/app/lib/db'
+export async function GET(req:NextRequest){try{const page=parseInt(req.nextUrl.searchParams.get('page')||'1');const limit=parseInt(req.nextUrl.searchParams.get('limit')||'20');const users=await prisma.user.findMany({skip:(page-1)*limit,take:limit,orderBy:{createdAt:'desc'},select:{id:true,email:true,name:true,role:true,tier:true,status:true,totalScans:true,createdAt:true}});const total=await prisma.user.count();return NextResponse.json({success:true,data:users,meta:{page,limit,total}})}catch{return NextResponse.json({success:false,error:'Server error'},{status:500})}}feat: add admin user management API endpoint
