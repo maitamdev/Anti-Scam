@@ -92,8 +92,8 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     id: sub.id,
     status: sub.status.toUpperCase() as any,
     priceId: sub.items.data[0].price.id,
-    currentPeriodEnd: sub.current_period_end,
-    currentPeriodStart: sub.current_period_start,
+    currentPeriodEnd: sub.items.data[0].current_period_end,
+    currentPeriodStart: sub.items.data[0].current_period_start,
     customer: sub.customer as string,
   }
 
@@ -158,8 +158,9 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
     where: { stripeSubscriptionId: sub.id },
     data: {
       status: sub.status.toUpperCase() as any,
-      currentPeriodEnd: new Date(sub.current_period_end * 1000),
-      stripeCurrentPeriodEnd: new Date(sub.current_period_end * 1000),
+      currentPeriodStart: new Date(sub.items.data[0].current_period_start * 1000),
+      currentPeriodEnd: new Date(sub.items.data[0].current_period_end * 1000),
+      stripeCurrentPeriodEnd: new Date(sub.items.data[0].current_period_end * 1000),
       cancelAtPeriodEnd: sub.cancel_at_period_end,
       canceledAt: sub.canceled_at ? new Date(sub.canceled_at * 1000) : null,
     },
